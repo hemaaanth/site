@@ -25,7 +25,7 @@ export default function Colophon() {
           </dt>
           <dd className="list-content">
           <p>
-              The majority of this website's code is forked from <a className="link" target="_blank" href="https://www.fabianschultz.com/">Fabian Schultz</a>, which is open source and available on <a className="link" target="_blank" href="https://github.com/fabe/site">Github</a>.
+              The majority of this website&#39;s code is forked from <a className="link" target="_blank" href="https://www.fabianschultz.com/">Fabian Schultz</a>, which is open source and available on <a className="link" target="_blank" href="https://github.com/fabe/site">Github</a>.
             </p>
           </dd>
         </dl>

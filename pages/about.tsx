@@ -30,11 +30,11 @@ export default function Colophon() {
       <dd className="list-content">
         <div>Currently, I lead growth at <LinkExternal href="//goldsky.com">Goldsky</LinkExternal>, a realtime data infrastructure company.</div>
         <div className="text-neutral-500 [font-variation-settings:'opsz'_14] dark:text-silver-dark">
-          That sounds boring but I promise it's not. We're solving complex problems that enable our customers to focus on building awesome new products, not wrangling with their data infrastructure all day.
+          That sounds boring but I promise it&#39;s not. We&#39;re solving complex problems that enable our customers to focus on building awesome new products, not wrangling with their data infrastructure all day.
         </div><br />
         <div>Previously, I built <LinkExternal href="//helika.io">Helika</LinkExternal>, <LinkExternal href="//conduit.fi">Conduit</LinkExternal>, and <LinkExternal href="//novisto.com">Novisto</LinkExternal> out of a venture studio called <LinkExternal href="//diagram.ca">Diagram</LinkExternal>.</div>
         <div className="text-neutral-500 [font-variation-settings:'opsz'_14] dark:text-silver-dark">
-          I came up with the ideas, proved them by securing early users and investors, and hired the core team (CEO, CTO). These companies now have a combined market cap of >$200M USD and employ >150 people.
+          I came up with the ideas, proved them by securing early users and investors, and hired the core team (CEO, CTO). These companies now have a combined market cap of &gt;$200M USD and employ &gt;150 people.
         </div><br />
         <div>
           At the <LinkExternal href="//wef.org">World Economic Forum</LinkExternal>, I led research on the impact of emerging tech in financial services.
@@ -60,7 +60,7 @@ export default function Colophon() {
       <dd className="list-content">
         <div>When COVID19 hit Canada, I co-founded <LinkExternal href="//getgroceryhero.com">GroceryHero</LinkExternal> to match frontline medical workers with a volunteer shoppers.</div>
         <div className="text-neutral-500 [font-variation-settings:'opsz'_14] dark:text-silver-dark">
-          We made >4K matches in 4 months, with over 70% of matches within 1KM of each other. We were endorsed by notable public figures (eg. mayor of Toronto, Ontario minister of health, deputy Prime Minister of Canada) and covered in major news networks (eg. National Post, CTV, CP24, Betakit, Global News).
+          We made &gt;4K matches in 4 months, with over 70% of matches within 1KM of each other. We were endorsed by notable public figures (eg. mayor of Toronto, Ontario minister of health, deputy Prime Minister of Canada) and covered in major news networks (eg. National Post, CTV, CP24, Betakit, Global News).
         </div><br />
         <div>In college, I co-founded REACH Diagnostics, a diabetes screening and care platform for urban slum dwellers in India.</div>
         <div className="text-neutral-500 [font-variation-settings:'opsz'_14] dark:text-silver-dark">

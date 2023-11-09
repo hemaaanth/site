@@ -50,7 +50,7 @@ export default function BlogPost() {
                 Pensions were negotiated without full consideration for the
                 long-term liability they represent, creating unsustainable
                 systems whereby new contributions only pay retiree income and
-                are not actually saved for contributors' own retirement, making
+                are not actually saved for contributors&#39; own retirement, making
                 the fundamental assumption that populations and economies will
                 grow continuously and infinitely - an assumption that cannot be
                 taken for granted. Private pensions are also unprotected,
@@ -67,7 +67,7 @@ export default function BlogPost() {
               <p>
                 There is a $3T retirement gap as of 2015, which will balloon to
                 $13T by 2050. 12M working Canadians have no workplace pension,
-                and thus relay on private savings or Canada's social security
+                and thus relay on private savings or Canada&#39;s social security
                 benefit which totals ~$20K, enough to avoid poverty but not
                 enough for a dignified quality-of-life. Less than 20% of
                 Canadians have enough private savings to adequately supplement
@@ -85,7 +85,7 @@ export default function BlogPost() {
               </p>
               <h4>
                 Pensions for the next 50 years can be secured but will require
-                novel solutions. In Canada's context, there is specifically an
+                novel solutions. In Canada&#39;s context, there is specifically an
                 opportunity in government-managed reverse-mortgages.
               </h4>
               <p>
@@ -103,13 +103,13 @@ export default function BlogPost() {
                 5.65% actual over the past 30 years). This would deliver $1,500
                 monthly for 15 years, nearly matching the maximum benefit from
                 public coverage while leaving over $100K in equity. In a highly
-                conservative case where the home value doesn't increase at all,
+                conservative case where the home value doesn&#39;t increase at all,
                 14 years of income could be sustained before equity is exhausted
                 (ie. net value becomes negative).
               </p>
               <p>
                 Almost $200K woudl be paid in interest which can create sticker
-                shock, but it's important to remember the unique benefits:
+                shock, but it&#39;s important to remember the unique benefits:
               </p>
               <ul>
                 <li>
@@ -117,7 +117,7 @@ export default function BlogPost() {
                   rental or through a sale+leaseback.
                 </li>
                 <li>
-                  Income isn't taxable, and thus doesn't reduce public pension
+                  Income isn&#39;t taxable, and thus doesn&#39;t reduce public pension
                   benefits eligibility.
                 </li>
                 <li>
@@ -155,7 +155,7 @@ export default function BlogPost() {
                   reverse-mortgagors to vacate the premises while continuing to
                   receive payments (or sell the home early) to pay for
                   end-of-life care. This is critical to ensuring that the
-                  product caters to the full lifecycle of retirees' needs.
+                  product caters to the full lifecycle of retirees&#39;s needs.
                 </li>
                 <li>
                   Payments pegged to inflation that ensure mortgagors sustain
@@ -180,7 +180,7 @@ export default function BlogPost() {
                   Rebrand away from “reverse-mortgage” which may connote “giving
                   up” home equity. Instead, a “home equity pension” (HEP) or
                   similar branding would frame the product to what it really is:
-                  a method of unlocking the value of a lifetime's worth of
+                  a method of unlocking the value of a lifetime&#39;s worth of
                   investment in property.
                 </li>
               </ul>
@@ -190,12 +190,12 @@ export default function BlogPost() {
               </p>
               <h4>
                 The government will also need to open the market to a greater
-                number of providers - specifically, Canada's largest banks.
+                number of providers - specifically, Canada&#39;s largest banks.
               </h4>
               <p>
                 These institutions have the expertise, balance sheet, and
                 footprint needed to serve Canadians. For example, consider the
-                T1 capital ratio of Canada's largest banks as of Q3 2019:
+                T1 capital ratio of Canada&#39;s largest banks as of Q3 2019:
               </p>
               <ul>
                 <li>RBC: 13.00%</li>
@@ -211,7 +211,7 @@ export default function BlogPost() {
                 are subject to. By encouraging their participation (eg. allowing
                 IRB calculations for HEPs), the government can foster greater
                 competition in the market and enable seamless access (these
-                banks already serve most Canadians, have them KYC'd, etc.).
+                banks already serve most Canadians, have them KYC&#39;d, etc.).
               </p>
               <h4>Such a program would not be without its downsides.</h4>
               <p>
@@ -220,12 +220,12 @@ export default function BlogPost() {
               </p>
               <ul>
                 <li>
-                  Doesn't serve everyone: By 64, 80% of Canadians own their
+                  Doesn&#39;t serve everyone: By 64, 80% of Canadians own their
                   primary residence (and this has increased over time),
                   indicating that reverse-mortgages can help many. However,
-                  those who don't own a home and don't have other savings will
+                  those who don&#39;t own a home and don&#39;t have other savings will
                   need to rely on the social safety net. The net of income
-                  supplements combined with the country's universal healthcare
+                  supplements combined with the country&#39;s universal healthcare
                   and public housing program offered by the CMHC can ensure
                   retirement even for those with limited resources.
                 </li>
@@ -305,7 +305,7 @@ export default function BlogPost() {
                 The expanded use of “home equity pensions” and a restructuring
                 of related regulation can enable Canada to secure pensions for
                 the next 50 years and beyond, driving accumulation during
-                Canadians's working years and graceful decumulation in
+                Canadians&#39; working years and graceful decumulation in
                 retirement.
               </h4>
             </div>
@@ -325,9 +325,9 @@ export default function BlogPost() {
             </p>
             <h3>Meta</h3>
             <p className="time">
-              I wrote this originally for a challenge run by Credit Suisse's
+              I wrote this originally for a challenge run by Credit Suisse&#39;s
               research institute, and received an honorary mention (top 20 of
-              170+ submissions from 30 countries). Because of this, there's a
+              170+ submissions from 30 countries). Because of this, there&#39;s a
               more formal tone to this than most of my other writing.
             </p>
           </dt>
