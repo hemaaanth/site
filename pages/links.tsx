@@ -25,7 +25,7 @@ export default function Links() {
                     <dd className="list-content">
                         <div className="pb-2 last-of-type:pb-0">
                             <div>
-                                <LinkExternal href="#" className="link inline-flex items-center gap-1">
+                                <LinkExternal href="#">
                                     Calendar
                                 </LinkExternal>
                                 <time className="time">
@@ -40,7 +40,7 @@ export default function Links() {
                     <dd className="list-content">
                         <div className="pb-2 last-of-type:pb-0">
                             <div>
-                                <LinkExternal href="#" className="link inline-flex items-center gap-1">
+                                <LinkExternal href="#">
                                     Twitter
                                 </LinkExternal>
                                 <time className="time">
@@ -48,7 +48,7 @@ export default function Links() {
                                 </time><br />
                             </div>
                             <div>
-                                <LinkExternal href="#" className="link inline-flex items-center gap-1">
+                                <LinkExternal href="#">
                                     Telegram
                                 </LinkExternal>
                                 <time className="time">
@@ -56,7 +56,7 @@ export default function Links() {
                                 </time><br />
                             </div>
                             <div>
-                                <LinkExternal href="#" className="link inline-flex items-center gap-1">
+                                <LinkExternal href="#">
                                     Email
                                 </LinkExternal>
                                 <time className="time">
@@ -64,7 +64,7 @@ export default function Links() {
                                 </time><br />
                             </div>
                             <div>
-                                <LinkExternal href="#" className="link inline-flex items-center gap-1">
+                                <LinkExternal href="#">
                                     Personal Email
                                 </LinkExternal>
                                 <time className="time">
@@ -79,7 +79,7 @@ export default function Links() {
                     <dd className="list-content">
                         <div className="pb-2 last-of-type:pb-0">
                             <div>
-                                <LinkExternal href="#" className="link inline-flex items-center gap-1">
+                                <LinkExternal href="#">
                                     Company
                                 </LinkExternal>
                                 <time className="time">
@@ -87,7 +87,7 @@ export default function Links() {
                                 </time><br />
                             </div>
                             <div>
-                                <LinkExternal href="#" className="link inline-flex items-center gap-1">
+                                <LinkExternal href="#">
                                     Documentation
                                 </LinkExternal>
                                 <time className="time">
@@ -95,7 +95,7 @@ export default function Links() {
                                 </time><br />
                             </div>
                             <div>
-                                <LinkExternal href="#" className="link inline-flex items-center gap-1">
+                                <LinkExternal href="#">
                                     Open Datasets
                                 </LinkExternal>
                                 <time className="time">
