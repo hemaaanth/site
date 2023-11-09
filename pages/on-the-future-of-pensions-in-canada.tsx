@@ -1,8 +1,6 @@
 import type { GetStaticProps, GetStaticPaths } from "next";
 import { Main } from "../components/Layouts";
 import { baseUrl, SEO } from "../components/SEO";
-import { initializeApollo } from "../graphql/client";
-import { QUERY_POST, QUERY_POST_SLUGS } from "../graphql/queries";
 import { useRouter } from "next/router";
 import React from "react";
 import Image from "next/image";

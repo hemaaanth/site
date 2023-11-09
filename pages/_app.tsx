@@ -1,7 +1,6 @@
 import "../styles/globals.css";
 import type { AppProps as NextAppProps } from "next/app";
 import { ApolloCache, ApolloProvider } from "@apollo/client";
-import { useApollo } from "../graphql/client";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import localFont from "next/font/local";
@@ -28,11 +27,9 @@ export default function MyApp({
   Component,
   pageProps,
 }: AppProps<CustomPageProps>) {
-  const apolloClient = useApollo(pageProps.initialApolloState);
 
   return (
     <>
-      <ApolloProvider client={apolloClient}>
         <style jsx global>
           {`
             :root {
@@ -40,11 +37,7 @@ export default function MyApp({
             }
           `}
         </style>
-
         <Component {...pageProps} />
-
-
-      </ApolloProvider>
     </>
   );
 }
