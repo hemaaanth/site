@@ -39,7 +39,7 @@ export default function Writing() {
           <div>
             <Link href="/on-uber-surge-pricing" className="link inline-flex items-center gap-1">
               <div className="opacity-20 dark:opacity-30"><NoteIcon size={16} /></div>
-              On Uber's surge pricing
+              On Uber&#39;s surge pricing
             </Link>
           </div>
         </div>
