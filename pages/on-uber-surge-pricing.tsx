@@ -20,7 +20,7 @@ export default function BlogPost() {
       <SEO
         seo={{
           title: "On Uber's surge pricing",
-          description: "Description",
+          description: "Uber's surge pricing model has been getting negative attention in the press. It makes sense but prioritizes efficiency over equality. Uber can keep the economic-incentive benefits of the model alive while addressing criticism by calculating their split only on base fares.",
           path: "/on-uber-surge-pricing",
         }}
       />

@@ -20,7 +20,7 @@ export default function BlogPost() {
       <SEO
         seo={{
           title: "On the future of pensions in Canada",
-          description: "Description",
+          description: "There is a huge and growing pension gap in Canada, and this essay explores reverse mortgages as a novel approach to defuse this ticking time bomb.",
           path: "/on-the-future-of-pensions-in-canada",
         }}
       />
