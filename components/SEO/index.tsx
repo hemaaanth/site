@@ -1,11 +1,11 @@
 import Head from "next/head";
 import { DefaultSeo } from "next-seo";
 
-export const baseUrl = "https://fabianschultz.com";
+export const baseUrl = "https://hem.so";
 
 export const defaultSEO = {
   title: "Hemanth Soni",
-  description: "Product Designer",
+  description: "I have a decade of experience building in financial services, data infrastructure, crypto, and various mixes of the three.",
   openGraph: {
     type: "website",
     locale: "en_US",

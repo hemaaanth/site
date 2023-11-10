@@ -11,10 +11,6 @@ const sansFont = localFont({
   display: "swap",
 });
 
-const Archipelago = dynamic(
-  () => import("../components/Navigation/Archipelago")
-);
-
 type AppProps<P = any> = {
   pageProps: P;
 } & Omit<NextAppProps<P>, "pageProps">;

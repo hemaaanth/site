@@ -20,7 +20,7 @@ export default function Writing() {
               <div className="opacity-20 dark:opacity-30">
                 <NoteIcon size={16} />
               </div>
-              On pricing a SaaS product <Badge>WIP</Badge>
+              On pricing a SaaS product from scratch<Badge>WIP</Badge>
             </Link>
           </div>
           <div>
