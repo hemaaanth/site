@@ -5,7 +5,7 @@ export const baseUrl = "https://hem.so";
 
 export const defaultSEO = {
   title: "Hemanth Soni",
-  description: "I have a decade of experience building in financial services, data infrastructure, crypto, and various mixes of the three.",
+  description: "I build products & companies in financial services, data infrastructure, crypto, and various mixes of the three. This is my personal website.",
   openGraph: {
     type: "website",
     locale: "en_US",

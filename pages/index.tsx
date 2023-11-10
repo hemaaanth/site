@@ -25,7 +25,7 @@ export default function Home() {
             </h3>
           </dt>
           <dd className="list-content">
-          <div>I have a decade of experience building in financial services, data infrastructure, crypto, and various mixes of the three. Currently, I lead growth at Goldsky. More about me <Link href="/about" className="link inline-flex items-center gap-1">here</Link>.</div>
+          <div>I build products & companies in financial services, data infrastructure, crypto, and various mixes of the three. Currently, I lead growth at Goldsky. More about me <Link href="/about" className="link inline-flex items-center gap-1">here</Link>.</div>
           </dd>
         </dl>
         <Writing />
