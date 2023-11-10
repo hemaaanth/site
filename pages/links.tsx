@@ -25,7 +25,7 @@ export default function Links() {
                     <dd className="list-content">
                         <div className="pb-2 last-of-type:pb-0">
                             <div>
-                                <LinkExternal href="#">
+                                <LinkExternal href="https://cal.com/goldsky-hemanth/meet-open">
                                     Calendar
                                 </LinkExternal>
                                 <time className="time">
@@ -40,7 +40,7 @@ export default function Links() {
                     <dd className="list-content">
                         <div className="pb-2 last-of-type:pb-0">
                             <div>
-                                <LinkExternal href="#">
+                                <LinkExternal href="https://twitter.com/hemaaanth">
                                     Twitter
                                 </LinkExternal>
                                 <time className="time">
@@ -48,7 +48,7 @@ export default function Links() {
                                 </time><br />
                             </div>
                             <div>
-                                <LinkExternal href="#">
+                                <LinkExternal href="https://t.me/hemaaanth">
                                     Telegram
                                 </LinkExternal>
                                 <time className="time">
@@ -56,7 +56,7 @@ export default function Links() {
                                 </time><br />
                             </div>
                             <div>
-                                <LinkExternal href="#">
+                                <LinkExternal href="mailto:hemanth@goldsky.com">
                                     Email
                                 </LinkExternal>
                                 <time className="time">
@@ -64,7 +64,7 @@ export default function Links() {
                                 </time><br />
                             </div>
                             <div>
-                                <LinkExternal href="#">
+                                <LinkExternal href="mailto:site@soni.im">
                                     Personal Email
                                 </LinkExternal>
                                 <time className="time">
@@ -79,7 +79,7 @@ export default function Links() {
                     <dd className="list-content">
                         <div className="pb-2 last-of-type:pb-0">
                             <div>
-                                <LinkExternal href="#">
+                                <LinkExternal href="https://goldsky.com">
                                     Company
                                 </LinkExternal>
                                 <time className="time">
@@ -87,7 +87,7 @@ export default function Links() {
                                 </time><br />
                             </div>
                             <div>
-                                <LinkExternal href="#">
+                                <LinkExternal href="https://docs.goldsky.com">
                                     Documentation
                                 </LinkExternal>
                                 <time className="time">
@@ -95,7 +95,7 @@ export default function Links() {
                                 </time><br />
                             </div>
                             <div>
-                                <LinkExternal href="#">
+                                <LinkExternal href="https://indexed.xyz">
                                     Open Datasets
                                 </LinkExternal>
                                 <time className="time">
