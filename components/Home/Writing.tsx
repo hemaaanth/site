@@ -31,7 +31,7 @@ export default function Writing() {
               <div className="opacity-20 dark:opacity-30">
                 <NoteIcon size={16} />
               </div>
-              On crytpo startup ideas for 2023
+              On crypto startup ideas for 2023
             </Link>
           </div>
           <div>
