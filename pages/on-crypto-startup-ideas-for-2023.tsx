@@ -31,12 +31,12 @@ export default function BlogPost() {
           <h1 className="text-xl text-neutral-800 [font-variation-settings:'opsz'_32,_'wght'_500] dark:text-white sm:pb-6 sm:text-xl">
             On crypto startup ideas for 2023
           </h1>
-          <button
+          <p
             onClick={() => router.back()}
-            className="text-neutral-700 sm:pb-6 sm:align-left"
+            className="text-neutral-700 sm:pb-6 sm:align-left cursor-pointer"
           >
             Go Back
-          </button>
+          </p>
         </div>
         <dl className="list-container">
           <dd className="list-content">
