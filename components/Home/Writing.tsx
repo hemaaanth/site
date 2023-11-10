@@ -12,6 +12,17 @@ export default function Writing() {
       </dt>
       <dd className="list-content">
         <div className="pb-2 last-of-type:pb-0">
+        <div>
+            <Link
+              href="#"
+              className="opacity-20 dark:opacity-20 link inline-flex items-center gap-1"
+            >
+              <div className="opacity-20 dark:opacity-30">
+                <NoteIcon size={16} />
+              </div>
+              On competition<Badge>WIP</Badge>
+            </Link>
+          </div>
           <div>
             <Link
               href="#"
