@@ -17,7 +17,7 @@ export default function Links() {
                 }}
             />
             <Main>
-            <h1 className="text-xl text-neutral-800 [font-variation-settings:'opsz'_32,_'wght'_500] dark:text-white sm:pb-6 sm:text-xl">Links</h1>
+            <header><h1 className="text-xl text-neutral-800 [font-variation-settings:'opsz'_32,_'wght'_500] dark:text-white sm:pb-6 sm:text-xl">Links</h1></header>
                 <dl className="list-container">
                     <dt className="list-title">
                         <h3 className="text-neutral-500 dark:text-silver-dark">Meet</h3>
@@ -34,6 +34,8 @@ export default function Links() {
                             </div>
                         </div>
                     </dd>
+                    </dl>
+                    <dl className="list-container">
                     <dt className="list-title">
                         <h3 className="text-neutral-500 dark:text-silver-dark">Contact</h3>
                     </dt>
@@ -73,6 +75,8 @@ export default function Links() {
                             </div>
                         </div>
                     </dd>
+                    </dl>
+                    <dl className="list-container">
                     <dt className="list-title">
                         <h3 className="text-neutral-500 dark:text-silver-dark">Goldsky</h3>
                     </dt>

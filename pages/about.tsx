@@ -15,9 +15,9 @@ export default function Colophon() {
         }}
       />
       <Main>
-      <h1 className="text-xl text-neutral-800 [font-variation-settings:'opsz'_32,_'wght'_500] dark:text-white sm:pb-6 sm:text-xl">
+      <header><h1 className="text-xl text-neutral-800 [font-variation-settings:'opsz'_32,_'wght'_500] dark:text-white sm:pb-6 sm:text-xl">
           About
-        </h1>
+        </h1></header>
         <dl className="list-container">
       <dt className="list-title">
         <h3 className="text-neutral-500 dark:text-silver-dark">

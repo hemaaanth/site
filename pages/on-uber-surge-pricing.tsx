@@ -26,9 +26,9 @@ export default function BlogPost() {
       />
       <Main>
         <div className="flex w-full flex-col justify-between sm:flex-row">
-          <h1 className="text-xl text-neutral-800 [font-variation-settings:'opsz'_32,_'wght'_500] dark:text-white sm:pb-6 sm:text-xl">
+          <header><h1 className="text-xl text-neutral-800 [font-variation-settings:'opsz'_32,_'wght'_500] dark:text-white sm:pb-6 sm:text-xl">
             On Uber&#39;s surge pricing
-          </h1>
+          </h1></header>
           <p
             onClick={() => router.back()}
             className="text-neutral-700 sm:pb-6 sm:align-left cursor-pointer"
