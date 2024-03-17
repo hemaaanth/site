@@ -20,6 +20,17 @@ export default function Writing() {
               <div className="opacity-20 dark:opacity-30">
                 <NoteIcon size={16} />
               </div>
+              On crypto startup ideas for 2024<Badge>WIP</Badge>
+            </Link>
+          </div>
+        <div>
+            <Link
+              href="#"
+              className="opacity-20 dark:opacity-20 link inline-flex items-center gap-1"
+            >
+              <div className="opacity-20 dark:opacity-30">
+                <NoteIcon size={16} />
+              </div>
               On competition<Badge>WIP</Badge>
             </Link>
           </div>

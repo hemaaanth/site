@@ -36,7 +36,6 @@ export default function Home() {
             </h3>
           </dt>
           <dd className="list-content">
-          <div><LinkExternal href="https://literal.club/book/nine-pints-rmlbu">Nine Pints</LinkExternal> by Rose George</div>
           <div><LinkExternal href="https://literal.club/book/the-first-fifteen-lives-of-harry-august-d9bij">The First Fifteen Lives of Harry August
 </LinkExternal> by Claire North</div>
           </dd>
