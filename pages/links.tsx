@@ -58,6 +58,14 @@ export default function Links() {
                                 </time><br />
                             </div>
                             <div>
+                                <LinkExternal href="https://warpcast.com/hemaaanth">
+                                    Farcaster
+                                </LinkExternal>
+                                <time className="time">
+                                    @hemaaanth
+                                </time><br />
+                            </div>
+                            <div>
                                 <LinkExternal href="mailto:hemanth@goldsky.com">
                                     Email
                                 </LinkExternal>
