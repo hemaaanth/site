@@ -25,7 +25,7 @@ export default function Links() {
                     <dd className="list-content">
                         <div className="pb-2 last-of-type:pb-0">
                             <div>
-                                <LinkExternal href="https://cal.com/goldsky-hemanth/meet-open">
+                                <LinkExternal href="https://cal.com/hemaanth/meet-open">
                                     Calendar
                                 </LinkExternal>
                                 <time className="time">
