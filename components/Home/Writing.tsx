@@ -4,80 +4,38 @@ import Link from "next/link";
 import { FeedIcon, NoteIcon } from "../Icons";
 import Badge from "../../components/Badge";
 
-export default function Writing() {
+export default function Writing({ posts }) {
   return (
     <dl className="list-container">
       <dt className="list-title">
         <h3 className="text-neutral-500 dark:text-silver-dark">Writing</h3>
       </dt>
       <dd className="list-content">
-        <div className="pb-2 last-of-type:pb-0">
-        <div>
-            <Link
-              href="#"
-              className="opacity-20 dark:opacity-20 link inline-flex items-center gap-1"
-            >
-              <div className="opacity-20 dark:opacity-30">
-                <NoteIcon size={16} />
+        {posts.map((post) => (
+          <div key={post.slug} className={`pb-2 last-of-type:pb-0 ${post.status === 'draft' ? 'opacity-20 dark:opacity-20' : ''}`}>
+            {post.status === 'draft' ? (
+              // For drafts, display the title without a link and with the "WIP" badge
+              <div className="inline-flex items-center gap-1">
+                <div className="opacity-30 dark:opacity-30">
+                  <NoteIcon size={16} />
+                </div>
+                {post.title}<Badge>WIP</Badge>
               </div>
-              On crypto startup ideas for 2024<Badge>WIP</Badge>
-            </Link>
+            ) : (
+              // For published posts, display the link and without the "WIP" badge
+              <Link href={`/posts/${post.slug}`} className="link inline-flex items-center gap-1">
+                <div className="opacity-30 dark:opacity-30">
+                  <NoteIcon size={16} />
+                </div>
+                {post.title}
+              </Link>
+            )}
           </div>
-        <div>
-            <Link
-              href="#"
-              className="opacity-20 dark:opacity-20 link inline-flex items-center gap-1"
-            >
-              <div className="opacity-20 dark:opacity-30">
-                <NoteIcon size={16} />
-              </div>
-              On competition<Badge>WIP</Badge>
-            </Link>
-          </div>
-          <div>
-            <Link
-              href="#"
-              className="opacity-20 dark:opacity-20 link inline-flex items-center gap-1"
-            >
-              <div className="opacity-20 dark:opacity-30">
-                <NoteIcon size={16} />
-              </div>
-              On pricing a SaaS product from scratch<Badge>WIP</Badge>
-            </Link>
-          </div>
-          <div>
-            <Link
-              href="/on-crypto-startup-ideas-for-2023"
-              className="link inline-flex items-center gap-1"
-            >
-              <div className="opacity-20 dark:opacity-30">
-                <NoteIcon size={16} />
-              </div>
-              On crypto startup ideas for 2023
-            </Link>
-          </div>
-          <div>
-            <Link
-              href="/on-the-future-of-pensions-in-canada"
-              className="link inline-flex items-center gap-1"
-            >
-              <div className="opacity-20 dark:opacity-30">
-                <NoteIcon size={16} />
-              </div>
-              On the future of pensions in Canada
-            </Link>
-          </div>
-          <div>
-            <Link
-              href="/on-uber-surge-pricing"
-              className="link inline-flex items-center gap-1"
-            >
-              <div className="opacity-20 dark:opacity-30">
-                <NoteIcon size={16} />
-              </div>
-              On Uber&#39;s surge pricing
-            </Link>
-          </div>
+        ))}
+                <div className="mt-2 flex items-center gap-3">
+          <Link href="/posts" className="link link-sm inline-flex items-center">
+            View all
+          </Link>
         </div>
       </dd>
     </dl>
