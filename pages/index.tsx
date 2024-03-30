@@ -65,8 +65,8 @@ export async function getStaticProps() {
   });
 
   // Sort posts by date
-  posts.sort((a, b) => new Date(b.date) - new Date(a.date));
-
+  posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  
   // Only keep the three most recent posts
   const recentPosts = posts.slice(0, 5);
 
