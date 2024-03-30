@@ -9,14 +9,6 @@ import path from 'path';
 import matter from 'gray-matter';
 import Badge from "../../components/Badge";
 
-const redactedStyle = {
-    backgroundColor: 'white',
-    color: 'white',
-    display: 'inline-block',
-    width: '100%', // Adjust the width as needed
-    height: '0.97rem', // Adjust the height to match your font size
-  };
-
 export default function Posts({ posts }) {
     return (
       <>
@@ -83,7 +75,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   
     // Sort posts by date
     posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-      
+
     return {
       props: {
         posts,
