@@ -26,6 +26,7 @@ export default function Post(props) {
   const slug = router.query.slug;
   const relativeUrl = `/posts/${slug}`;
   const url = `${baseUrl}${relativeUrl}`;
+  const ogImageUrl = `https://hem.so/api/og?title=${encodeURIComponent(title)}`;
 
   return (
     <>
@@ -34,6 +35,7 @@ export default function Post(props) {
           title: title || "Loading...",
           description: tldr,
           path: relativeUrl,
+          image: ogImageUrl,
         }}
       />
       <Main>

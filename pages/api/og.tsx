@@ -1,10 +1,25 @@
 import { ImageResponse } from '@vercel/og';
- 
+import { NextRequest } from 'next/server';
+
 export const config = {
   runtime: 'edge',
 };
  
-export default async function handler() {
+export default async function handler(request: NextRequest) {
+
+// Make sure the font exists in the specified path:
+  const fontData = await fetch(
+    new URL('../../public/inter.roman.var.ttf', import.meta.url),
+  ).then((res) => res.arrayBuffer());
+
+    const { searchParams } = new URL(request.url);
+ 
+    // ?title=<title>
+    const hasTitle = searchParams.has('title');
+    const title = hasTitle
+      ? searchParams.get('title')?.slice(0, 100)
+      : 'Hemanth Soni';
+
   return new ImageResponse(
     (
       <div
@@ -15,17 +30,25 @@ export default async function handler() {
           width: '100%',
           height: '100%',
           padding: '50px 200px',
-          textAlign: 'center',
+          textAlign: 'left',
           justifyContent: 'center',
           alignItems: 'center',
+          fontFamily: '"Inter"'
         }}
       >
-        👋 Hello 你好 नमस्ते こんにちは สวัสดีค่ะ 안녕 добрий день Hallá
+        {title}
       </div>
     ),
     {
       width: 1200,
       height: 630,
+      fonts: [
+        {
+          name: 'Inter',
+          data: fontData,
+          style: 'normal',
+        },
+      ],
     },
   );
 }
