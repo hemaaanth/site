@@ -79,7 +79,7 @@ export function SEO({ seo }: { seo?: SEOProps }) {
                 name: defaultSEO.title,
                 url: baseUrl,
                 jobTitle: "Builder",
-                image: seo.image || defaultSEO.openGraph.images[0].url,
+                image: defaultSEO.openGraph.images[0].url,
                 sameAs: [
                   "https://twitter.com/hemaaanth",
                   "https://www.linkedin.com/in/hemanthsoni",
