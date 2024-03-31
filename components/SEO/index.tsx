@@ -13,7 +13,7 @@ export const defaultSEO = {
     site_name: "Hemanth Soni",
     images: [
       {
-        url: `${baseUrl}/social.png`,
+        url: `https://hem.so/api/og`,
         alt: "Hemanth Soni",
       },
     ],
@@ -78,8 +78,8 @@ export function SEO({ seo }: { seo?: SEOProps }) {
                 "@type": "Person",
                 name: defaultSEO.title,
                 url: baseUrl,
-                jobTitle: "Product Designer",
-                image: defaultSEO.openGraph.images[0].url,
+                jobTitle: "Builder",
+                image: seo.image || defaultSEO.openGraph.images[0].url,
                 sameAs: [
                   "https://twitter.com/hemaaanth",
                   "https://www.linkedin.com/in/hemanthsoni",
