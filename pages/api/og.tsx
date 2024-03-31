@@ -13,8 +13,9 @@ export default async function handler(request: NextRequest) {
       ).then((res) => res.arrayBuffer());
       const hasTitle = searchParams.has("title");
       const title = hasTitle ? searchParams.get("title") : null;
-  
-      if (title) {
+      const hasValidTitle = title !== null && title.trim() !== "";
+
+      if (hasValidTitle) {
         return new ImageResponse(
           (
             <div
@@ -68,8 +69,6 @@ export default async function handler(request: NextRequest) {
           },
         );
       } else {
-        // Return a different image layout when title doesn't exist
-        // Fill in the desired layout here
         return new ImageResponse(
           (
             <div
@@ -112,7 +111,6 @@ export default async function handler(request: NextRequest) {
           {
             width: 1200,
             height: 630,
-            // Adjust fonts or other options as needed
             fonts: [
               {
                 name: "Inter",
