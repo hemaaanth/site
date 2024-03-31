@@ -28,13 +28,13 @@ export default async function handler(request: NextRequest) {
                 justifyContent: "space-between",
                 flexWrap: "nowrap",
                 fontFamily: '"Inter"',
-                padding: "80px 80px",
+                padding: "100px 100px",
                 boxSizing: "border-box",
               }}
             >
               <div
                 style={{
-                  fontSize: 36,
+                  fontSize: 42,
                   fontStyle: "normal",
                   color: "#9b9b9b",
                   whiteSpace: "pre-wrap",
@@ -44,7 +44,7 @@ export default async function handler(request: NextRequest) {
               </div>
               <div
                 style={{
-                  fontSize: 76,
+                  fontSize: 84,
                   fontStyle: "normal",
                   letterSpacing: "-0.01em",
                   color: "white",
@@ -87,7 +87,7 @@ export default async function handler(request: NextRequest) {
             >
               <div
                 style={{
-                  fontSize: 36,
+                  fontSize: 42,
                   fontStyle: "normal",
                   color: "#9b9b9b",
                   whiteSpace: "pre-wrap",
@@ -96,7 +96,7 @@ export default async function handler(request: NextRequest) {
               </div>
               <div
                 style={{
-                  fontSize: 76,
+                  fontSize: 84,
                   fontStyle: "normal",
                   letterSpacing: "-0.01em",
                   color: "white",
