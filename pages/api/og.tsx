@@ -1,54 +1,132 @@
-import { ImageResponse } from '@vercel/og';
-import { NextRequest } from 'next/server';
+import { ImageResponse } from "@vercel/og";
+import { NextRequest } from "next/server";
 
 export const config = {
-  runtime: 'edge',
+  runtime: "edge",
 };
- 
+
 export default async function handler(request: NextRequest) {
-
-// Make sure the font exists in the specified path:
-  const fontData = await fetch(
-    new URL('../../public/inter.roman.var.ttf', import.meta.url),
-  ).then((res) => res.arrayBuffer());
-
-    const { searchParams } = new URL(request.url);
- 
-    // ?title=<title>
-    const hasTitle = searchParams.has('title');
-    const title = hasTitle
-      ? searchParams.get('title')?.slice(0, 100)
-      : 'Hemanth Soni';
-
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          fontSize: 40,
-          color: 'white',
-          background: 'black',
-          width: '100%',
-          height: '100%',
-          padding: '50px 200px',
-          textAlign: 'left',
-          justifyContent: 'center',
-          alignItems: 'center',
-          fontFamily: '"Inter"'
-        }}
-      >
-        {title}
-      </div>
-    ),
-    {
-      width: 1200,
-      height: 630,
-      fonts: [
-        {
-          name: 'Inter',
-          data: fontData,
-          style: 'normal',
-        },
-      ],
-    },
-  );
-}
+    try {
+      const { searchParams } = new URL(request.url);
+      const fontData = await fetch(
+        new URL("../../public/inter.roman.var.ttf", import.meta.url),
+      ).then((res) => res.arrayBuffer());
+      const hasTitle = searchParams.has("title");
+      const title = hasTitle ? searchParams.get("title") : null;
+  
+      if (title) {
+        return new ImageResponse(
+          (
+            <div
+              style={{
+                backgroundColor: "black",
+                height: "100%",
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                flexWrap: "nowrap",
+                fontFamily: '"Inter"',
+                padding: "80px 80px",
+                boxSizing: "border-box",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 36,
+                  fontStyle: "normal",
+                  color: "#9b9b9b",
+                  whiteSpace: "pre-wrap",
+                }}
+              >
+                Hemanth Soni
+              </div>
+              <div
+                style={{
+                  fontSize: 76,
+                  fontStyle: "normal",
+                  letterSpacing: "-0.01em",
+                  color: "white",
+                  lineHeight: 1.1,
+                  whiteSpace: "pre-wrap",
+                }}
+              >
+                {decodeURIComponent(title)}
+              </div>
+            </div>
+          ),
+          {
+            width: 1200,
+            height: 630,
+            fonts: [
+              {
+                name: "Inter",
+                data: fontData,
+                style: "normal",
+              },
+            ],
+          },
+        );
+      } else {
+        // Return a different image layout when title doesn't exist
+        // Fill in the desired layout here
+        return new ImageResponse(
+          (
+            <div
+              style={{
+                backgroundColor: "black",
+                height: "100%",
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                flexWrap: "nowrap",
+                fontFamily: '"Inter"',
+                padding: "80px 80px",
+                boxSizing: "border-box",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 36,
+                  fontStyle: "normal",
+                  color: "#9b9b9b",
+                  whiteSpace: "pre-wrap",
+                }}
+              >
+              </div>
+              <div
+                style={{
+                  fontSize: 76,
+                  fontStyle: "normal",
+                  letterSpacing: "-0.01em",
+                  color: "white",
+                  lineHeight: 1.1,
+                  whiteSpace: "pre-wrap",
+                }}
+              >
+                Hemanth Soni
+              </div>
+            </div>
+          ),
+          {
+            width: 1200,
+            height: 630,
+            // Adjust fonts or other options as needed
+            fonts: [
+              {
+                name: "Inter",
+                data: fontData,
+                style: "normal",
+              },
+            ],
+          },
+        );
+      }
+    } catch (e: any) {
+      console.log(`${e.message}`);
+      return new Response(`Failed to generate the image`, {
+        status: 500,
+      });
+    }
+  }
