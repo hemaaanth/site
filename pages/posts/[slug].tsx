@@ -35,8 +35,8 @@ export default function Post(props) {
           title: title || "Loading...",
           description: tldr,
           path: relativeUrl,
-          image: ogImageUrl,
-        }}
+          image: `${baseUrl}/api/og?title=${encodeURIComponent(title)}`,
+          }}
       />
       <Main>
         <div className="flex w-full flex-col justify-between sm:flex-row">
