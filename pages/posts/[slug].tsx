@@ -81,7 +81,7 @@ export default function Post(props) {
             </div>
             <div className="prose-custom">
               <hr className="pb-0" />
-              <a href="/posts" className="text-neutral-700 sm:pb-6 sm:align-left cursor-pointer">← All posts</a>
+              <Link href="/posts" className="text-neutral-700 sm:pb-6 sm:align-left cursor-pointer">← All posts</Link>
             </div>
           </dd>
           <dt className="list-title">
