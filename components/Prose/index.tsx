@@ -1,3 +1,9 @@
+const Header = ({ level, children, ...props }) => {
+  const id = children.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
+  const Tag = `h${level}`;
+  return <Tag id={id} {...props}>{children}</Tag>;
+};
+
 export const mdxComponents = {
   a: (props) => (
     <a className="link" target="_blank" rel="noopener noreferrer" {...props} />
@@ -8,4 +14,10 @@ export const mdxComponents = {
       {props.children}
     </div>
   ),
+  h1: (props) => <Header level={1} {...props} />,
+  h2: (props) => <Header level={2} {...props} />,
+  h3: (props) => <Header level={3} {...props} />,
+  h4: (props) => <Header level={4} {...props} />,
+  h5: (props) => <Header level={5} {...props} />,
+  h6: (props) => <Header level={6} {...props} />,
 };

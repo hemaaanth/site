@@ -247,6 +247,21 @@ a[href^="mailto:"] {
     @apply pt-1;
   }
 
+  .sidebar {
+    @apply font-sans;
+    @apply block;
+    @apply text-sm;
+    @apply text-neutral-500 dark:text-silver-dark;
+    @apply [font-variation-settings:'opsz'_14];
+    @apply slashed-zero tabular-nums;
+    @apply mb-6
+  }
+
+  .toc {
+    @apply mt-0;
+    @apply p-0;
+  }
+
   .time {
     @apply font-sans;
     @apply block;
@@ -283,6 +298,10 @@ a[href^="mailto:"] {
 
   .list-content {
     @apply col-span-12 sm:col-span-8;
+  }
+
+  .list-sticky {
+    @apply sticky top-4;
   }
 
   .island {
