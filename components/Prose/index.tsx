@@ -1,3 +1,8 @@
+interface HeaderProps {
+  level: number;
+  children: React.ReactNode;
+}
+
 const Header = ({ level, children, ...props }) => {
   const id = children.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
   const Tag = `h${level}`;
