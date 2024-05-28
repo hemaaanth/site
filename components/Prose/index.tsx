@@ -12,7 +12,12 @@ export const mdxComponents = {
   ),
 
   Note: (props) => (
-    <div className="mb-5 rounded border border-gray-200  bg-gray-50 p-4 text-sm [font-variation-settings:'opsz'_14] dark:border-neutral-800 dark:bg-neutral-900">
+    <div className="mb-5 rounded border border-gray-200 p-4 pb-3 dark:border-neutral-800 ">
+      {props.children}
+    </div>
+  ),
+  Aside: (props) => (
+    <div className="prose-p:text-neutral-600">
       {props.children}
     </div>
   ),
