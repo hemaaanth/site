@@ -58,6 +58,7 @@ module.exports = {
       },
       maxWidth: {
         main: "46rem",
+        "wide-main": "62rem",
       },
       width: {
         main: "46rem",

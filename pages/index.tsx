@@ -57,10 +57,10 @@ export async function getStaticProps() {
     const { data } = matter(fileContents);
 
     return {
-      title: data.title,
-      date: data.date,
+      title: data.title || 'Untitled',
+      date: data.date || 'Untitled',
       slug: filename.replace(/\.mdx?$/, ''),
-      status: data.status,
+      status: data.status || 'Untitled',
     };
   });
 

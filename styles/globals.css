@@ -300,6 +300,10 @@ a[href^="mailto:"] {
     @apply col-span-12 sm:col-span-8;
   }
 
+  .list-content-wide {
+    @apply col-span-12 sm:col-span-12;
+  }
+
   .list-sticky {
     @apply sticky top-4;
   }
@@ -332,7 +336,7 @@ a[href^="mailto:"] {
     @apply prose-headings:font-normal prose-headings:[font-variation-settings:'wght'_500];
     @apply prose-strong:font-normal prose-strong:[font-variation-settings:'wght'_500];
     @apply prose-em:not-italic prose-em:underline prose-em:decoration-neutral-300 prose-em:decoration-wavy dark:prose-em:decoration-neutral-700;
-    @apply prose-code:rounded prose-code:font-normal prose-code:text-neutral-800 dark:prose-code:text-silver-dark;
+    @apply prose-code:rounded prose-code:font-normal prose-code:text-neutral-800 dark:prose-code:text-silver-dark prose-code:px-1 prose-code:py-1 prose-code:bg-gray-800;
     @apply prose-pre:overflow-auto prose-pre:whitespace-pre prose-pre:border prose-pre:border-neutral-200 prose-pre:bg-transparent prose-pre:p-4 prose-pre:text-sm dark:prose-pre:border-neutral-900 sm:prose-pre:-ml-4 sm:prose-pre:-mr-4;
     @apply prose-img:rounded-lg;
     @apply prose-hr:my-6 prose-hr:h-[2px] prose-hr:border-none prose-hr:bg-neutral-200 dark:prose-hr:bg-neutral-900 sm:prose-hr:my-10;
