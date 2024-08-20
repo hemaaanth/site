@@ -22,10 +22,10 @@ const postsDirectory = path.join(process.cwd(), 'pages/posts/content/');
 
 export default function Post(props) {
   const router = useRouter();
-  const { title, date, meta, tldr, mdxSource, headers, readingTime} = props;
+  const { title, date, meta, tldr, mdxSource, headers, readingTime, layout} = props;
   const slug = router.query.slug;
   const relativeUrl = `/posts/${slug}`;
-  const allPostsUrl = `${baseUrl}/posts`; // Replace `homeUrl` with your actual base URL if it's defined elsewhere
+  const allPostsUrl = `${baseUrl}/posts`;
   const url = `${baseUrl}${relativeUrl}`;
   console.log(`${baseUrl}/api/og?title=${encodeURIComponent(title)}`)
   const [activeSection, setActiveSection] = useState('');
@@ -73,7 +73,7 @@ export default function Post(props) {
             </LinkShare>
         </div>
         <dl className="list-container">
-          <dd className="list-content">
+          <dd className={layout === 'wide' ? 'list-content-wide' : 'list-content'}>
             <div className="prose-custom">
             <p className="text-neutral-700">{readingTime} minute(s)</p>
 
@@ -84,33 +84,39 @@ export default function Post(props) {
               <Link href="/posts" className="text-neutral-700 sm:pb-6 sm:align-left cursor-pointer">← All posts</Link>
             </div>
           </dd>
-          <dt className="list-title">
-            <div className="list-sticky">
-            <h3 className="pb-1">Table of Contents</h3>
-              <ul className="sidebar toc w-full">
-                {headers.map((header, index) => {
-                  const slug = header.text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
-                  return (
-                    <li key={index} className={`leading-6 truncate ${activeSection === slug ? 'text-white' : ''}`} style={{ marginLeft: `${header.depth * 1-1}rem` }}>
-                      <a href={`#${slug}`}>
-                        {header.text}
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            <h3>Date</h3>
-            <p>
-              <time className="time" dateTime={date}>
-                {formatDate(date, false)}
-              </time>
-            </p>
-            <h3>Tl;dr</h3>
-            <p className="sidebar">{tldr}</p>
-            <h3>Meta</h3>
-            <p className="sidebar">{meta}</p>
-            </div>
-          </dt>
+          {layout !== 'wide' && (
+            <dt className="list-title">
+              <div className="list-sticky">
+              <h3 className="pb-1">Table of Contents</h3>
+                <ul className="sidebar toc w-full">
+                  {headers.map((header, index) => {
+                    const slug = header.text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
+                    return (
+                      <li key={index} className={`leading-6 truncate ${activeSection === slug ? 'text-white' : ''}`} style={{ marginLeft: `${header.depth * 1-1}rem` }}>
+                        <a href={`#${slug}`}>
+                          {header.text}
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              <h3>Date</h3>
+              <p>
+                <time className="time" dateTime={date}>
+                  {formatDate(date, false)}
+                </time>
+              </p>
+              <h3>Tl;dr</h3>
+              <p className="sidebar">{tldr}</p>
+              {meta && (
+                <>
+                  <h3>Meta</h3>
+                  <p className="sidebar">{meta}</p>
+                </>
+              )}
+              </div>
+            </dt>
+          )}
         </dl>
       </Main>
     </>
@@ -133,6 +139,7 @@ export const getStaticProps = async (context) => {
   const words = content.trim().split(/\s+/).length; // getting wordcount / reading time
   const readingSpeed = 200;
   const readingTime = Math.ceil(words / readingSpeed);
+  const layout = frontMatter.layout || 'default';
 
   while ((match = headerRegex.exec(content)) !== null) {
     let text = match[2].trim();
@@ -145,17 +152,24 @@ export const getStaticProps = async (context) => {
     headers.push({ depth, text });
   }
 
+  // Adjust header depth relative to the minimum depth found
   headers = headers.map(header => ({
     ...header,
     depth: header.depth - minDepth + 1
   }));
+
+  // Filter headers based on the optional 'depth' variable from front matter
+  const maxDepth = frontMatter.depth || Infinity; // Use all headers if 'depth' is not specified
+  headers = headers.filter(header => header.depth <= maxDepth);
 
   return {
     props: {
       ...frontMatter,
       mdxSource,
       headers,
-      readingTime
+      layout,
+      readingTime,
+      isDraft: frontMatter.status === 'draft'
     },
   };
 };
