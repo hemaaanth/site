@@ -329,6 +329,7 @@ Oracles provide the critical function of providing external, offchain data to on
 
 Key factors to consider:
 - `CPRSGD`
+- <u>Push vs. pull</u>: Oracles can be either push (eg. RedStone, Chainlink) or pull based (eg. Pyth), and they have different tradeoffs. Typically, push-based oracles are used in situations where prices don't need to be updated as frequently (eg. lending protocols), while pull-based oracles are used when prices need to be pushed on chain as often as possible (eg. perpetuatals). Depending on the types of applications you're looking to onboard onto your network (and if they have any predispositions to a specific oracle provider), you can usually narrow down the options significantly.
 - <u>Accuracy</u>: Different oracles have different methods for ensuring data accuracy, such as multi-source aggregation, cryptographic proofs, and validation mechanisms. Ensure the oracle's methodology aligns with your project's needs.
 - <u>Granularity</u>: The level of granularity can be further broken down into refresh rate (ie. how often a given data feed is refreshed), sensitivity (ie. the thresholds that must be exceeded in order to trigger an on-chain refresh), and precision (ie. to how many decimals feeds report exchange rates and other data).
 - <u>Breadth</u>: The number of "off the shelf" feeds that are available by integrating a given network. While additional breadth is always good, usage likely follows the pareto principle where a surprisingly small number of data feeds (my finger-to-the-wind guess is under 100) can cover 80%+ of developer needs.
@@ -414,7 +415,7 @@ The title really says it all - these are the wallets you know and love and use. 
 #### APIs
 
 Beyond these above categories, there's a significant number of other dev tools that can help bolster your ecosystem. This is an ever-expanding list as infrastructure investment in crypto continues to flow; some of the most frequent names listed down below:
-- [Noves](https://noves.xyz/?ref=hemanth
+- [Noves](https://noves.xyz/?ref=hemanth)
 - [SimpleHash](https://simplehash.com/?ref=hemanth)
 
 Defining a decision criteria for each of these beyond `CPRSGD` is out of scope for this guide, especially as these are typically "1-of-1" decisions that deeply rely on your chain's specific context.
@@ -499,6 +500,7 @@ This guide has been a heroic effort with significant contributions from many peo
 - Ella @ [Gelato](https://www.gelato.network/?ref=hemanth)
 - Dan @ [Nirvana](https://www.nirvanalabs.io/?ref=hemanth)
 - Will @ [Parsec](https://parsec.fi/landing/explorer-as-a-service?ref=hemanth)
+- Matt @ [RedStone](https://redstone.finance/?ref=hemanth)
 - Jaack @ [Routescan](https://routescan.io/?ref=hemanth)
 - Ryan @ [Xai](https://www.xai.network/?ref=hemanth)
 
