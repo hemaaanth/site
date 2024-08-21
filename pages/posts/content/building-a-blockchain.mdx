@@ -81,7 +81,7 @@ Given these pros and cons, <u>the first step in launching a blockchain is defini
 
 ### Mission
 
-Your mission can is the one-liner on what you're hoping to accomplish. For example...
+Your mission is the one-liner on what you're hoping to accomplish. For example...
 
 - to solve a sector-specific need that isn't met by existing chains (eg. enforcement of NFT royalties and creator earnings at the protocol level)
 - to solve for a functionality not addressed by other blockchains (eg. 10K+ transactions per second for trading applications and other high-throughput use cases)
@@ -329,7 +329,7 @@ Oracles provide the critical function of providing external, offchain data to on
 
 Key factors to consider:
 - `CPRSGD`
-- <u>Push vs. pull</u>: Oracles can be either push (eg. RedStone, Chainlink) or pull based (eg. Pyth), and they have different tradeoffs. Typically, push-based oracles are used in situations where prices don't need to be updated as frequently (eg. lending protocols), while pull-based oracles are used when prices need to be pushed on chain as often as possible (eg. perpetuatals). Depending on the types of applications you're looking to onboard onto your network (and if they have any predispositions to a specific oracle provider), you can usually narrow down the options significantly.
+- <u>Push vs. pull</u>: Oracles can be either push (eg. RedStone, Chainlink) or pull based (eg. Pyth), and they have different tradeoffs. Typically, push-based oracles are used in situations where prices don't need to be updated as frequently (eg. lending protocols), while pull-based oracles are used when prices need to be pushed on chain as often as possible (eg. perpetuals). Depending on the types of applications you're looking to onboard onto your network (and if they have any predispositions to a specific oracle provider), you can usually narrow down the options significantly.
 - <u>Accuracy</u>: Different oracles have different methods for ensuring data accuracy, such as multi-source aggregation, cryptographic proofs, and validation mechanisms. Ensure the oracle's methodology aligns with your project's needs.
 - <u>Granularity</u>: The level of granularity can be further broken down into refresh rate (ie. how often a given data feed is refreshed), sensitivity (ie. the thresholds that must be exceeded in order to trigger an on-chain refresh), and precision (ie. to how many decimals feeds report exchange rates and other data).
 - <u>Breadth</u>: The number of "off the shelf" feeds that are available by integrating a given network. While additional breadth is always good, usage likely follows the pareto principle where a surprisingly small number of data feeds (my finger-to-the-wind guess is under 100) can cover 80%+ of developer needs.
