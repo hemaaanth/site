@@ -25,6 +25,11 @@ export default function Footer() {
               </Link>
               </li>
               <li>
+              <Link href="/places" className="link-fade">
+                Places
+              </Link>
+              </li>
+              <li>
               <Link href="/links" className="link-fade">
                 Links
               </Link>
