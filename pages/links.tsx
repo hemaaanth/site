@@ -66,6 +66,14 @@ export default function Links() {
                                 </time><br />
                             </div>
                             <div>
+                                <LinkExternal href="https://www.linkedin.com/in/hemanthsoni/">
+                                    LinkedIn
+                                </LinkExternal>
+                                <time className="time">
+                                    @hemanthsoni
+                                </time><br />
+                            </div>
+                            <div>
                                 <LinkExternal href="mailto:hemanth@goldsky.com">
                                     Email
                                 </LinkExternal>
@@ -107,8 +115,16 @@ export default function Links() {
                                 </time><br />
                             </div>
                             <div>
+                                <LinkExternal href="https://crypto.clickhouse.com">
+                                    Open Solana data
+                                </LinkExternal>
+                                <time className="time">
+                                    CryptoHouse
+                                </time><br />
+                            </div>
+                            <div>
                                 <LinkExternal href="https://indexed.xyz">
-                                    Open Datasets
+                                    Open EVM + Arweave data
                                 </LinkExternal>
                                 <time className="time">
                                     indexed.xyz
