@@ -7,8 +7,10 @@ import { LinkExternal } from "../components/Links";
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { getCurrentlyReading } from "../lib/literal";
+import { getRecentlyPlayed } from "../lib/spotify";
 
-export default function Home( {recentPosts} ) {
+export default function Home( {recentPosts, currentlyReading, recentlyPlayed} ) {
   return (
     <>
       <SEO
@@ -39,15 +41,47 @@ export default function Home( {recentPosts} ) {
             </h3>
           </dt>
           <dd className="list-content">
-          <div><LinkExternal href="https://literal.club/book/the-nickel-boys-fiv1f">The Nickel Boys</LinkExternal> by Colson Whitehead</div>
+            {currentlyReading.length > 0 ? (
+              currentlyReading.map((book, index) => (
+                <div key={book.url} className={index !== 0 ? "pt-2" : ""}>
+                  <LinkExternal href={book.url}>
+                    {book.title}
+                  </LinkExternal> by {book.author}
+                </div>
+              ))
+            ) : (
+              <div>Not currently reading anything</div>
+            )}
           </dd>
         </dl>
+        <dl className="list-container">
+  <dt className="list-title">
+    <h3 className="text-neutral-500 dark:text-silver-dark">
+      Listening
+    </h3>
+  </dt>
+  <dd className="list-content">
+    {recentlyPlayed.length > 0 ? (
+      recentlyPlayed.map((track, index) => (
+        <div key={track.url} className={`${index !== 0 ? "pt-2" : ""} truncate`}>
+          <LinkExternal href={track.url}>
+            {track.title}
+          </LinkExternal>
+          <span className="truncate"> by {track.artist}</span>
+        </div>
+      ))
+    ) : (
+      <div>No recently played tracks</div>
+    )}
+  </dd>
+</dl>
       </Main>
     </>
   );
 }
 
 export async function getStaticProps() {
+  console.log('Starting getStaticProps...');
   const postsDirectory = path.join(process.cwd(), 'pages/posts/content');
   const filenames = fs.readdirSync(postsDirectory);
 
@@ -70,9 +104,26 @@ export async function getStaticProps() {
   // Only keep the three most recent posts
   const recentPosts = posts.slice(0, 5);
 
+  // Add reading data
+  console.log('Fetching currently reading...');
+  const currentlyReading = await getCurrentlyReading(process.env.LITERAL_USER_ID);
+  console.log('Currently reading data:', currentlyReading);
+
+  // Add recently played tracks
+  console.log('Starting Spotify fetch...');
+  console.log('Spotify env vars present:', {
+    clientId: !!process.env.SPOTIFY_CLIENT_ID,
+    clientSecret: !!process.env.SPOTIFY_CLIENT_SECRET,
+    refreshToken: !!process.env.SPOTIFY_REFRESH_TOKEN,
+  });
+  const recentlyPlayed = await getRecentlyPlayed();
+  console.log('Spotify recently played data:', recentlyPlayed);
+
   return {
     props: {
       recentPosts,
+      currentlyReading,
+      recentlyPlayed,
     },
   };
 }
