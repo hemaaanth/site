@@ -125,5 +125,6 @@ export async function getStaticProps() {
       currentlyReading,
       recentlyPlayed,
     },
+    revalidate: 3600, // update every hour
   };
 }
