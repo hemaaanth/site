@@ -44,7 +44,7 @@ export default function Place({ title, year, places }) {
           </dd>
           <dt className="list-title">
             <div className="list-sticky">
-              <h3>Year visited</h3>
+              <h3>Last visited</h3>
               <p className="sidebar">{year}</p>
             </div>
           </dt>
