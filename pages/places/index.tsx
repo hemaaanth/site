@@ -9,6 +9,7 @@ import matter from 'gray-matter';
 import Badge from "../../components/Badge";
 
 type PlaceStatus = 'published' | 'WIP' | 'upcoming';
+const placesDirectory = path.join(process.cwd(), 'pages/places/content');
 
 interface Place {
   slug: string;
@@ -59,30 +60,32 @@ export default function Places({ places }: { places: Place[] }) {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const placesDirectory = path.join(process.cwd(), 'pages/places/content');
-  const filenames = fs.readdirSync(placesDirectory);
-  const allPlaces = filenames.map(filename => {
-  const filePath = path.join(placesDirectory, filename);
-  const fileContents = fs.readFileSync(filePath, 'utf8');
-  const { data } = matter(fileContents);
-  return {
-  title: data.title,
-  year: data.date,
-  slug: filename.replace(/\.mdx?$/, ''),
-  status: (data.status as PlaceStatus) || 'published',
-  rank: data.rank || 0, // Default to 0 if not specified
-  };
+  const fileNames = fs.readdirSync(placesDirectory);
+  const places = fileNames.map((fileName) => {
+    const slug = fileName.replace(/\.mdx$/, '');
+    const fullPath = path.join(placesDirectory, fileName);
+    const fileContents = fs.readFileSync(fullPath, 'utf8');
+    const { data } = matter(fileContents);
+    
+    return {
+      slug,
+      title: data.title,
+      year: new Date(data.date).getFullYear().toString(),
+      status: data.status as PlaceStatus,
+    };
   });
-  // Sort places by year (descending) and then by rank (descending)
-  allPlaces.sort((a, b) => {
-  if (a.year !== b.year) {
-  return b.year.localeCompare(a.year);
-  }
-  return b.rank - a.rank;
+
+  // Sort places by rank if available, then by date
+  places.sort((a, b) => {
+    if (a.year !== b.year) {
+      return b.year.localeCompare(a.year);
+    }
+    return 0;
   });
+
   return {
-  props: {
-  places: allPlaces,
-  },
+    props: {
+      places,
+    },
   };
-  };
+};
