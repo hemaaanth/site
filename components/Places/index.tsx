@@ -1,9 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FaUtensils, FaGlassMartini, FaLandmark, FaStore, FaBed, FaCoffee, FaBriefcase, FaBeer } from 'react-icons/fa';
+import { FaUtensils, FaGlassMartini, FaLandmark, FaStore, FaBed, FaCoffee, FaBriefcase, FaBeer, FaWineGlassAlt, FaGlassMartiniAlt } from 'react-icons/fa';
 
-export type PlaceType = 'food' | 'drink' | 'activity' | 'sight' | 'store' | 'hotel' | 'coffee' | 'work' | 'party' | 'landmark';
+export type PlaceType = 'food' | 'beer' | 'cocktails' | 'wine' | 'activity' | 'sight' | 'store' | 'hotel' | 'coffee' | 'work' | 'party' | 'landmark';
 
 interface PlaceItemProps {
     title: string;
@@ -16,7 +16,9 @@ interface PlaceItemProps {
 
 const typeIcons = {
   food: FaUtensils,
-  drink: FaGlassMartini,
+  beer: FaBeer,
+  cocktails: FaGlassMartiniAlt,
+  wine: FaWineGlassAlt,
   activity: FaLandmark,
   sight: FaLandmark,
   shop: FaStore,
