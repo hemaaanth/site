@@ -16,6 +16,7 @@ interface Place {
   title: string;
   year: string;
   status: PlaceStatus;
+  rank?: number;
 }
 
 export default function Places({ places }: { places: Place[] }) {
@@ -72,16 +73,25 @@ export const getStaticProps: GetStaticProps = async () => {
       title: data.title,
       year: new Date(data.date).getFullYear().toString(),
       status: data.status as PlaceStatus,
+      rank: data.rank as number,
     };
   });
 
-  // Sort places by rank if available, then by date
-  places.sort((a, b) => {
-    if (a.year !== b.year) {
-      return b.year.localeCompare(a.year);
-    }
-    return 0;
-  });
+// In your sorting logic:
+places.sort((a, b) => {
+  // First sort by year
+  if (a.year !== b.year) {
+    return b.year.localeCompare(a.year);
+  }
+  // Then sort by rank if both places have ranks
+  if (a.rank !== undefined && b.rank !== undefined) {
+    return a.rank - b.rank;  // Lower rank number shows first
+  }
+  // Places with rank come before places without rank
+  if (a.rank !== undefined) return -1;
+  if (b.rank !== undefined) return 1;
+  return 0;
+});
 
   return {
     props: {
