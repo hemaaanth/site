@@ -14,11 +14,25 @@ export const literalClient = new ApolloClient({
 export async function getCurrentlyReading(profileId: string) {
   const { data } = await literalClient.query({
     query: gql`
-      query booksByReadingStateAndProfile($profileId: String!) {
-        booksByReadingStateAndProfile(
-          limit: 3  # Increased limit to show multiple books
+      query booksReadingAndCompleted($profileId: String!) {
+        currentlyReading: booksByReadingStateAndProfile(
+          limit: 3
           offset: 0
           readingStatus: IS_READING
+          profileId: $profileId
+        ) {
+          slug
+          title
+          publishedDate
+          cover
+          authors {
+            name
+          }
+        }
+        recentlyCompleted: booksByReadingStateAndProfile(
+          limit: 1
+          offset: 0
+          readingStatus: FINISHED
           profileId: $profileId
         ) {
           slug
@@ -36,11 +50,24 @@ export async function getCurrentlyReading(profileId: string) {
     },
   });
 
-  if (!data.booksByReadingStateAndProfile?.length) return [];
-  
-  return data.booksByReadingStateAndProfile.map(book => ({
-    title: book.title,
-    author: book.authors[0]?.name,
-    url: `https://literal.club/book/${book.slug}`,
-  }));
+  const currentlyReading = data.currentlyReading?.length
+    ? data.currentlyReading.map(book => ({
+        title: book.title,
+        author: book.authors[0]?.name,
+        url: `https://literal.club/book/${book.slug}`,
+      }))
+    : [];
+
+  const lastCompleted = data.recentlyCompleted?.length
+    ? {
+        title: data.recentlyCompleted[0].title,
+        author: data.recentlyCompleted[0].authors[0]?.name,
+        url: `https://literal.club/book/${data.recentlyCompleted[0].slug}`,
+      }
+    : null;
+
+  return {
+    currentlyReading,
+    lastCompleted,
+  };
 }
