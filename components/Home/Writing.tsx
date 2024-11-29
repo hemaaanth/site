@@ -12,7 +12,7 @@ export default function Writing({ posts }) {
       </dt>
       <dd className="list-content">
         {posts.map((post) => (
-          <div key={post.slug} className={`pb-2 last-of-type:pb-0 ${post.status === 'draft' ? 'opacity-20 dark:opacity-20' : ''}`}>
+          <div key={post.slug} className={`pb-2 last-of-type:pb-0 ${post.status === 'draft' ? 'opacity-30 dark:opacity-30' : ''}`}>
             {post.status === 'draft' ? (
               // For drafts, display the title without a link and with the "WIP" badge
               <div className="inline-flex items-center gap-1">
