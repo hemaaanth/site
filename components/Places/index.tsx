@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FaUtensils, FaGlassMartini, FaLandmark, FaStore, FaBed, FaCoffee, FaBriefcase, FaBeer, FaWineGlassAlt, FaGlassMartiniAlt, FaStar } from 'react-icons/fa';
+import { FaUtensils, FaGlassMartini, FaLandmark, FaStore, FaBed, FaCoffee, FaBriefcase, FaBeer, FaWineGlassAlt, FaGlassMartiniAlt, FaStar, FaPersonBooth } from 'react-icons/fa';
 
 export type PlaceType = 'food' | 'beer' | 'cocktails' | 'wine' | 'activity' | 'sight' | 'store' | 'hotel' | 'coffee' | 'work' | 'party' | 'landmark' | 'favourite';
 
@@ -25,7 +25,7 @@ const typeIcons = {
   hotel: FaBed,
   coffee: FaCoffee,
   work: FaBriefcase,
-  party: FaBeer,
+  party: FaPersonBooth,
   favourite: FaStar,
 };
 
