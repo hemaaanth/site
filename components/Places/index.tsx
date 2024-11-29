@@ -19,7 +19,7 @@ const typeIcons = {
   drink: FaGlassMartini,
   activity: FaLandmark,
   sight: FaLandmark,
-  store: FaStore,
+  shop: FaStore,
   hotel: FaBed,
   coffee: FaCoffee,
   work: FaBriefcase,

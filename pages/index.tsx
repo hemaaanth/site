@@ -65,7 +65,7 @@ export default function Home({
                   >
                     <LinkExternal href={book.url}>{book.title}</LinkExternal>
                     <span className="truncate"> by {book.author}</span>
-                    <Badge>DONE</Badge>
+                    <Badge>READING</Badge>
                   </div>
                 ))}
                 {lastCompleted && (
