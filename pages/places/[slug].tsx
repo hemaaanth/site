@@ -8,6 +8,7 @@ import PlaceItem, { PlaceType } from "../../components/Places";
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import Map from "../../components/Map";
 
 const placesDirectory = path.join(process.cwd(), "pages/places/content/");
 
@@ -19,6 +20,10 @@ export default function Place({ title, year, places }) {
 
   // Add state and filter logic
   const [selectedTypes, setSelectedTypes] = useState<PlaceType[]>([]);
+  const [hoveredPlace, setHoveredPlace] = useState(null);
+  const [placesWithCoordinates, setPlacesWithCoordinates] = useState([]);
+  const [allPlacesWithCoordinates, setAllPlacesWithCoordinates] = useState([]);
+  const [showUserLocation, setShowUserLocation] = useState(false); // New state for user location toggle
 
   // Get unique types from all places
   const allTypes = Array.from(
@@ -26,8 +31,10 @@ export default function Place({ title, year, places }) {
   ).sort();
 
   // Filter places based on selected types
-  const filteredPlaces = places.filter((place) =>
-    selectedTypes.every((type) => place.types.includes(type)),
+  const filteredPlaces = places.filter(
+    (place) =>
+      selectedTypes.length === 0 ||
+      selectedTypes.every((type) => place.types.includes(type)),
   );
 
   // Update URL when filters change
@@ -48,6 +55,39 @@ export default function Place({ title, year, places }) {
       setSelectedTypes(urlTypes);
     }
   }, [router.isReady]);
+
+  // Fetch coordinates for all places
+  useEffect(() => {
+    const fetchCoordinates = async () => {
+      const placesWithCoords = await Promise.all(
+        places.map(async (place) => {
+          const response = await fetch(
+            `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+              place.location,
+            )}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`,
+          );
+          const data = await response.json();
+          return {
+            ...place,
+            coordinates: data.features[0]?.center || null,
+          };
+        }),
+      );
+      setAllPlacesWithCoordinates(placesWithCoords);
+    };
+
+    fetchCoordinates();
+  }, [places]);
+
+  // Update filtered places whenever filters change
+  useEffect(() => {
+    const filtered = allPlacesWithCoordinates.filter(
+      (place) =>
+        selectedTypes.length === 0 ||
+        selectedTypes.every((type) => place.types.includes(type)),
+    );
+    setPlacesWithCoordinates(filtered);
+  }, [selectedTypes, allPlacesWithCoordinates]);
 
   return (
     <>
@@ -70,7 +110,14 @@ export default function Place({ title, year, places }) {
           <dd className="list-content">
             {filteredPlaces.length > 0 ? (
               filteredPlaces.map((place, index) => (
-                <PlaceItem key={index} {...place} />
+                <PlaceItem
+                  key={index}
+                  {...place}
+                  onMouseEnter={() =>
+                    setHoveredPlace(placesWithCoordinates[index])
+                  }
+                  onMouseLeave={() => setHoveredPlace(null)}
+                />
               ))
             ) : (
               <div className="prose-custom text-neutral-500 mt-4">
@@ -98,8 +145,27 @@ export default function Place({ title, year, places }) {
           </dd>
           <dt className="list-title">
             <div className="list-sticky">
-              <h3>Last visited</h3>
-              <p className="sidebar">{year}</p>
+              <div className="mt-8 mb-8">
+                <h3>Map</h3>
+                <div className="mt-2">
+                  <Map
+                    locations={placesWithCoordinates}
+                    hoveredLocation={hoveredPlace}
+                    showUserLocation={showUserLocation} // Pass the toggle state to the Map component
+                  />
+                </div>
+                <span
+                  onClick={() => setShowUserLocation((prev) => !prev)}
+                  className="mt-2 text-sm text-neutral-400 cursor-pointer hover:underline"
+                >
+                  {showUserLocation ? "Hide my location" : "Show my location"}
+                </span>
+              </div>
+
+              <div className="mt-8 mb-8">
+                <h3>Last visited</h3>
+                <p className="sidebar">{year}</p>
+              </div>
 
               <div className="mt-8">
                 <h3>Filter(s)</h3>
