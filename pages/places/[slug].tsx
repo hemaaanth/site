@@ -9,6 +9,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import Map from "../../components/Map";
+import { shuffle } from "lodash"; // Import lodash's shuffle function
 
 const placesDirectory = path.join(process.cwd(), "pages/places/content/");
 
@@ -145,7 +146,6 @@ export default function Place({ title, year, places }) {
           </dd>
           <dt className="list-title">
             <div className="list-sticky">
-              <div className="mt-8 mb-8">
                 <h3>Map</h3>
                 <div className="mt-2">
                   <Map
@@ -156,11 +156,11 @@ export default function Place({ title, year, places }) {
                 </div>
                 <span
                   onClick={() => setShowUserLocation((prev) => !prev)}
-                  className="mt-2 text-sm text-neutral-400 cursor-pointer hover:underline"
+                  className="mt-2 text-sm text-neutral-300 cursor-pointer hover:underline"
                 >
                   {showUserLocation ? "Hide my location" : "Show my location"}
                 </span>
-              </div>
+                <p className="text-sm text-neutral-500">Only displays user pin within bounds of city map.</p>
 
               <div className="mt-8 mb-8">
                 <h3>Last visited</h3>
@@ -182,8 +182,8 @@ export default function Place({ title, year, places }) {
                       }}
                       className={`cursor-pointer text-sm ${
                         selectedTypes.includes(type as PlaceType)
-                          ? "text-neutral-800 dark:text-white font-medium underline"
-                          : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-white"
+                          ? "text-neutral-800 dark:text-white underline hover:underline"
+                          : "text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-white hover:underline"
                       }`}
                     >
                       {(type as string).charAt(0).toUpperCase() +
@@ -229,11 +229,14 @@ export const getStaticProps: GetStaticProps = async (context) => {
       };
     });
 
+  // Shuffle places server-side
+  const shuffledPlaces = shuffle(places);
+
   return {
     props: {
       title: data.title,
       year: new Date(data.date).getFullYear().toString(),
-      places,
+      places: shuffledPlaces, // Pass the shuffled places to the component
     },
   };
 };
