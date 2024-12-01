@@ -64,8 +64,8 @@ export default function Post(props) {
           }} 
       /> 
       <Main>
-        <div className="flex w-full flex-col justify-between sm:flex-row"> 
-          <header><h1 className="text-xl text-neutral-800 [font-variation-settings:'opsz'_32,_'wght'_500] dark:text-white sm:pb-6 sm:text-xl">
+        <div className="flex w-full flex-col justify-between sm:flex-row sm:mb-0 mb-4"> 
+          <header><h1 className="text-xl text-neutral-800 [font-variation-settings:'opsz'_32,_'wght'_500] dark:text-white sm:pb-6 sm:text-xl sm:mb-0 mb-4">
             {title}
           </h1></header>
           <LinkShare title={title} url={url}>
@@ -87,6 +87,7 @@ export default function Post(props) {
           {layout !== 'wide' && (
             <dt className="list-title">
               <div className="list-sticky">
+              <div className="hidden sm:block">
               <h3 className="pb-1">Table of Contents</h3>
                 <ul className="sidebar toc w-full">
                   {headers.map((header, index) => {
@@ -100,6 +101,8 @@ export default function Post(props) {
                     );
                   })}
                 </ul>
+              </div>
+              <div className="mt-8 mb-8">
               <h3>Date</h3>
               <p>
                 <time className="time" dateTime={date}>
@@ -114,6 +117,7 @@ export default function Post(props) {
                   <p className="sidebar">{meta}</p>
                 </>
               )}
+              </div>
               </div>
             </dt>
           )}
