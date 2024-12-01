@@ -411,12 +411,3 @@ a[href^="mailto:"] {
 .mapboxgl-control-container {
   display: none !important;
 }
-
-.mapboxgl-popup-tip,
-.mapboxgl-popup-close-button {
-  display: none;
-}
-
-.mapboxgl-popup-content {
-  @apply rounded border border-transparent bg-neutral-800 px-3 py-3 font-sans text-base font-medium text-silver [font-variation-settings:'opsz'_15,_'wght'_500] dark:border-white/[.08] dark:bg-black/[.96] dark:text-silver !important;
-}

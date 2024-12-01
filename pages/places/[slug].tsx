@@ -102,7 +102,7 @@ export default function Place({ title, year, places }) {
       <Main>
         <div className="flex w-full flex-col justify-between sm:flex-row">
           <header>
-            <h1 className="text-xl text-neutral-800 [font-variation-settings:'opsz'_32,_'wght'_500] dark:text-white sm:pb-6 sm:text-xl">
+            <h1 className="text-xl text-neutral-800 [font-variation-settings:'opsz'_32,_'wght'_500] dark:text-white sm:pb-6 sm:mb-0 sm:text-xl mb-4">
               {title}
             </h1>
           </header>
@@ -146,6 +146,7 @@ export default function Place({ title, year, places }) {
           </dd>
           <dt className="list-title">
             <div className="list-sticky">
+              <div className="hidden sm:block">
                 <h3>Map</h3>
                 <div className="mt-2">
                   <Map
@@ -160,7 +161,10 @@ export default function Place({ title, year, places }) {
                 >
                   {showUserLocation ? "Hide my location" : "Show my location"}
                 </span>
-                <p className="text-sm text-neutral-500">Only displays user pin within bounds of city map.</p>
+                <p className="text-sm text-neutral-500">
+                  Only shows pin if it is within bounds of the city map.
+                </p>
+              </div>
 
               <div className="mt-8 mb-8">
                 <h3>Last visited</h3>
