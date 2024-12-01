@@ -108,7 +108,7 @@ export default function Place({ title, year, places }) {
           </header>
         </div>
         <dl className="list-container">
-          <dd className="list-content">
+          <dd className="list-content sm:order-1 order-2">
             {filteredPlaces.length > 0 ? (
               filteredPlaces.map((place, index) => (
                 <PlaceItem
@@ -144,7 +144,7 @@ export default function Place({ title, year, places }) {
               </Link>
             </div>
           </dd>
-          <dt className="list-title">
+          <dt className="list-title sm:order-2 order-1">
             <div className="list-sticky">
               <div className="hidden sm:block">
                 <h3>Map</h3>
@@ -166,12 +166,12 @@ export default function Place({ title, year, places }) {
                 </p>
               </div>
 
-              <div className="mt-8 mb-8">
+              <div className="sm:mt-8 mt-4 mb-8">
                 <h3>Last visited</h3>
                 <p className="sidebar">{year}</p>
               </div>
 
-              <div className="mt-8">
+              <div className="mt-8 mb-8">
                 <h3>Filter(s)</h3>
                 <div className="flex flex-col gap-2 mt-2">
                   {allTypes.map((type) => (

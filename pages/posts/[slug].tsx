@@ -73,8 +73,8 @@ export default function Post(props) {
             </LinkShare>
         </div>
         <dl className="list-container">
-          <dd className={layout === 'wide' ? 'list-content-wide' : 'list-content'}>
-            <div className="prose-custom">
+        <dd className={`${layout === 'wide' ? 'list-content-wide' : 'list-content'} sm:order-1 order-2`}>
+        <div className="prose-custom">
             <p className="text-neutral-700">{readingTime} minute(s)</p>
 
             <MDXRemote {...mdxSource} components={{ ...mdxComponents, LinkExternal }} />
@@ -85,9 +85,8 @@ export default function Post(props) {
             </div>
           </dd>
           {layout !== 'wide' && (
-            <dt className="list-title">
+            <dt className="list-title sm:order-2 order-1">
               <div className="list-sticky">
-              <div className="hidden sm:block">
               <h3 className="pb-1">Table of Contents</h3>
                 <ul className="sidebar toc w-full">
                   {headers.map((header, index) => {
@@ -101,7 +100,6 @@ export default function Post(props) {
                     );
                   })}
                 </ul>
-              </div>
               <div className="mt-8 mb-8">
               <h3>Date</h3>
               <p>
