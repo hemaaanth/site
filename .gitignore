@@ -35,3 +35,6 @@ yarn-error.log*
 robots.txt
 sitemap.xml
 sitemap-*.xml
+
+# draft blog posts
+/pages/posts/drafts/
