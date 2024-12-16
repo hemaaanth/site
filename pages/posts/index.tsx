@@ -72,10 +72,13 @@ const draftsDirectory = path.join(process.cwd(), "pages/posts/drafts");
 
 export const getStaticProps = async () => {
   const contentFiles = fs.readdirSync(postsDirectory);
-  const draftFiles = fs.readdirSync(draftsDirectory);
+  
+  let draftFiles = [];
+  try {
+    draftFiles = fs.readdirSync(draftsDirectory);
+  } catch {}
 
   const posts = [
-    // Process content files
     ...contentFiles.map((filename) => {
       const filePath = path.join(postsDirectory, filename);
       const fileContents = fs.readFileSync(filePath, "utf8");
@@ -88,7 +91,6 @@ export const getStaticProps = async () => {
         status: "published",
       };
     }),
-    // Process draft files
     ...draftFiles.map((filename) => {
       const filePath = path.join(draftsDirectory, filename);
       const fileContents = fs.readFileSync(filePath, "utf8");
@@ -103,7 +105,6 @@ export const getStaticProps = async () => {
     }),
   ];
 
-  // Sort posts by date
   posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return {
