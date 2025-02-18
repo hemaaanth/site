@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  skipTrailingSlashRedirect: true, // Required for PostHog trailing slash API requests
   reactStrictMode: true,
   swcMinify: true,
   images: {
@@ -30,12 +31,19 @@ const nextConfig = {
 
     return config;
   },
-  async redirects() {
+  async rewrites() {
     return [
       {
-        source: "/projects/:path*",
-        destination: "https://fabe.github.io/projects/:path*",
-        permanent: false,
+        source: "/ingest/static/:path*",
+        destination: "https://us-assets.i.posthog.com/static/:path*",
+      },
+      {
+        source: "/ingest/:path*",
+        destination: "https://us.i.posthog.com/:path*",
+      },
+      {
+        source: "/ingest/decide",
+        destination: "https://us.i.posthog.com/decide",
       },
     ];
   },
