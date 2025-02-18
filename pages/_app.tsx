@@ -4,6 +4,10 @@ import { ApolloCache, ApolloProvider } from "@apollo/client";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import localFont from "next/font/local";
+import { useEffect } from 'react'
+import { Router } from 'next/router'
+import posthog from 'posthog-js'
+import { PostHogProvider } from 'posthog-js/react'
 
 const sansFont = localFont({
   src: "../public/inter.roman.var.woff2",
@@ -24,6 +28,24 @@ export default function MyApp({
   pageProps,
 }: AppProps<CustomPageProps>) {
 
+  useEffect(() => {
+    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
+      api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com',
+      person_profiles: 'always',
+      loaded: (posthog) => {
+        if (process.env.NODE_ENV === 'development') posthog.debug()
+      }
+    })
+
+    const handleRouteChange = () => posthog?.capture('$pageview')
+
+    Router.events.on('routeChangeComplete', handleRouteChange);
+
+    return () => {
+      Router.events.off('routeChangeComplete', handleRouteChange);
+    }
+  }, [])
+  
   return (
     <>
         <style jsx global>
@@ -33,7 +55,9 @@ export default function MyApp({
             }
           `}
         </style>
-        <Component {...pageProps} />
+        <PostHogProvider client={posthog}>
+          <Component {...pageProps} />
+        </PostHogProvider>
     </>
   );
 }

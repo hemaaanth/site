@@ -138,14 +138,7 @@ export async function getStaticProps() {
   const readingData = await getCurrentlyReading(process.env.LITERAL_USER_ID);
 
   // Add recently played tracks
-  console.log("Starting Spotify fetch...");
-  console.log("Spotify env vars present:", {
-    clientId: !!process.env.SPOTIFY_CLIENT_ID,
-    clientSecret: !!process.env.SPOTIFY_CLIENT_SECRET,
-    refreshToken: !!process.env.SPOTIFY_REFRESH_TOKEN,
-  });
   const recentlyPlayed = await getRecentlyPlayed();
-  console.log("Spotify recently played data:", recentlyPlayed);
 
   return {
     props: {
