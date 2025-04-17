@@ -2,6 +2,7 @@ import React from "react";
 import { Main } from "../components/Layouts";
 import { SEO } from "../components/SEO";
 import Writing from "../components/Home/Writing";
+import Tinkering from "../components/Home/Tinkering";
 import Link from "next/link";
 import { LinkExternal } from "../components/Links";
 import fs from "fs";
@@ -51,6 +52,7 @@ export default function Home({
           </dd>
         </dl>
         <Writing posts={recentPosts} />
+<Tinkering />
         <dl className="list-container">
           <dt className="list-title">
             <h3 className="text-neutral-500 dark:text-silver-dark">Reading</h3>

@@ -211,6 +211,18 @@ a[href^="mailto:"] {
 }
 
 @layer components {
+  .studio-list-title {
+    @apply col-span-12 sm:col-span-8 flex items-start pl-0 sm:pl-0;
+  }
+  .studio-list-content {
+    @apply col-span-12 sm:col-span-4 flex flex-col justify-start;
+  }
+  .studio-screenshot-placeholder {
+    @apply w-full aspect-[16/9] bg-gray-300 dark:bg-zinc-800;
+    min-height: 120px;
+    /* No border, no rounding, no max-width, no centering */
+  }
+
   .link {
     @apply !underline;
     @apply !decoration-1.5;
