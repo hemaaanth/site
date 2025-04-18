@@ -34,7 +34,7 @@ export default function Tinkering() {
           <div key={project.url} className="pb-4 last-of-type:pb-0">
             <div className="studio-list-title" />
             <div className="studio-list-content">
-              <LinkExternal href={project.url} className="font-medium text-neutral-700 dark:text-silver-dark">
+              <LinkExternal href={project.url}>
                 {project.title}
               </LinkExternal>
               <div className="pt-1 text-sm text-neutral-500 [font-variation-settings:'opsz'_14] dark:text-silver-dark">
