@@ -1,0 +1,83 @@
+---
+title: "On pricing a SaaS product from scratch"
+date: "2025-05-02"
+author: "Hemanth Soni"
+meta: "When I joined Goldsky one of my first tasks was to revamp our pricing strategy; this outlines the high-level thought process I went through."
+tldr: "Pricing strategies can be complicated, but aligning them with your company's values can make it easier to make the right choices."
+category: "blog"
+
+---
+
+## Context
+
+There's a seemingly infinite tree of options when it comes to pricing a SaaS product, especially a somewhat complex developer tool like Goldsky (where I work now).
+
+- What's the desired outcome? Penetration? Prestige? Value? Retention? Some hybrid of these and other outcome?
+- How do you get there?Do you price per seat? By usage? On a cost-plus basis? Simple flat rates? Per feature? Or any of the infinite mix of permutations of some of the above?
+
+Considering the pros and cons of each alongside their implementation effort can easily get overwhelming, and it's not obvious that any one approach to pricing is objectively better than another. And you don't have infinite tries: every change in pricing model comes with communication, implementation, transition, and general friction, so the fewer the better.
+
+But before jumping into how to define a pricing model, let's quickly take a look at the original model we had in place and why it needed a change.
+
+## Original model
+
+Goldsky used to have three pricing plans:
+
+- A free community plan that gave you limited access to only certain datasets
+- A $20/month developer plan that gave you up to 3 custom data indexers (called subgraphs)
+- An enterprise plan where you contacted us and got a custom package based on your needs
+
+This model was designed to ensure easy product discovery: people could experience Goldsky without having to give us a credit card, and that allowed our product to sell itself. At the higher end, enterprise pricing being fully bespoke meant that we could design custom pricing plans and product functionality specific to individual use cases, allowing for very well-made custom packages.
+
+However, this model had its issues.
+
+First, the developer plan was disconnected from underlying economics: 3 indexers were included at $20 per month regardless if those indexers stored 100MB of data or 100GB. A few companies running 3 very heavy subgraphs could easily cost us hundreds per month while only paying us $20, leading to terrible unit economics at the extremes.
+
+Much more importantly — if you wanted to spend more than $20, you had to contact us and go through a manual sales process. This meant if you knew what you needed exceeded the limits of the developer plan, your timeline to realizing value with Goldsky was days instead of hours or minutes. For us, it meant we had more companies looking to sign up for “enterprise” than we could manually onboard. It also meant that customers at the lower end of this spend (where the direct and opportunity costs of going through the sales motion) were neglected.
+
+As the customer backlog grew, we knew we needed to find a way to make it easier for them to serve themselves. Simultaneously, we were launching a new indexing product called Mirror and thus had multiple products with radically different technology underpinning them. This meant that the simple “3 indexer” package for the developer plan also was no longer good enough, and it was time to revisit our pricing model at a more foundational level.
+
+## Principles for a new model
+
+To figure this out, we needed to look at our core values as a company. In general, values are only really values if they are lived - embedded in the decision-making process. I think this needs to hold true in choices as complex as pricing strategy, and in fact can be a very effective way to simplify the process.
+
+So what principles defined our pricing model?
+
+- We want the best developer experience, bar none
+- We are building an enduring company
+
+That's it - not even a clean, round list of 3 items, just 2. If I could get away with one I would, but have to throw #2 in there. Otherwise the logical extreme would be to make everything free forever at every level of use.
+
+So tactically, how does this help? It gives the framework we need to make any choice about pricing we might need to make.
+
+## Resulting strategy
+
+What unit do we want to meter and charge on?
+
+We know we want it to be a good DX, which means that we shouldn't penalize iteration, and we should enable cost forecasting to be intuitive: people should be able to predict how much they're spending and will spend on Goldsky.
+
+- For **subgraphs** (hosted databases and APIs), we charge on **total data stored**
+- For **Mirror pipelines** (realtime data streams), we charge on **bandwidth** — the volume of data sent
+
+Both are predictable metrics from the developers using the product. This also helped us define what we should definitely **NOT** charge on:
+
+- **Queries**: Charging per query is too spiky, unpredictable, and disconnected from underlying value for our customers. We've heard cases where a team working with one of our competitors goes viral on Twitter and wakes up to a 4-digit bill for a few hours of visitor volume, with none of those visitors converting to actual revenue for them. Storage only really grows with indexed transaction activity, which is directly correlated with the users' own economics (fees, revenue, etc). This makes Goldsky extremely predictable as a % of total company scale.
+- **Team members**: Pricing per-seat explicitly discourages collaboration. We want teams to loop in more devs, analysts, stakeholders—not fewer. Good infrastructure is inherently collaborative with many types of contributors (internal, external, part-time, etc.), and our pricing shouldn't work against that.
+- **Specific product features**: This is basically a tax on curiosity. We want users to explore more of the platform, not worry about toggling on a new feature and waking up to an unexpected bill, or having to do an ROI analysis on every single piece of the product they want to use. This has the side benefit of driving a simpler sales and support motion.
+
+We've applied this same "principles-driven approach" to pricing across every decision we had to make.
+
+- What are the actual $ amounts we should charge?
+- Do we have multiple tiers?
+- How do we handle growth between different tiers?
+- What does the free plan include?
+- Who gets discounts?
+- When people miss a payment, what happens?
+
+Every choice was debated with the same two principles in mind, but with those two principles in mind it was pretty quick to make each choice.
+
+## Conclusion
+
+I'm sure it's not perfect — people coming to our pricing page may still end up confused, find us unaffordable for their specific use case, or just generally unintuitive. But the data so far has been promising: revenue has grown substantially with great conversion and retention rates, while enabling our sales team to focus on the most important enterprise accounts.
+
+We'll definitely revisit this model, but my hunch is that we'll do it not because it breaks, but because we outgrow it.
