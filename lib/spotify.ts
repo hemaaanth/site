@@ -67,6 +67,7 @@ export async function getRecentlyPlayed() {
       title: item.track.name,
       artist: item.track.artists.map(artist => artist.name).join(', '),
       url: item.track.external_urls.spotify,
+      imageUrl: item.track.album?.images?.[1]?.url || item.track.album?.images?.[0]?.url,
     }));
   } catch (error) {
     console.error('Error in getRecentlyPlayed:', error);
