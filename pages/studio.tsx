@@ -36,7 +36,7 @@ export default function Studio() {
             <dt className="studio-list-title mt-8">
               <Image
                 src="/images/studio/bridgebot_header.png"
-                alt="Hyp.ee header screenshot"
+                alt="Bridgebot header screenshot"
                 className="studio-screenshot-placeholder object-cover rounded-md border border-neutral-200 dark:border-zinc-800"
                 width={794}
                 height={548}
