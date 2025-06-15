@@ -1,0 +1,28 @@
+.hover-preview-trigger {
+  display: inline-flex;
+  position: relative;
+}
+
+.hover-preview-image {
+  animation: fadeIn 0.2s ease-in-out;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate3d(var(--x), var(--y), 0) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(var(--x), var(--y), 0) scale(1);
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .hover-preview-image {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+}

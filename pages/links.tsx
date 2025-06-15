@@ -128,6 +128,14 @@ export default function Links() {
                                 </LinkExternal>
                                 <time className="time">
                                     indexed.xyz
+                                </time><br />
+                            </div>
+                            <div>
+                                <LinkExternal href="https://erpc.cloud">
+                                    RPC proxy and caching
+                                </LinkExternal>
+                                <time className="time">
+                                    eRPC
                                 </time>
                             </div>
                         </div>
