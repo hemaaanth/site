@@ -3,19 +3,28 @@ import { useState } from "react";
 import { ExternalIcon, ShareIcon } from "../Icons";
 import { Tooltip } from "../Tooltip";
 import useCopy from "@react-hook/copy";
+import { HoverPreview } from "../HoverPreview";
 
-export function LinkExternal({ href, children }) {
+interface LinkExternalProps {
+  href: string;
+  children: React.ReactNode;
+  imageUrl?: string;
+}
+
+export function LinkExternal({ href, children, imageUrl }: LinkExternalProps) {
   return (
-    <a
-      className="link link-external"
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      {children}
+    <HoverPreview imageUrl={imageUrl}>
+      <a
+        className="link link-external"
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {children}
 
-      <ExternalIcon size={16} />
-    </a>
+        <ExternalIcon size={16} />
+      </a>
+    </HoverPreview>
   );
 }
 

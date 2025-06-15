@@ -55,6 +55,7 @@ export async function getCurrentlyReading(profileId: string) {
         title: book.title,
         author: book.authors[0]?.name,
         url: `https://literal.club/book/${book.slug}`,
+        imageUrl: book.cover,
       }))
     : [];
 
@@ -63,6 +64,7 @@ export async function getCurrentlyReading(profileId: string) {
         title: data.recentlyCompleted[0].title,
         author: data.recentlyCompleted[0].authors[0]?.name,
         url: `https://literal.club/book/${data.recentlyCompleted[0].slug}`,
+        imageUrl: data.recentlyCompleted[0].cover,
       }
     : null;
 

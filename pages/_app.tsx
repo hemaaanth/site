@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import "../styles/hover-preview.css";
 import type { AppProps as NextAppProps } from "next/app";
 import { ApolloCache, ApolloProvider } from "@apollo/client";
 import dynamic from "next/dynamic";
