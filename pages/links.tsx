@@ -132,10 +132,10 @@ export default function Links() {
                             </div>
                             <div>
                                 <LinkExternal href="https://erpc.cloud">
-                                    RPC proxy and caching
+                                    RPC load-balancer and cache
                                 </LinkExternal>
                                 <time className="time">
-                                    eRPC
+                                    erpc.cloud
                                 </time>
                             </div>
                         </div>
