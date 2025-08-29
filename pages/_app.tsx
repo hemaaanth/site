@@ -30,21 +30,23 @@ export default function MyApp({
 }: AppProps<CustomPageProps>) {
 
   useEffect(() => {
-    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
-      api_host: '/ingest',
-      ui_host: 'https://us.posthog.com',
-      person_profiles: 'always',
-      loaded: (posthog) => {
-        if (process.env.NODE_ENV === 'development') posthog.debug()
+    if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_POSTHOG_KEY) {
+      posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
+        api_host: '/aly',
+        ui_host: 'https://us.posthog.com',
+        person_profiles: 'always',
+        loaded: (posthog) => {
+          if (process.env.NODE_ENV === 'development') posthog.debug()
+        }
+      })
+
+      const handleRouteChange = () => posthog?.capture('$pageview')
+
+      Router.events.on('routeChangeComplete', handleRouteChange);
+
+      return () => {
+        Router.events.off('routeChangeComplete', handleRouteChange);
       }
-    })
-
-    const handleRouteChange = () => posthog?.capture('$pageview')
-
-    Router.events.on('routeChangeComplete', handleRouteChange);
-
-    return () => {
-      Router.events.off('routeChangeComplete', handleRouteChange);
     }
   }, [])
   
