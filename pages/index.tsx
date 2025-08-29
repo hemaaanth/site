@@ -8,7 +8,7 @@ import { LinkExternal } from "../components/Links";
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import { getCurrentlyReading } from "../lib/literal";
+import { getCurrentlyReading } from "../lib/hardcover";
 import { getRecentlyPlayed } from "../lib/spotify";
 import Badge from "../components/Badge";
 
@@ -137,7 +137,7 @@ export async function getStaticProps() {
   const recentPosts = posts.slice(0, 5);
 
   // Add reading data
-  const readingData = await getCurrentlyReading(process.env.LITERAL_USER_ID);
+  const readingData = await getCurrentlyReading();
 
   // Add recently played tracks
   const recentlyPlayed = await getRecentlyPlayed();

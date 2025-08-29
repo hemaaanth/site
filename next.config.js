@@ -2,11 +2,17 @@
 const nextConfig = {
   skipTrailingSlashRedirect: true, // Required for PostHog trailing slash API requests
   reactStrictMode: true,
-  swcMinify: true,
   images: {
     formats: ["image/avif", "image/webp"],
-    domains: ["images.ctfassets.net", "i.scdn.co"],
     remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.ctfassets.net",
+      },
+      {
+        protocol: "https",
+        hostname: "i.scdn.co",
+      },
       {
         protocol: "https",
         hostname: "**.digitaloceanspaces.com",
@@ -17,7 +23,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "assets.literal.club",
+        hostname: "**.hardcover.app",
       },
       {
         protocol: "https",
@@ -34,16 +40,20 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: "/ingest/static/:path*",
+        source: "/aly/static/:path*",
         destination: "https://us-assets.i.posthog.com/static/:path*",
       },
       {
-        source: "/ingest/:path*",
-        destination: "https://us.i.posthog.com/:path*",
+        source: "/aly/decide",
+        destination: "https://us.i.posthog.com/decide",
       },
       {
-        source: "/ingest/decide",
-        destination: "https://us.i.posthog.com/decide",
+        source: "/aly/decide/:path*",
+        destination: "https://us.i.posthog.com/decide/:path*",
+      },
+      {
+        source: "/aly/:path*",
+        destination: "https://us.i.posthog.com/:path*",
       },
     ];
   },
