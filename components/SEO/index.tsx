@@ -30,6 +30,7 @@ export interface SEOProps {
   description?: string;
   image?: string;
   path?: string;
+  noindex?: boolean;
 }
 
 export function SEO({ seo }: { seo?: SEOProps }) {
@@ -47,7 +48,8 @@ export function SEO({ seo }: { seo?: SEOProps }) {
         }}
       />
       <Head>
-        <meta name="googlebot" content="index,follow" />
+        <meta name="googlebot" content={seo?.noindex ? "noindex,nofollow" : "index,follow"} />
+        {seo?.noindex && <meta name="robots" content="noindex,nofollow" />}
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
