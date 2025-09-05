@@ -104,19 +104,19 @@ export default function Meridian() {
                     <dd className="list-content">
                         <div className="pb-2 last-of-type:pb-0">
                             <div>
-                                <LinkExternal href="#">
+                                <LinkExternal href="#https://www.linkedin.com/in/tamir-sen/">
                                     LinkedIn
                                 </LinkExternal>
                                 <time className="time">
-                                    @tamirsen
+                                    @tamir-sen
                                 </time><br />
                             </div>
                             <div>
-                                <LinkExternal href="#">
-                                    X / Twitter
+                                <LinkExternal href="https://github.com/tamirms">
+                                    GitHub
                                 </LinkExternal>
                                 <time className="time">
-                                    @tamirsen
+                                    @tamirms
                                 </time>
                             </div>
                         </div>
