@@ -1,4 +1,5 @@
 import React from 'react';
+import { HoverNote } from '../HoverNote';
 
 const Header = ({ level, children, ...props }: { level: number; children: React.ReactNode; [x: string]: any }) => {
   const id = children.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
@@ -21,6 +22,7 @@ export const mdxComponents = {
       {props.children}
     </div>
   ),
+  HoverNote: (props) => <HoverNote {...props} />,
   h1: (props) => <Header level={1} {...props} />,
   h2: (props) => <Header level={2} {...props} />,
   h3: (props) => <Header level={3} {...props} />,
