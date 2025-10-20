@@ -1,61 +1,66 @@
 ---
 title: "On free banking and stablecoins"
-date: "2025-10-15"
+date: "2025-10-20"
 author: "Hemanth Soni"
-tldr: "A walk through the 1800's free banking era in the US and predictions for the crypto industry's stablecoin."
+tldr: "A walk through the 19th century free-banking era in the US and predictions for the crypto industry's stablecoin meta."
 category: "blog"
+layout: wide
 depth: 2
 ---
 
 ### Introduction
 
-There's a funny pattern in the crypto industry where we seem to [speedrun traditional finance](https://www.bloomberg.com/opinion/articles/2024-08-15/stablecoins-can-have-bank-runs?embedded-checkout=true). We started with P2P transfers, and evolved rapidly to trading, lending/borrowing, leverage protocols, derivatives, etc. **I think we're about to learn a new set of lessons from history, the ones on free banking**.
+There's a funny pattern in crypto where we seem to [speedrun traditional finance](https://www.bloomberg.com/opinion/articles/2024-08-15/stablecoins-can-have-bank-runs?embedded-checkout=true). We started with P2P transfers, and evolved rapidly to trading, lending/borrowing, leverage protocols, derivatives, etc. **I think we're about to learn a new set of lessons from history, the ones on free banking**.
 
-From 1837 until the US Civil War, states allowed banks to issue their own bank notes. A bank had to deposit certain high-quality assets with regulators as reserves, and then could print + circulate banknotes. Holders of the note could present it to a redeeming bank and demand specie (gold/silver) in exchange, or the underlying collateral. Sound familiar?
+From 1837 until the US Civil War, states allowed banks to issue their own bank notes. A bank had to deposit high-quality assets with regulators as reserves, and then could print + circulate banknotes. Holders of the note could present it to a redeeming bank and demand specie <HoverNote>specie = coined money, typically gold or silver, as opposed to paper currency.</HoverNote> in exchange, or the underlying collateral. Sound familiar?
 
 Stablecoins aren't new, but the idea that anyone can issue a stablecoin is. In large part, it's being ushered in by the GENIUS Act under which "permitted payment stablecoin issuers" may legally issue stablecoins in the US, similar to the legal approval banks received in the 1800s. Against this backdrop...
-- [Bridge](https://www.bridge.xyz/) was acquired by Stripe for 1.1B (their largest acquisition to-date) and alongside infra like [M0](https://www.m0.org/) are radically bringing down the floor for stablecoin issuance.
-- Industry giants like [Consensys/MetaMask](https://metamask.io/price/metamask-usd) and [Phantom](https://phantom.com/cash) have launched or announced their own stablecoins, quickly building hundreds of millions of dollars in supply.
-- Incumbents like Circle and Tether are seeing [all-time high circulating supplies](https://app.artemisanalytics.com/stablecoins), while a host of upstarts are also proliferating the market.
+- [Bridge](https://www.bridge.xyz/) was acquired by Stripe for 1.1B (Stripe's largest acquisition to-date), and alongside infra like [M0](https://www.m0.org/), are radically bringing down the floor for stablecoin issuance <HoverNote>These whitelabel stablecoin platforms that allow a single entity to be the regulated issuer, but with separate brands/distribution managed by partners. This is similar to branded credit cards that are managed by a regulated entity but share in the economics with a consumer-facing distribution partner.</HoverNote>.
+- Industry giants like [Consensys/MetaMask](https://metamask.io/price/metamask-usd) and [Phantom](https://phantom.com/cash) have launched or announced their own stablecoins <HoverNote>as have large traditional organizations, eg. Wyoming's Frontier Stable Token</HoverNote>, quickly building hundreds of millions of dollars in supply.
+- Incumbents like Circle and Tether are seeing [all-time high circulating supplies](https://app.artemisanalytics.com/stablecoins), while a host of upstarts are also proliferating the market. The number of issuers with over 50M in circulating supply has increased from 29 to 55 in just over 12 months.
 
-We know how the previous story ended: free banking collapsed under the weight of fraud, poor collateral quality, fragmentation, and cascading bank runs. The GENIUS Act opens the door to a similar Cambrian explosion of "stable" notes, and we'll see many different flavours across the entire spectrum of reserve assets and risk appetites. We risk reliving the same story at a much larger scale and with a lot more pain, exacerbated by hidden fault lines that weren't even previously possible. But we also have a chance at succeeding where our 19th century predecessors failed and usher in a new era of programmable money.
+We know how the previous story ended: free banking collapsed under the weight of fraud, poor collateral quality, fragmentation, and cascading bank runs. The GENIUS Act opens the door to a similar Cambrian explosion of "stable" notes, and we'll see many different flavours across the entire spectrum of reserve assets and risk appetites. We risk reliving the same story at a much larger scale, exacerbated by hidden fault lines that weren't even previously possible. But we also have a chance at succeeding where our 19th century predecessors failed and usher in a new era of programmable money.
 
 ### Free banking fault lines (ie. What HAPPENED)
 
 Andrew Jackson vetoed the re-charter of Second Bank of the United States in 1832, ushering in the era of free banking. He did so for reasons that will sound strikingly familiar:
-- Concentration of power: He believed that the bank placed too much political and economic control in the hands of a few unelected and unaccountable financiers, who were free to manipulate the system to their advantage rather than to serve the public interest.
-- Lack of transparency and accountability: He believed that the bank - specifically its president Nicholas Biddle - was corrupt and [TBD]
+- <u>Concentration of power</u>: He believed that the bank placed too much political and economic control in the hands of a few unelected and unaccountable financiers, who were free to manipulate the system to their advantage rather than to serve the public interest.
+- <u>Lack of transparency / accountability</u>: He believed that the bank - specifically its president Nicholas Biddle - was corrupt and exercising disproportionate influence over credit, markets, and politics, further fueling suspicions of corruption in favour of certain financial interests.
 
-When the Bank's charter expired in 1836, the federal government withdrew to the sidelines of the monetary system and states stepped in. [Simplifying a lot here] Anyone could start a bank by depositing government bonds as collateral and issuing private banknotes.
+When the Bank's charter expired in 1836, the federal government withdrew to the sidelines of the monetary system and states stepped in. Anyone could start a bank <HoverNote>"Anyone" is a big simplification, but okay for our purposes</HoverNote> by depositing government bonds as collateral and issuing private banknotes.
 It was, in effect, a permissionless monetary system, the 19th-century version of “anyone can issue a token if they can back it.”
 
-The experiment spread quickly, with ~1,500 banks chartered under various free-banking laws across 18 states, issuing more than 8,000 different types of bank notes. The total supply of these notes reached about 200M or roughly 10% of the US GDP. In 2025, this would be ~3T in circulating supply (total stablecoin supply is about 300B today). However, the cracks in the system began to quickly appear.
+The experiment spread quickly, with ~1,500 banks chartered under various free-banking laws across 18 states, issuing more than 7,000 different types of bank notes. The total supply of these notes reached about 200M or roughly 10% of the US GDP. In 2025, this would be ~3T in circulating supply (total stablecoin supply is about 300B today).
 
-<Note>
+However, the cracks in the system began to quickly appear.
+
+<Aside>
 Over the next few blocks, we'll take a look at the key factors that led to the collapse of free banking, and parallels to the modern, stablecoin equivalent.
-</Note>
+</Aside>
+
+---
 
 #### Collateral quality and bank runs
 
-The requirements for collaterals in reserve were significantly lower than the GENIUS Act, as each state had it's own laws. The most notorious example was in Michigan, where state bonds were acceptable collateral; however there was no restriction on maturity dates, and bonds could be valued at par (rather than market) allowing for hidden undercollateralization. Furthermore, banknotes were redeemable for specie which the banks didn't necessarily hold in sufficient quantities, triggering a bank failure under even moderate redemption demand. In the same year most of Michigan's free banks came online, the Panic of 1837 hit the US and Michigan specifically hard, and the state's bonds collapsed in value, wiping out collateral for dozens of new banks almost overnight. Many never even opened their doors — they simply issued notes against worthless paper.
+The requirements for collaterals in reserve were significantly lower than the GENIUS Act, as each state had its own laws. The most notorious example was in Michigan, where state bonds were acceptable collateral; however there was no restriction on maturity dates, and bonds could be valued at par (rather than market) allowing for hidden undercollateralization. Furthermore, banknotes were redeemable for specie which the banks didn't necessarily hold in sufficient quantities, triggering a bank failure under even moderate redemption demand. In the same year most of Michigan's free banks came online, the Panic of 1837 hit Michigan particularly hard. The state's bonds collapsed in value, wiping out collateral for dozens of new banks almost overnight. Many never even opened their doors - they simply issued notes against worthless paper.
 
-The GENIUS Act has a much higher bar for collateral - both in terms of quality and duration mismatch risk. Specifically, it only allows the following assets to act as reserves for a GENIUS-approved stablecoin: U.S. dollars and coins; deposits at Federal Reserve Banks; demand deposits at insured depository institutions; Treasury securities with remaining tenor ≤ 93 days; overnight repurchase or reverse repurchase agreements fully collateralized by Treasury securities; shares in registered money market funds (investing only in the above). However, we can't take for granted that these constraints will be sufficient: we've seen a flavour of the collateral risk already with modern stablecoins in the USDC depeg in 2023. Circle held $3.3B of USDC reserves at Silicon Valley Bank, which was shut down and taken over by the FDIC. Funds were assumed to be unredeemable and market participants rushed to dump USDC and it traded down ~13% before confidence was restored. While there was no long-term collateral risk in this case, it exposed some fragility lurking even in “safe” instruments when access, not just value, is lost.
+The GENIUS Act has a much higher bar for collateral - both in terms of quality and duration mismatch risk. Specifically, it only allows the following assets to act as reserves for a GENIUS-approved stablecoin:
+- U.S. dollars and coins
+- deposits at Federal Reserve Banks
+- demand deposits at insured depository institutions
+- Treasury securities with remaining tenor ≤ 93 days
+- overnight repos or reverse repos, fully collateralized by Treasury securities
+- shares in registered money market funds (investing only in the above)
 
-#### Redemption risk
-
-A banknote is only as good as your ability to redeem it. In the 19th century, the redeeming bank was sometimes hundreds of miles away, and the further it travelled, the riskier it got. Merchants often simply refused distant notes once the cost or risk became too high, and over time those remote bank notes would trade at a persistent discount. A classic case was the Bank of the Upper Peninsula, whose notes circulated in Detroit but could only be redeemed in a remote mining town on Lake Superior. Merchants soon refused them entirely.
-
-A similar trap exists with modern stablecoins. [Admittedly, infra has evolved significantly since this example] The shutdown of PGN risked stranding over $1M in assets on the network and required significant effort from a number of teams to rescue. The redemption risk fault lines have actually become significantly larger and more complex: while we only needed to worry about physical roads in the 19th century, we now have a complex and intermingled mix of bridges, chains, and protocols that can all separately fail or become disabled. Stablecoin issuers of today need to worry not only about their physical infrastructure for redemption, but the end-to-end virtual path between users and reserves.
-
-<Aside>
-Hilariously and in true crypto fashion, total value secured on PGN has actually [gone up](https://l2beat.com/scaling/projects/publicgoodsnetwork) over the past few months as the value of ETH bridged to the network has increased.
-</Aside>
+However, we can't take for granted that these constraints will be sufficient: we've seen a flavour of the collateral risk already with modern stablecoins in the USDC depeg in 2023. Circle held $3.3B of USDC reserves at Silicon Valley Bank, which was shut down and taken over by the FDIC. Funds were assumed to be unredeemable and market participants rushed to dump USDC and it traded down ~13% before confidence was restored (about 48 hours later). <b>While there was no long-term collateral risk in this case, it exposed some fragility lurking even in “safe” instruments when access, not just value, is lost.</b>
 
 #### Fraud
 
 Some banks never intended to redeem their notes at all. They located their branches in inaccessible places, issued paper, and disappeared. The most obvious case of this is the Bank of Monroe (Michigan, 1837), which printed tens of thousands of dollars in notes (worth approximately 4M in 2025 USD) supposedly backed by state bonds. In routine inspections they would present boxes of coins, which was later found to be filled with nails and glass and only a top layer of coins.
 
-The crypto industry is no stranger to scams and while some of our bad actors are similar to these Looney Tunes Villians of the past, others are more sophisticated. We should expect every flavour of the previous scams to return, incl. fake reserves, fake audits, fake notes, and more. I can't imagine all of the new scams that will be invented, but I'm sure there will be novel ones not previously possible as well.
+The crypto industry is no stranger to scams and while some of our bad actors are similar to these Looney Tunes villains of the past, others are more sophisticated. We should expect every flavour of the previous scams to return, incl. fake reserves, fake audits, fake notes, and more. I can't imagine all of the new scams that will be invented, but I'm sure there will be novel ones not previously possible as well.
+
+This is likely to be a common talking point against crypto in general, despite the numbers showing that bad actors are a much smaller share of the crypto space than they are of the traditional financial system. Eg. significantly fewer than 1% of crypto transactions by volume or value are tied to illicit activity. But critically, this is an area where crypto is at a distinct advantage, especially with GENIUS-compliant stablecoins. We've already seen Paxos, USDT0, and Ondo build complex controls for verifying cross-chain transactions for fraud, checking against various blacklists, and more. Being able to do this realtime, programmatically, and continuously on a per-transaction basis should actually make fraud more difficult in the long-term.
 
 #### Information asymmetry
 
@@ -63,39 +68,45 @@ To try to manage the fraud risk, merchants relied on “banknote reporters” th
 
 The speed of information dissemination now is orders of magnitude faster, yet we aren't necessarily demanding better from issuers. The AICPA's Criteria for Stablecoin Reporting set a benchmark for rigorous, transparent, and comparable disclosures, but in practice few issuers come close: most still rely on self-published “proof-of-reserves” with limited assurance. They don't operate under a uniform audit standard, and disclosures vary so wildly that they're not comparable. Of all the fault lines highlighted by the collapse of free banking, this is the one that surprises me the most as one we're not doing better on today.
 
+---
+
+We can summarize this in a quick table below that outlines the issues observed in free banking, parallels to stablecoins, why crypto is better suited today, and where crypto might still be at risk.
+
+| Issue | Parallels | What's better  | New risks |
+| --- | --- | --- | --- |
+| Asset quality and bank runs | Stablecoin depegs, redemption runs | Onchain visibility of reserves, stricter collateral rules (GENIUS Act), faster information flow | Reserve assets still off-chain; concentration in a few custodial banks; reflexive onchain runs can happen at internet speed |
+| Fraud | Fake PoR / audits, forged attestations, fraudulent reserves | Cryptographic proofs, real-time attestations, programmable controls | New failure modes: cross-chain wrappers, derivative tokens, and complex audit dependencies create hidden contagion paths |
+| Information asymmetry | Unclear disclosures, nonstandard reporting | Onchain audit trails, open data enabling third-party and community analytics | Faster movement of money raise the bar for information symmetry, with added complexity across chains |
+
+---
+
 ### Predictions for the stablecoin meta
-
-Some predictions for the stablecoin meta are implicit in the above replay of the collapse of free banking:
-- Expect bank runs
-- Expect virtually stranded assets
-- Expect a lot of scams
-- Expect a new generation of banknote raters
-
-However, we can also zoom out from those linear predictions and make a few more, which I go through below:
 
 #### Only a few issuers will win.
 
-We're seeing barriers to stablecoin issuance decline rapidly, from a regulatory standpoint as well as technology / infrastructure standpoint. We already have dozens if not hundreds of issuers live today, and this may soon become thousands. But like the free banking era, this frenzy will likely be followed by an implosion: most of these new stablecoins will fail or fade away, leaving only a handful of trusted survivors. Like with the L2 meta, a winner-take-most dynamic is likely to emerge across many dimensions incl. brand awareness, liquidity, trust, and distribution. It's also likely that many underestimate the real run-rate costs of maintaining a stablecoin, and find those costs too burdensome over time, creating a new vector of redemption risk.
+We're seeing barriers to stablecoin issuance decline rapidly, from a regulatory standpoint as well as technology / infrastructure standpoint. We already have dozens if not hundreds of issuers live today, and this may soon become thousands. But I expect over time many of these new stablecoins will fade away, leaving only a handful of trusted survivors. Like with the L2 meta, a winner-take-most dynamic is likely to emerge across many dimensions incl. brand awareness, liquidity, trust, and distribution. It's also likely that many underestimate the real run-rate costs of maintaining a stablecoin <HoverNote>These costs can be the "direct" ones, like running a compliance program, marketing to ensure awareness and trust, etc. But they can also be the "indirect" and less obvious, like the costs of maintaining an onchain instant liquidity facility. Smaller stablecoin issuers who want to de-risk their offering may be forced to hold USDC/T for instant onchain redemptions</HoverNote>, and find those costs too burdensome over time.
 
-Already today, just two USD stablecoins account for over 80% of the market's circulating supply and while there is definitely room for more, I expect the market to stay highly concentrated. That doesn't mean there isn't room for new entrants especially if we assume the market as a whole to continue to grow: a coin with 1B in circulating supply (1/3 of 1% of today's circulating supply) can still be a massive success for the business depending on their strategy.
+Already today, just two USD stablecoins account for over 80% of the market's circulating supply and while there is definitely room for more, I expect the market to stay highly concentrated. One underrated reason for this concentration is interoperability itself. Early issuers like USDT and USDC have become default assets across CEXs, wallets, fiat on-ramps, and DeFi, building distribution moats that newer entrants can't easily replicate. Even a fully compliant, well-collateralized stablecoin may be functionally less useful if it isn't as widely or deeply integrated onchain. As long as integrations, not just trust, dictate liquidity and accessibility, this moat will persist. That doesn't mean there isn't room for new entrants especially if we assume the market as a whole to continue to grow: a coin with 1B in circulating supply (1/3 of 1% of today's circulating supply) can still be a massive success for the business depending on their strategy.
 
 <Note>
-This isn't the point of this essay but I've been asked a few times, so to address it here: who should consider issuing their own stablecoin, especially in stead of leveraging an existing stablecoin like USDC or DAI?
+This isn't the point of this essay, but I've been asked a few times, so to address it here: who should consider issuing their own stablecoin, especially instead of leveraging an existing stablecoin like USDC or USDT(0)?
 
-I'd argue that almost nobody, except for major players that already have a significant closed-loop ecosystem of users sending each other assets (eg. wallet and chat apps that have a large user base where sending funds between each other is a common use case), where capturing yield on the underlying reserves is a meaningful opportunity.
+I'd argue that almost nobody, except for major players that already have a significant closed-loop ecosystem of users sending each other assets (eg. wallet and chat apps <HoverNote>I already highlighted Phantom and Metamask above. If we zoom out of crypto, things like Starbucks come to mind as well.</HoverNote> that have a large user base where sending funds between each other is a common use case), where capturing yield on the underlying reserves is a meaningful opportunity.
 
 However, any player that does this should also be ready for interest rate changes to become a meaningful part of their business outcomes. Banks are used to this and while becoming an issuer doesn't mean becoming a full-fledged bank, it does mean opening your business to a vector of concern that might not be in your wheelhouse typically. From a focus standpoint and a capability standpoint, it's important to be prepared for this.
 </Note>
 
 #### CBDCs get a second wind.
 
-Ironically, the private-sector boom in stablecoins could breathe new life into Central Bank Digital Currency (CBDC) plans. TGhe European Central Bank has cited the expansive U.S. push into stablecoins as triggering urgency for a digital euro, and a BIS survey found 1 in 3 central banks have accelerated their CBDC development specifically in response to stablecoin growth. A high-profile stablecoin failure or systemic risk event (along the fault lines outlined above or some other) could also be a wedge that convinces regulators a government-issued digital dollar is needed as a safer alternative or backstop, similar to the collapse of free banking triggering the creation of the Federal Reserve and the US Dollar.
+Ironically, the private-sector boom in stablecoins could breathe new life into Central Bank Digital Currency (CBDC) plans. The European Central Bank has cited the expansive U.S. push into stablecoins as triggering urgency for a digital euro, and a BIS survey found 1 in 3 central banks have accelerated their CBDC development specifically in response to stablecoin growth. A high-profile stablecoin failure or systemic risk event (along the fault lines outlined above or some other) could also be a wedge that convinces regulators a government-issued digital dollar is needed as a safer alternative or backstop, similar to the collapse of free banking triggering the creation of the Federal Reserve and the US Dollar.
+
+I don't make the case here on whether CBDCs are a [good thing](https://www.nytimes.com/2025/09/29/opinion/cryptocurrency-genius-clarity-stablecoin-digital-dollar.html) or [not](https://murmurationstwo.substack.com/p/yes-we-really-do-want-to-trust-crypto). I'm just predicting that we're going to be hearing and seeing a lot more about CBDCs again. And now, with the success and proliferation of India's CBDC program, the world has a working reference for what scaled government-issued digital money can look like. The pilot program has been steadily growing to ~6m users, direct government distribution integrations, commercial adoption via fintechs and existing rails like UPI, and real-world use for retail and wholesale transactions.
 
 #### Stablecoins will globalize.
 
-So far, the stablecoin boom has been almost exclusive USD-denominated, with over 90% of supply in USD-pegged tokens. This effectively entrenches the dollar's dominance in crypto, and we can expect other major economies to respond to this dollarization of online commerce and in some cases, their local economies as well. Other jurisdictions can respond to this "erosion" of their monetary sovereignty in two (non-exclusive) ways:
+So far, the stablecoin boom has been almost exclusively USD-denominated, with over 90% of supply in USD-pegged tokens. This effectively entrenches the dollar's dominance in crypto, and we can expect other major economies to respond to this dollarization of online commerce and in some cases, their local economies as well. Other jurisdictions can respond to this "erosion" of their monetary sovereignty in two (non-exclusive) ways:
 1. Launch their own non-USD stablecoins (eg. France's Societe Generale's euro-denominated stablecoin, China's digital yuan)
-2. Raise regulatory barriers to foreign stablecoins. With money as code, expect currency firewalls to rise that make it hard for citizens to use or redeem USD stablecoins.
+2. Raise regulatory barriers to foreign stablecoins. With money as code, expect currency firewalls to rise that make it hard for citizens to use or redeem non-domestic stablecoins.
 
 The stablecoin era may kick off a global currency war and while the US dollar has taken the first innings, I'd expect other major economies to have some response.
 
@@ -103,22 +114,37 @@ Outside of the major geopolitical context, this will mean a portion of the globa
 
 #### Stablecoins become systemically important.
 
-As circulating supply explodes, the largest issuers will become systemically important financial institutions. A run on a major stablecoin could easily have ripple effects beyond the crypto indsutry, impacting short-term funding markets, treasures, and the broader economy. Regulators are keenly aware of this; eg. under GENIUS, large issuers can have access to Federal Reserve master accounts and Fed oversight. I haven't seen anything yet about lender-of-last-resort facilities or insurance for stablecoin reserves yet, but imagine it's a possibility should they become big enough. Doing so without introducing moral hazard is a tricky problem but a 1T stablecoin should definitely be treated as critical market infrastructure.
+As circulating supply explodes, the largest issuers will become globally systemically important financial institutions. A run on a major stablecoin could easily have ripple effects beyond the crypto industry, impacting short-term funding markets, treasures, and the broader economy. Regulators are keenly aware of this; eg. under GENIUS, large issuers can have access to Federal Reserve master accounts and Fed oversight. I haven't seen anything yet about lender-of-last-resort facilities or insurance for stablecoin reserves yet, but imagine it's a possibility should they become big enough. Doing so without introducing moral hazard is a tricky problem but a 1T stablecoin should definitely be treated as critical market infrastructure, arguably Tether and Circle already are.
 
-Free banking ended with banknotes being brought under the umbrella of the Fed eventually; this era could similarly end with stablecoins tightly woven into the regulated banking fabric. In the best case, this would yield a more robust system with backstops and transparency that encourage widespread use. In teh worst case it could concetrate even mroe pwoer into a few issuers that are tightly controlled by regulators - arguably the opposite of crypto's ethos. Either way, the system importance of stablecoins likely only grows from here, and we'll all be spending a lot more time on "Too big to fail" questions in the stablecoin context.
+Free banking ended with banknotes being brought under the umbrella of the Fed eventually; this era could similarly end with stablecoins tightly woven into the regulated banking fabric. In the best case, this would yield a more robust system with backstops and transparency that encourage widespread use. In the worst case it could concentrate even more power into a few issuers that are tightly controlled by regulators - arguably the opposite of crypto's ethos. Either way, the system importance of stablecoins likely only grows from here, and we'll all be spending a lot more time on "too big to fail" questions in the stablecoin context.
 
 #### The scope of "interoperability" explodes.
 
-In crypto, "interoperability" has been a key theme but typically meant in a narrow way between L2s of a common VM, or in the best case across VMs. However, the proliferation of stablecoins means that "interopability" means movement across both crypto AND traditional rails. The entire payments ecosystem from incl. acquiring + issuing banks, POS, payment networks, gateways, etc. will ALL need to be able to interact with stablecoins seamlessly. We're already seeing this with physical card payments backed by cryptocurrency wallets, and major efforts to standardize and connect payment networks (eg. [SWIFT's efforts](https://www.reuters.com/business/finance/swift-top-global-banks-working-blockchain-based-overhaul-2025-09-29) alongside 30+ major global banks).
+In crypto, interoperability has been a key theme but typically meant in a narrow way between L2s or across VMs. Nativity across blockchains with issuers retaining control over supply and security are now readily available via tech like LayerZero and CCTP; this was not the case 3 years ago.
+
+However, interoperability now is expanding to mean movement across both crypto AND traditional rails. The entire payments ecosystem from incl. acquiring + issuing banks, POS, payment networks, gateways, etc. will ALL need to be able to interact with stablecoins seamlessly. We're already seeing these lines blur as the traditional rails themselves are becoming blockchains: Tempo (Stripe), Arc, Robinhood, Google, SWIFT, DTCC are all building chains that will be connected to the crypto-native interoperability mesh. 
 
 #### Payments get radically and irrevocably transformed.
 
-This is probably the most motherhood/apple-pie take on the stablecoin era, but I think it's true. Already, transaction volumes exceed that of Visa / Mastercard, and I can only imagine the growth will continue. I'd expect stablecoins to put heavy pressure on credit card networks and remittance services which currently charge ~3%+ fees. To be clear - these fees are not high, and in fact are quite low - only possible due to the scale at which these traditional players operate. Given the complexity of AML/KYC, managing chargebacks and disputes, points programs and benefits, physical infrastructure, and the entire suite of surrounding value embedded in those fees - the point I want to make isn't that stablecoins win because they can be cheaper. It's that they are a new, ultra-efficient rail that can reasonably get to similar scale as the traditional ones, and that scale gives them the permission to be a true competitor to the incumbents.
+This might sound like the most “motherhood” sentiment about the stablecoin era, but I believe it's accurate: stablecoins are positioned to disrupt virtually every layer of the payments stack. There's the obvious pressure on the ~3% fees by card networks and remittance services; we're already seeing consumers forego their chargeback protection in exchange for lower costs while merchants benefit from instant finality.  But I think the more interesting shift is driven by the reallocation of risk, and the new product shapes it enables.
 
-We've already seen that the incumbent players are no slouches - with major stablecoin partnerships and participation from Visa, MasterCard, Western Union, MoneyGram, etc. So it's not clear that they get displaced, but it is clear that the payments customer experience will be radically transformed by the rise of stablecoins across the board - settlement time, UX, accessibility, and more.
+- "Authorizations" go from dumb and blind holds to programmable escrows with time-locks, delivery proofs, and milestone releases.
+- Rewards shift from being funded by transaction fees to being funded by yield on reserves, partner tokens, and other intelligent loyalty programs.
+- Issuers' compliance and risk management is enhanced by wallet-side data (eg. risk-scored addresses, attestations) that provide enhanced consumer + merchant protection.
+
+We've already seen that the incumbent players are no slouches - with major stablecoin partnerships and participation from Visa, MasterCard, Western Union, and MoneyGram. So it's not clear they get displaced, but it is clear that the payments experience will be radically transformed by the rise of stablecoins across the board - settlement time, UI, and accessibility.
 
 ### Conclusion
 
-If free banking taught us anything, it's that issuance is the easy part, it's the trust and coordination that are hard. Crypto attempts to entrench those elements into code, and it's easy to foresee stablecoins not just mimicking banknotes but significantly outgrowing them. Along the way we'll probably see hundreds of new experiments (and scams), and the instruments that survive will transform the financial system - in some easy-to-predict ways (ie. payments + remittances) and others that are harder to foretell.
+If free banking taught us anything, it's that issuance is the easy part, it's the trust and coordination that are hard. Crypto attempts to entrench those elements into code, and it's easy to foresee stablecoins not just mimicking banknotes but significantly outgrowing them. Along the way we'll probably see hundreds of new experiments, and the instruments that survive will transform the financial system - in some easy-to-predict ways (ie. payments + remittances) and others that are harder to foretell. The winners, I suspect, will be those who blend the best of traditional finance with the best of crypto - marrying sound risk management and regulatory compliance with the novel elements of crypto (ie. composability). If they manage that balance, stablecoins won't just mimic 19th-century banknotes; they'll surpass them and reshape global finance in ways that make money more open, efficient, and programmable. Learning from history and applying these lessons pragmatically is how we ensure this era's private issuers don't just speedrun finance, but actually improve it.
 
-My bet: the winners in every category will be the ones that learn from history and combine the best of traditional finance (ie. strong risk management) with the novel elements of crypto (ie. programmability). Whether that's as a chain, token, both, or some other related infrastructure/protocol, I'm excited to see who wins.
+#### Other readings
+- [We Really Want to Trust Crypto Interests With the Future of Money?](https://www.nytimes.com/2025/09/29/opinion/cryptocurrency-genius-clarity-stablecoin-digital-dollar.html)
+- [Yes, we really do want to trust crypto interests with the future of money](https://murmurationstwo.substack.com/p/yes-we-really-do-want-to-trust-crypto)
+- [LayerZero: Scaling Stablecoin Issuers with the OFT Standard](https://messari.io/report/layerzero-scaling-stablecoin-issuers-with-the-oft-standard)
+- [Wildcat Banking, Banking Panics, and Free Banking in the United States](https://fraser.stlouisfed.org/files/docs/publications/frbatlreview/rev_frbatl_1996_v81no3.pdf)
+- [Everyone's Wrong About Stablecoins vs Visa](https://x.com/alfongj/status/1973034687879622747)
+
+<Note>
+Huge thank you to Andres Monty from Range, Armand Khatri from Ondo Finance, Oleg 'Olaf' Kudin from Re7 Capital, Mike McCoy, as well as friends from LayerZero, Artemis, and Tempo for their thoughtful feedback and review of early drafts.
+</Note>
