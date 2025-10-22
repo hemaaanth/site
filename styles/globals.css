@@ -353,6 +353,9 @@ a[href^="mailto:"] {
     @apply prose-img:rounded-lg;
     @apply prose-hr:my-6 prose-hr:h-[2px] prose-hr:border-none prose-hr:bg-neutral-200 dark:prose-hr:bg-neutral-900 sm:prose-hr:my-10;
     @apply prose-blockquote:not-italic prose-blockquote:text-neutral-600 dark:prose-blockquote:text-silver-dark;
+    @apply prose-th:text-left prose-th:[font-variation-settings:'wght'_500];
+    @apply prose-td:text-left;
+    @apply prose-td:first:font-medium prose-td:first:[font-variation-settings:'wght'_500];
   }
 }
 
