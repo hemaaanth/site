@@ -17,6 +17,7 @@ import path from 'path';
 import matter from 'gray-matter';
 import { remark } from 'remark';
 import html from 'remark-html';
+import remarkGfm from 'remark-gfm';
 
 const postsDirectory = path.join(process.cwd(), 'pages/posts/content/');
 
@@ -131,7 +132,11 @@ export const getStaticProps = async (context) => {
   const fileContents = fs.readFileSync(filePath, 'utf8');
 
   const { data: frontMatter, content } = matter(fileContents);
-  const mdxSource = await serialize(content);
+  const mdxSource = await serialize(content, {
+    mdxOptions: {
+      remarkPlugins: [remarkGfm],
+    },
+  });
 
   const headerRegex = /^(#+)\s+(.*)/gm; // finding markdown headers
   let headers = [];
