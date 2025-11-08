@@ -6,6 +6,7 @@ const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
 const apiVersion = '2024-01-01'
 const token = process.env.SANITY_API_READ_TOKEN
+const studioUrl = process.env.NEXT_PUBLIC_SANITY_STUDIO_URL
 
 if (!projectId) {
   throw new Error('Missing NEXT_PUBLIC_SANITY_PROJECT_ID')
@@ -136,6 +137,7 @@ export async function getPostBySlug(slug: string, includeDrafts = false) {
         perspective: 'previewDrafts', // Enable preview drafts perspective
         stega: {
           enabled: true, // Enable stega encoding for visual editing overlays
+          studioUrl, // Required when stega is enabled
         },
       })
     : client
@@ -165,6 +167,7 @@ export async function getPlaceBySlug(slug: string, includeDrafts = false) {
         perspective: 'previewDrafts', // Enable preview drafts perspective
         stega: {
           enabled: true, // Enable stega encoding for visual editing overlays
+          studioUrl, // Required when stega is enabled
         },
       })
     : client
