@@ -5,13 +5,9 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import PlaceItem, { PlaceType } from "../../components/Places";
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
 import Map from "../../components/Map";
-import { shuffle } from "lodash"; // Import lodash's shuffle function
-
-const placesDirectory = path.join(process.cwd(), "pages/places/content/");
+import { shuffle } from "lodash";
+import { getPlaceBySlug, getPublishedPlaceSlugs } from "../../lib/sanity";
 
 export default function Place({ title, year, places }) {
   const router = useRouter();
@@ -205,50 +201,44 @@ export default function Place({ title, year, places }) {
 }
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const slug = context.params?.slug;
-  const filePath = path.join(placesDirectory, `${slug}.mdx`);
-  const fileContents = fs.readFileSync(filePath, "utf8");
-  const { data, content } = matter(fileContents);
+  const slug = context.params?.slug as string;
+  // Check if preview/draft mode is enabled
+  const isDraftMode = context.preview === true;
+  const place = await getPlaceBySlug(slug, isDraftMode);
 
-  // Parse the content to extract places
-  const places = content
-    .split("---")
-    .filter(Boolean)
-    .map((placeString) => {
-      const lines = placeString.trim().split("\n");
-      const title = lines[0].trim();
-      const location = lines[1].trim();
-      const typeString = lines[2].trim();
-      const description = lines.slice(3).join("\n").trim();
+  if (!place) {
+    return {
+      notFound: true,
+    };
+  }
 
-      // Split the type string by comma and trim each type
-      const types = typeString.split(",").map((t) => t.trim()) as PlaceType[];
-
-      return {
-        title,
-        location,
-        googleMapsUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`,
-        types,
-        description,
-      };
-    });
+  // Transform Sanity places array to match expected format
+  const places = place.places.map((p: any) => ({
+    title: p.title,
+    location: p.location,
+    googleMapsUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.location)}`,
+    types: p.types || [],
+    description: p.description,
+  }));
 
   // Shuffle places server-side
   const shuffledPlaces = shuffle(places);
 
   return {
     props: {
-      title: data.title,
-      year: new Date(data.date).getFullYear().toString(),
-      places: shuffledPlaces, // Pass the shuffled places to the component
+      title: place.title,
+      year: place.date || '', // Date is now a string (year)
+      places: shuffledPlaces,
     },
+    // Revalidate every hour (3600 seconds) to pick up new content
+    revalidate: 3600,
   };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const filenames = fs.readdirSync(placesDirectory);
-  const paths = filenames.map((filename) => ({
-    params: { slug: filename.replace(/\.mdx?$/, "") },
+  const places = await getPublishedPlaceSlugs();
+  const paths = places.map((place) => ({
+    params: { slug: place.slug.current },
   }));
 
   return {

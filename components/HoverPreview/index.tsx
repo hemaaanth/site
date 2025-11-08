@@ -138,6 +138,7 @@ export const HoverPreview: React.FC<HoverPreviewProps> = ({
               width={0}
               height={0}
               sizes="100vw"
+              loading="eager"
               style={{
                 width: 'auto',
                 height: 'auto',
