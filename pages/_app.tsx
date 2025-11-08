@@ -1,9 +1,6 @@
 import "../styles/globals.css";
 import "../styles/hover-preview.css";
 import type { AppProps as NextAppProps } from "next/app";
-import { ApolloCache, ApolloProvider } from "@apollo/client";
-import dynamic from "next/dynamic";
-import { Suspense } from "react";
 import localFont from "next/font/local";
 import { useEffect } from 'react'
 import { Router } from 'next/router'
@@ -20,14 +17,10 @@ type AppProps<P = any> = {
   pageProps: P;
 } & Omit<NextAppProps<P>, "pageProps">;
 
-interface CustomPageProps {
-  initialApolloState?: ApolloCache<any>;
-}
-
 export default function MyApp({
   Component,
   pageProps,
-}: AppProps<CustomPageProps>) {
+}: AppProps) {
 
   useEffect(() => {
     if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_POSTHOG_KEY) {

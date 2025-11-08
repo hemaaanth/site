@@ -1,0 +1,117 @@
+import { createClient } from '@sanity/client'
+import imageUrlBuilder from '@sanity/image-url'
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
+
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
+const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
+const apiVersion = '2024-01-01'
+const token = process.env.SANITY_API_READ_TOKEN
+
+if (!projectId) {
+  throw new Error('Missing NEXT_PUBLIC_SANITY_PROJECT_ID')
+}
+
+export const client = createClient({
+  projectId,
+  dataset,
+  apiVersion,
+  useCdn: true,
+  token,
+})
+
+const builder = imageUrlBuilder(client)
+
+export function urlFor(source: SanityImageSource) {
+  return builder.image(source)
+}
+
+// GROQ queries
+// Exclude drafts by checking if _id is not in drafts path
+export const postsQuery = `*[_type == "post" && !(_id in path("drafts.**"))] | order(date desc) {
+  _id,
+  title,
+  slug,
+  date
+}`
+
+export const postBySlugQuery = `*[_type == "post" && slug.current == $slug && !(_id in path("drafts.**"))][0] {
+  _id,
+  title,
+  slug,
+  date,
+  author,
+  tldr,
+  meta,
+  category,
+  layout,
+  depth,
+  content
+}`
+
+export const publishedPostsQuery = `*[_type == "post" && !(_id in path("drafts.**"))] | order(date desc) {
+  slug
+}`
+
+// Query for all posts including drafts (for admin/index page)
+export const allPostsQuery = `*[_type == "post"] | order(date desc) {
+  _id,
+  title,
+  slug,
+  date
+}`
+
+// Places query - includes both published and drafts (drafts show as WIP)
+// Note: Sanity includes drafts by default, but we query explicitly to be sure
+export const placesQuery = `*[_type == "place"] | order(date desc, rank asc) {
+  _id,
+  title,
+  slug,
+  date,
+  rank
+}`
+
+export const placeBySlugQuery = `*[_type == "place" && slug.current == $slug && !(_id in path("drafts.**"))][0] {
+  _id,
+  title,
+  slug,
+  date,
+  rank,
+  places
+}`
+
+// Only published places for getStaticPaths (drafts don't have pages)
+export const publishedPlacesQuery = `*[_type == "place" && !(_id in path("drafts.**"))] | order(date desc) {
+  slug
+}`
+
+// Helper functions
+export async function getAllPosts() {
+  return await client.fetch(postsQuery)
+}
+
+export async function getAllPostsIncludingDrafts() {
+  return await client.fetch(allPostsQuery)
+}
+
+export async function getPostBySlug(slug: string) {
+  return await client.fetch(postBySlugQuery, { slug })
+}
+
+export async function getPublishedPostSlugs() {
+  return await client.fetch(publishedPostsQuery)
+}
+
+export async function getAllPlaces() {
+  // Use a client without CDN to ensure drafts are included
+  // Drafts are not cached in CDN, so we need to bypass it
+  return await client.fetch(placesQuery)
+}
+
+export async function getPlaceBySlug(slug: string) {
+  return await client.fetch(placeBySlugQuery, { slug })
+}
+
+export async function getPublishedPlaceSlugs() {
+  return await client.fetch(publishedPlacesQuery)
+}
+

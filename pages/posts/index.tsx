@@ -4,10 +4,8 @@ import React from "react";
 import { Main } from "../../components/Layouts";
 import { SEO } from "../../components/SEO";
 import formatDate from "../../lib/formatDate";
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
 import Badge from "../../components/Badge";
+import { client, allPostsQuery } from "../../lib/sanity";
 
 export default function Posts({ posts }) {
   return (
@@ -25,12 +23,12 @@ export default function Posts({ posts }) {
           </h1>
         </header>
         <dl className="list-container items-center gap-2">
-          {posts.map(({ slug, title, date, status }) => (
-            <React.Fragment key={slug}>
+          {posts.map(({ slug, title, date, isDraft }) => (
+            <React.Fragment key={slug.current || slug}>
               <dt
-                className={`list-title border-none pt-0 ${status === "draft" ? "opacity-30 dark:opacity-30" : ""}`}
+                className={`list-title border-none pt-0 ${isDraft ? "opacity-30 dark:opacity-30" : ""}`}
               >
-                {status === "draft" ? (
+                {isDraft ? (
                   // For drafts, "redact" the date
                   <time className="time time-lg" dateTime={date}>
                     ▒▒▒ ▒▒, ▒▒▒▒
@@ -43,17 +41,17 @@ export default function Posts({ posts }) {
                 )}
               </dt>
               <dd
-                className={`list-content border-none pb-4 pt-0 sm:pb-0 ${status === "draft" ? "opacity-30 dark:opacity-30" : ""}`}
+                className={`list-content border-none pb-4 pt-0 sm:pb-0 ${isDraft ? "opacity-30 dark:opacity-30" : ""}`}
               >
                 <div className="inline-flex items-center gap-1">
-                  {status === "draft" ? (
+                  {isDraft ? (
                     // For drafts, display the title without a link and with the "WIP" badge
                     <span>
                       {title} <Badge>WIP</Badge>
                     </span>
                   ) : (
                     // For published posts, display the link
-                    <Link href={`/posts/${slug}`} className="link">
+                    <Link href={`/posts/${slug.current || slug}`} className="link">
                       {title}
                     </Link>
                   )}
@@ -67,49 +65,26 @@ export default function Posts({ posts }) {
   );
 }
 
-const postsDirectory = path.join(process.cwd(), "pages/posts/content");
-const draftsDirectory = path.join(process.cwd(), "pages/posts/drafts");
-
 export const getStaticProps = async () => {
-  const contentFiles = fs.readdirSync(postsDirectory);
-  
-  let draftFiles = [];
-  try {
-    draftFiles = fs.readdirSync(draftsDirectory);
-  } catch {}
+  const posts = await client.fetch(allPostsQuery);
 
-  const posts = [
-    ...contentFiles.map((filename) => {
-      const filePath = path.join(postsDirectory, filename);
-      const fileContents = fs.readFileSync(filePath, "utf8");
-      const { data } = matter(fileContents);
+  // Transform Sanity data to match expected format
+  // Check if post is a draft by checking if _id starts with "drafts."
+  const transformedPosts = posts.map((post) => ({
+    title: post.title,
+    date: post.date,
+    slug: post.slug,
+    isDraft: post._id.startsWith('drafts.'),
+  }));
 
-      return {
-        title: data.title,
-        date: data.date,
-        slug: filename.replace(/\.mdx?$/, ""),
-        status: "published",
-      };
-    }),
-    ...draftFiles.map((filename) => {
-      const filePath = path.join(draftsDirectory, filename);
-      const fileContents = fs.readFileSync(filePath, "utf8");
-      const { data } = matter(fileContents);
-
-      return {
-        title: data.title,
-        date: data.date,
-        slug: filename.replace(/\.mdx?$/, ""),
-        status: "draft",
-      };
-    }),
-  ];
-
-  posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  // Already sorted by date desc from query, but ensure it
+  transformedPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return {
     props: {
-      posts,
+      posts: transformedPosts,
     },
+    // Revalidate every hour (3600 seconds) to pick up new content
+    revalidate: 3600,
   };
 };
