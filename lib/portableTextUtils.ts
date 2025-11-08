@@ -72,7 +72,26 @@ export function calculateReadingTime(content: PortableTextBlock[]): number {
       if (block._type === 'block' && block.children) {
         for (const child of block.children) {
           if (child._type === 'span' && 'text' in child) {
-            const words = child.text.trim().split(/\s+/).filter(Boolean)
+            // Filter out stega-encoded metadata that might be embedded in text
+            // Stega encoding can add invisible characters or metadata
+            let text = child.text
+            
+            // Remove stega markers and invisible Unicode characters
+            // Stega uses zero-width spaces and other invisible characters
+            text = text.replace(/[\u200B-\u200D\uFEFF\u2060]/g, '') // Remove zero-width spaces and word joiners
+            
+            // Remove any extremely long sequences (likely encoded metadata)
+            // Split on whitespace and filter
+            const words = text.trim().split(/\s+/).filter(word => {
+              const trimmed = word.trim()
+              // Filter out:
+              // - Empty strings
+              // - Words longer than 50 chars (likely encoded data, not real words)
+              // - Strings with no alphanumeric characters
+              return trimmed.length > 0 && 
+                     trimmed.length <= 50 && 
+                     /[a-zA-Z0-9\u00C0-\u017F]/.test(trimmed)
+            })
             wordCount += words.length
           }
         }
@@ -88,6 +107,8 @@ export function calculateReadingTime(content: PortableTextBlock[]): number {
   traverse(content)
   
   const readingSpeed = 200 // words per minute
-  return Math.ceil(wordCount / readingSpeed)
+  const minutes = Math.ceil(wordCount / readingSpeed)
+  // Return at least 1 minute if there's any content
+  return Math.max(1, minutes)
 }
 
