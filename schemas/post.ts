@@ -143,8 +143,9 @@ export default defineType({
     select: {
       title: 'title',
       date: 'date',
+      slug: 'slug.current',
     },
-    prepare({ title, date }) {
+    prepare({ title, date, slug }) {
       return {
         title,
         subtitle: date,

@@ -202,7 +202,9 @@ export default function Place({ title, year, places }) {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const slug = context.params?.slug as string;
-  const place = await getPlaceBySlug(slug);
+  // Check if preview/draft mode is enabled
+  const isDraftMode = context.preview === true;
+  const place = await getPlaceBySlug(slug, isDraftMode);
 
   if (!place) {
     return {
