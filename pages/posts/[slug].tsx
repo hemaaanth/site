@@ -3,32 +3,21 @@ import { Main } from "../../components/Layouts";
 import { baseUrl, SEO } from "../../components/SEO";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import Badge from "../../components/Badge";
 import { LinkShare } from "../../components/Links";
 import Link from "next/link";
-import { serialize } from "next-mdx-remote/serialize";
-import { MDXRemote } from "next-mdx-remote";
-import { mdxComponents } from "../../components/Prose";
 import formatDate from "../../lib/formatDate";
-import { LinkExternal } from "../../components/Links";
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
-import { remark } from 'remark';
-import html from 'remark-html';
-import remarkGfm from 'remark-gfm';
-
-const postsDirectory = path.join(process.cwd(), 'pages/posts/content/');
+import { getPostBySlug, getPublishedPostSlugs } from "../../lib/sanity";
+import PortableText from "../../components/PortableText";
+import { extractHeaders, filterHeadersByDepth, calculateReadingTime } from "../../lib/portableTextUtils";
+import type { PortableTextBlock } from '@portabletext/types';
 
 export default function Post(props) {
   const router = useRouter();
-  const { title, date, meta, tldr, mdxSource, headers, readingTime, layout} = props;
+  const { title, date, meta, tldr, content, headers, readingTime, layout} = props;
   const slug = router.query.slug;
   const relativeUrl = `/posts/${slug}`;
-  const allPostsUrl = `${baseUrl}/posts`;
   const url = `${baseUrl}${relativeUrl}`;
-  console.log(`${baseUrl}/api/og?title=${encodeURIComponent(title)}`)
   const [activeSection, setActiveSection] = useState('');
 
   useEffect(() => {
@@ -78,7 +67,7 @@ export default function Post(props) {
         <div className="prose-custom">
             <p className="text-neutral-700">{readingTime} minute(s)</p>
 
-            <MDXRemote {...mdxSource} components={{ ...mdxComponents, LinkExternal }} />
+            <PortableText content={content} />
             </div>
             <div className="prose-custom">
               <hr className="pb-0" />
@@ -127,65 +116,52 @@ export default function Post(props) {
 }
 
 export const getStaticProps = async (context) => {
-  const slug = context.params?.slug;
-  const filePath = path.join(postsDirectory, `${slug}.mdx`);
-  const fileContents = fs.readFileSync(filePath, 'utf8');
+  const slug = context.params?.slug as string;
+  const post = await getPostBySlug(slug);
 
-  const { data: frontMatter, content } = matter(fileContents);
-  const mdxSource = await serialize(content, {
-    mdxOptions: {
-      remarkPlugins: [remarkGfm],
-    },
-  });
-
-  const headerRegex = /^(#+)\s+(.*)/gm; // finding markdown headers
-  let headers = [];
-  let match;
-  let minDepth = Infinity;
-
-  const words = content.trim().split(/\s+/).length; // getting wordcount / reading time
-  const readingSpeed = 200;
-  const readingTime = Math.ceil(words / readingSpeed);
-  const layout = frontMatter.layout || 'default';
-
-  while ((match = headerRegex.exec(content)) !== null) {
-    let text = match[2].trim();
-    const depth = match[1].length; // getting depth
-    if (depth < minDepth) minDepth = depth;
-
-    text = text.replace(/\*\*?(.*?)\*\*?/g, '$1'); // removing bold and italic
-    text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1'); // removing links
-
-    headers.push({ depth, text });
+  if (!post) {
+    return {
+      notFound: true,
+    };
   }
 
-  // Adjust header depth relative to the minimum depth found
-  headers = headers.map(header => ({
-    ...header,
-    depth: header.depth - minDepth + 1
-  }));
-
-  // Filter headers based on the optional 'depth' variable from front matter
-  const maxDepth = frontMatter.depth || Infinity; // Use all headers if 'depth' is not specified
-  headers = headers.filter(header => header.depth <= maxDepth);
+  const content = post.content as PortableTextBlock[];
+  const layout = post.layout || 'default';
+  
+  // Extract headers from Portable Text
+  let headers = extractHeaders(content);
+  
+  // Filter headers based on the optional 'depth' variable
+  const maxDepth = post.depth || Infinity;
+  headers = filterHeadersByDepth(headers, maxDepth);
+  
+  // Calculate reading time
+  const readingTime = calculateReadingTime(content);
 
   return {
     props: {
-      ...frontMatter,
-      mdxSource,
-      headers,
+      title: post.title,
+      date: post.date,
+      author: post.author,
+      tldr: post.tldr,
+      meta: post.meta || null,
+      category: post.category,
       layout,
+      depth: post.depth || null,
+      content,
+      headers,
       readingTime,
-      isDraft: frontMatter.status === 'draft'
+      isDraft: false, // Only published posts are accessible via getStaticPaths
     },
+    // Revalidate every hour (3600 seconds) to pick up new content
+    revalidate: 3600,
   };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  // Logic to generate the paths for your posts
-  const filenames = fs.readdirSync(postsDirectory);
-  const paths = filenames.map((filename) => ({
-    params: { slug: filename.replace(/\.mdx?$/, '') },
+  const posts = await getPublishedPostSlugs();
+  const paths = posts.map((post) => ({
+    params: { slug: post.slug.current },
   }));
 
   return {
