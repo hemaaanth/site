@@ -1,15 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
+import Head from "next/head";
 import { Main } from "../components/Layouts";
 import { SEO } from "../components/SEO";
 import Writing from "../components/Home/Writing";
 import Tinkering from "../components/Home/Tinkering";
 import Link from "next/link";
 import { LinkExternal } from "../components/Links";
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
 import { getCurrentlyReading } from "../lib/hardcover";
 import { getRecentlyPlayed } from "../lib/spotify";
+import { getAllPosts } from "../lib/sanity";
 import Badge from "../components/Badge";
 
 export default function Home({
@@ -18,8 +17,53 @@ export default function Home({
   currentlyReading,
   recentlyPlayed,
 }) {
+  // Collect all image URLs for preloading
+  const imageUrls = React.useMemo(() => {
+    const urls: string[] = [];
+    
+    // Add book images
+    currentlyReading.forEach(book => {
+      if (book.imageUrl) urls.push(book.imageUrl);
+    });
+    if (lastCompleted?.imageUrl) {
+      urls.push(lastCompleted.imageUrl);
+    }
+    
+    // Add Spotify track images
+    recentlyPlayed.forEach(track => {
+      if (track.imageUrl) urls.push(track.imageUrl);
+    });
+    
+    return urls;
+  }, [currentlyReading, lastCompleted, recentlyPlayed]);
+
+  // Preload images when component mounts
+  useEffect(() => {
+    imageUrls.forEach(url => {
+      if (url) {
+        // Preload via Image object to ensure browser caches it
+        const img = new Image();
+        img.src = url;
+      }
+    });
+  }, [imageUrls]);
+
   return (
     <>
+      <Head>
+        {/* Preload all hover images */}
+        {imageUrls.map((url, index) => (
+          url && (
+            <link
+              key={`preload-${index}`}
+              rel="preload"
+              as="image"
+              href={url}
+              crossOrigin="anonymous"
+            />
+          )
+        ))}
+      </Head>
       <SEO
         seo={{
           title: "Hemanth Soni",
@@ -114,26 +158,21 @@ export default function Home({
 
 export async function getStaticProps() {
   console.log("Starting getStaticProps...");
-  const postsDirectory = path.join(process.cwd(), "pages/posts/content");
-  const filenames = fs.readdirSync(postsDirectory);
+  
+  // Fetch all posts from Sanity
+  const allPosts = await getAllPosts();
 
-  const posts = filenames.map((filename) => {
-    const filePath = path.join(postsDirectory, filename);
-    const fileContents = fs.readFileSync(filePath, "utf8");
-    const { data } = matter(fileContents);
+  // Transform Sanity posts to match expected format
+  const posts = allPosts.map((post) => ({
+    title: post.title,
+    date: post.date,
+    slug: post.slug.current || post.slug,
+  }));
 
-    return {
-      title: data.title || "Untitled",
-      date: data.date || "Untitled",
-      slug: filename.replace(/\.mdx?$/, ""),
-      status: data.status || "Untitled",
-    };
-  });
-
-  // Sort posts by date
+  // Sort posts by date (already sorted by query, but ensure it)
   posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  // Only keep the three most recent posts
+  // Only keep the five most recent posts
   const recentPosts = posts.slice(0, 5);
 
   // Add reading data
