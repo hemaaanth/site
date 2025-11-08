@@ -117,7 +117,9 @@ export default function Post(props) {
 
 export const getStaticProps = async (context) => {
   const slug = context.params?.slug as string;
-  const post = await getPostBySlug(slug);
+  // Check if preview/draft mode is enabled
+  const isDraftMode = context.preview === true;
+  const post = await getPostBySlug(slug, isDraftMode);
 
   if (!post) {
     return {

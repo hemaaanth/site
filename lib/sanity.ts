@@ -17,6 +17,11 @@ export const client = createClient({
   apiVersion,
   useCdn: true,
   token,
+  // Enable Content Source Maps for visual editing (only in preview mode)
+  perspective: 'published',
+  stega: {
+    enabled: false, // Disable stega encoding by default (only enable in preview)
+  },
 })
 
 const builder = imageUrlBuilder(client)
@@ -35,6 +40,21 @@ export const postsQuery = `*[_type == "post" && !(_id in path("drafts.**"))] | o
 }`
 
 export const postBySlugQuery = `*[_type == "post" && slug.current == $slug && !(_id in path("drafts.**"))][0] {
+  _id,
+  title,
+  slug,
+  date,
+  author,
+  tldr,
+  meta,
+  category,
+  layout,
+  depth,
+  content
+}`
+
+// Query that includes drafts (for preview mode)
+export const postBySlugQueryWithDrafts = `*[_type == "post" && slug.current == $slug][0] {
   _id,
   title,
   slug,
@@ -79,6 +99,16 @@ export const placeBySlugQuery = `*[_type == "place" && slug.current == $slug && 
   places
 }`
 
+// Query that includes drafts (for preview mode)
+export const placeBySlugQueryWithDrafts = `*[_type == "place" && slug.current == $slug][0] {
+  _id,
+  title,
+  slug,
+  date,
+  rank,
+  places
+}`
+
 // Only published places for getStaticPaths (drafts don't have pages)
 export const publishedPlacesQuery = `*[_type == "place" && !(_id in path("drafts.**"))] | order(date desc) {
   slug
@@ -93,8 +123,23 @@ export async function getAllPostsIncludingDrafts() {
   return await client.fetch(allPostsQuery)
 }
 
-export async function getPostBySlug(slug: string) {
-  return await client.fetch(postBySlugQuery, { slug })
+export async function getPostBySlug(slug: string, includeDrafts = false) {
+  const query = includeDrafts ? postBySlugQueryWithDrafts : postBySlugQuery
+  // Use a client without CDN when fetching drafts, with Content Source Maps for visual editing
+  const fetchClient = includeDrafts 
+    ? createClient({
+        projectId,
+        dataset,
+        apiVersion,
+        useCdn: false, // Drafts aren't in CDN
+        token,
+        perspective: 'previewDrafts', // Enable preview drafts perspective
+        stega: {
+          enabled: true, // Enable stega encoding for visual editing overlays
+        },
+      })
+    : client
+  return await fetchClient.fetch(query, { slug })
 }
 
 export async function getPublishedPostSlugs() {
@@ -107,8 +152,23 @@ export async function getAllPlaces() {
   return await client.fetch(placesQuery)
 }
 
-export async function getPlaceBySlug(slug: string) {
-  return await client.fetch(placeBySlugQuery, { slug })
+export async function getPlaceBySlug(slug: string, includeDrafts = false) {
+  const query = includeDrafts ? placeBySlugQueryWithDrafts : placeBySlugQuery
+  // Use a client without CDN when fetching drafts, with Content Source Maps for visual editing
+  const fetchClient = includeDrafts 
+    ? createClient({
+        projectId,
+        dataset,
+        apiVersion,
+        useCdn: false, // Drafts aren't in CDN
+        token,
+        perspective: 'previewDrafts', // Enable preview drafts perspective
+        stega: {
+          enabled: true, // Enable stega encoding for visual editing overlays
+        },
+      })
+    : client
+  return await fetchClient.fetch(query, { slug })
 }
 
 export async function getPublishedPlaceSlugs() {

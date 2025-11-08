@@ -6,6 +6,7 @@ import { useEffect } from 'react'
 import { Router } from 'next/router'
 import posthog from 'posthog-js'
 import { PostHogProvider } from 'posthog-js/react'
+import { VisualEditing } from '@sanity/visual-editing'
 
 const sansFont = localFont({
   src: "../public/inter.roman.var.woff2",
@@ -54,6 +55,8 @@ export default function MyApp({
         </style>
         <PostHogProvider client={posthog}>
           <Component {...pageProps} />
+          {/* Visual editing overlays - automatically enabled when in preview mode */}
+          <VisualEditing />
         </PostHogProvider>
     </>
   );
