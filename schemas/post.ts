@@ -84,8 +84,22 @@ export default defineType({
                 fields: [
                   {
                     name: 'href',
-                    type: 'url',
+                    type: 'string',
                     title: 'URL',
+                    description: 'Full URL (https://...) or anchor link (#section)',
+                    validation: (Rule) =>
+                      Rule.custom((value) => {
+                        if (!value) return true // Allow empty for optional links
+                        // Allow anchor links starting with #
+                        if (value.startsWith('#')) return true
+                        // Allow full URLs
+                        try {
+                          new URL(value)
+                          return true
+                        } catch {
+                          return 'Must be a valid URL (https://...) or anchor link (#section)'
+                        }
+                      }),
                   },
                 ],
               },
@@ -96,8 +110,22 @@ export default defineType({
                 fields: [
                   {
                     name: 'href',
-                    type: 'url',
+                    type: 'string',
                     title: 'URL',
+                    description: 'Full URL (https://...) or anchor link (#section)',
+                    validation: (Rule) =>
+                      Rule.custom((value) => {
+                        if (!value) return true // Allow empty for optional links
+                        // Allow anchor links starting with #
+                        if (value.startsWith('#')) return true
+                        // Allow full URLs
+                        try {
+                          new URL(value)
+                          return true
+                        } catch {
+                          return 'Must be a valid URL (https://...) or anchor link (#section)'
+                        }
+                      }),
                   },
                 ],
               },
