@@ -99,7 +99,7 @@ export default function Links() {
                     <dd className="list-content">
                         <div className="pb-2 last-of-type:pb-0">
                             <div>
-                                <LinkExternal href="https://goldsky.com">
+                                <LinkExternal href="https://goldsky.com?ref=hemanth">
                                     Company
                                 </LinkExternal>
                                 <time className="time">
@@ -107,7 +107,7 @@ export default function Links() {
                                 </time><br />
                             </div>
                             <div>
-                                <LinkExternal href="https://docs.goldsky.com">
+                                <LinkExternal href="https://docs.goldsky.com?ref=hemanth">
                                     Documentation
                                 </LinkExternal>
                                 <time className="time">
@@ -115,7 +115,7 @@ export default function Links() {
                                 </time><br />
                             </div>
                             <div>
-                                <LinkExternal href="https://crypto.clickhouse.com">
+                                <LinkExternal href="https://crypto.clickhouse.com?ref=hemanth">
                                     Open Solana data
                                 </LinkExternal>
                                 <time className="time">
@@ -123,7 +123,15 @@ export default function Links() {
                                 </time><br />
                             </div>
                             <div>
-                                <LinkExternal href="https://indexed.xyz">
+                                <LinkExternal href="https://goldsky.com/products/turbo-pipelines?ref=hemanth">
+                                    Solana Data Streams
+                                </LinkExternal>
+                                <time className="time">
+                                    Turbo Pipelines
+                                </time><br />
+                            </div>
+                            <div>
+                                <LinkExternal href="https://indexed.xyz?ref=hemanth">
                                     Open EVM + Arweave data
                                 </LinkExternal>
                                 <time className="time">
@@ -131,11 +139,11 @@ export default function Links() {
                                 </time><br />
                             </div>
                             <div>
-                                <LinkExternal href="https://erpc.cloud">
+                                <LinkExternal href="https://erpc.cloud?ref=hemanth">
                                     RPC load-balancer and cache
                                 </LinkExternal>
                                 <time className="time">
-                                    erpc.cloud
+                                    eRPC
                                 </time>
                             </div>
                         </div>
