@@ -90,6 +90,8 @@ export default defineType({
                     validation: (Rule) =>
                       Rule.custom((value) => {
                         if (!value) return true // Allow empty for optional links
+                        // Ensure value is a string
+                        if (typeof value !== 'string') return 'Must be a valid URL (https://...) or anchor link (#section)'
                         // Allow anchor links starting with #
                         if (value.startsWith('#')) return true
                         // Allow full URLs
@@ -116,6 +118,8 @@ export default defineType({
                     validation: (Rule) =>
                       Rule.custom((value) => {
                         if (!value) return true // Allow empty for optional links
+                        // Ensure value is a string
+                        if (typeof value !== 'string') return 'Must be a valid URL (https://...) or anchor link (#section)'
                         // Allow anchor links starting with #
                         if (value.startsWith('#')) return true
                         // Allow full URLs
