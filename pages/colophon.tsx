@@ -1,7 +1,6 @@
 import React from "react";
 import { Main } from "../components/Layouts";
 import { SEO } from "../components/SEO";
-import Writing from "../components/Home/Writing";
 import { getCurrentCoffee } from "../lib/coffee";
 
 interface CoffeeData {

@@ -21,13 +21,13 @@ export async function getCurrentCoffee(): Promise<CoffeeData | null> {
 
     const data = await response.json();
     
-    // Only return the fields we actually need to reduce payload size
+    // Only return the fields we actually need (exclude imageUrl as it's often base64 encoded and huge)
     return {
       coffee: data.coffee || '',
       roaster: data.roaster || '',
       averageRating: data.averageRating || 0,
       totalRatings: data.totalRatings || 0,
-      imageUrl: data.imageUrl || '',
+      imageUrl: '', // Exclude large base64 image data
     };
   } catch (error) {
     console.error('Error fetching coffee data:', error);
