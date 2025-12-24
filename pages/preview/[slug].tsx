@@ -112,7 +112,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         recipients,
         expiresAt
       }`,
-      { token }
+      { token } as Record<string, any>
     )
 
     if (!session) {

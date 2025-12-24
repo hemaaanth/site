@@ -124,7 +124,7 @@ export default async function handler(
     // Use prepareSession (access tokens) for preview mode
     // This is simpler and appropriate for "anyone with token can access" use case
     const liveblocksSession = liveblocks.prepareSession(userId, {
-      info: {
+      userInfo: {
         name: displayName,
         email: userEmail,
         isOwner: isOwner,
