@@ -116,7 +116,7 @@ export default async function handler(
         break
       }
 
-      case 'threadResolved': {
+      case 'threadMarkedAsResolved': {
         const { userId, threadId } = event.data as any
 
         // If owner resolved, notify recipients
@@ -138,7 +138,7 @@ export default async function handler(
         break
       }
 
-      case 'threadUnresolved': {
+      case 'threadMarkedAsUnresolved': {
         // Optional: handle unresolve events
         break
       }
