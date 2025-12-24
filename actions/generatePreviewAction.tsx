@@ -311,6 +311,10 @@ export const generatePreviewAction: DocumentActionComponent = (props) => {
     return null
   }
 
+  // Use the published ID if it exists, otherwise strip 'drafts.' prefix from draft ID
+  // This ensures we always reference the base document ID in our review system
+  const documentId = published?._id || id.replace(/^drafts\./, '')
+
   return {
     label: 'Generate Preview Link',
     icon: AddIcon,
@@ -325,7 +329,7 @@ export const generatePreviewAction: DocumentActionComponent = (props) => {
           content: (
             <GeneratePreviewDialog
               doc={doc}
-              id={id}
+              id={documentId}
               type={type}
               onClose={() => setDialogOpen(false)}
             />
