@@ -120,8 +120,11 @@ export default async function handler(
           liveblocksRoomId,
           documentReference: {
             _type: 'reference',
-            _ref: documentId,
+            _ref: documentId.replace(/^drafts\./, ''),
+            _weak: true, // Allow referencing drafts
           },
+          documentSlug: slug,
+          documentTitle: `Preview for ${slug}`,
           mode,
           createdBy: {
             id: ownerInfo.id || ownerInfo.email,
@@ -150,8 +153,11 @@ export default async function handler(
           liveblocksRoomId, // Same room as recipient
           documentReference: {
             _type: 'reference',
-            _ref: documentId,
+            _ref: documentId.replace(/^drafts\./, ''),
+            _weak: true, // Allow referencing drafts
           },
+          documentSlug: slug,
+          documentTitle: `Preview for ${slug}`,
           mode,
           createdBy: {
             id: ownerInfo.id || ownerInfo.email,
@@ -224,8 +230,11 @@ export default async function handler(
         liveblocksRoomId,
         documentReference: {
           _type: 'reference',
-          _ref: documentId,
+          _ref: documentId.replace(/^drafts\./, ''),
+          _weak: true, // Allow referencing drafts
         },
+        documentSlug: slug,
+        documentTitle: `Preview for ${slug}`,
         mode,
         createdBy: {
           id: ownerInfo.id || ownerInfo.email,

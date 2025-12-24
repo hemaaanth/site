@@ -102,12 +102,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         _id,
         liveblocksRoomId,
         mode,
-        documentReference->{
-          _id,
-          _type,
-          slug,
-          title
-        },
+        documentSlug,
+        documentTitle,
         createdBy,
         recipients,
         expiresAt
@@ -124,18 +120,22 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       return { notFound: true }
     }
 
-    // Verify slug matches
-    const docSlug = session.documentReference?.slug?.current || session.documentReference?.slug
-    if (docSlug !== slug) {
+    // Verify slug matches (use stored slug instead of dereferencing)
+    if (session.documentSlug !== slug) {
+      console.error('Slug mismatch:', { expected: slug, got: session.documentSlug })
       return { notFound: true }
     }
 
     // Fetch the draft document
+    console.log('Fetching post by slug:', slug, 'with drafts enabled')
     const post = await getPostBySlug(slug, true) // true = draft mode
 
     if (!post) {
+      console.error('Post not found for slug:', slug)
       return { notFound: true }
     }
+    
+    console.log('Post found:', post._id, post.title)
 
     const content = post.content as PortableTextBlock[]
     const layout = post.layout || 'default'
