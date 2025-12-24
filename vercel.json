@@ -1,0 +1,14 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/send-notifications",
+      "schedule": "*/5 * * * *"
+    }
+  ],
+  "functions": {
+    "pages/cms/[[...index]].tsx": {
+      "maxDuration": 60
+    }
+  }
+}
+

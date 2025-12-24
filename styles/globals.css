@@ -426,3 +426,77 @@ a[href^="mailto:"] {
 .mapboxgl-control-container {
   display: none !important;
 }
+
+/* Liveblocks Comments Styles - Using @liveblocks/react-ui */
+/* Note: Base styles imported in _app.tsx to avoid duplication */
+
+/* Hide Liveblocks branding */
+[data-liveblocks-portal] a[href*="liveblocks.io"] {
+  display: none !important;
+}
+
+/* Liveblocks theme customization */
+.lb-root {
+  --lb-accent: rgb(37 99 235);
+  --lb-accent-foreground: rgb(255 255 255);
+  --lb-radius: 0.5rem;
+}
+
+/* Dark mode (via .dark class from component) */
+.dark .lb-root {
+  --lb-accent: rgb(96 165 250);
+  --lb-accent-foreground: rgb(15 23 42);
+  --lb-background: rgb(9 9 11);
+  --lb-foreground: rgb(229 231 235);
+  --lb-dynamic-background: rgb(23 23 23);
+  --lb-dynamic-foreground: rgb(212 212 212);
+}
+
+/* Hide attachment and emoji buttons in composer */
+.lb-composer-editor-action[aria-label="Add emoji"],
+.lb-composer-editor-action[aria-label="Attach files"] {
+  display: none !important;
+}
+
+/* Hide three-dot menu button on comments */
+.lb-comment-action[aria-label="More"] {
+  display: none !important;
+}
+
+/* Hide "Powered by Liveblocks" badge */
+#liveblocks-badge {
+  display: none !important;
+}
+
+/* Always show send button and keep composer footer stable */
+.lb-composer-submit,
+.lb-composer-action,
+.lb-composer-action[disabled] {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Keep button disabled functionally but always visible */
+.lb-composer-action[disabled] {
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+}
+
+/* Prevent composer footer from resizing when blurred */
+.lb-composer-footer {
+  min-height: auto !important;
+  height: auto !important;
+}
+
+/* Keep composer editor actions visible */
+.lb-composer-editor-actions {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Remove padding from inline thread highlights to prevent text shifting */
+[data-lb-inline-thread] {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
