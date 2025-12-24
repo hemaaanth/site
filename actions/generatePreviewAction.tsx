@@ -311,9 +311,9 @@ export const generatePreviewAction: DocumentActionComponent = (props) => {
     return null
   }
 
-  // Use the published ID if it exists, otherwise strip 'drafts.' prefix from draft ID
-  // This ensures we always reference the base document ID in our review system
-  const documentId = published?._id || id.replace(/^drafts\./, '')
+  // Use the actual document ID (keep drafts. prefix if it's a draft)
+  // Sanity needs the correct ID to create references
+  const documentId = published?._id || id
 
   return {
     label: 'Generate Preview Link',
