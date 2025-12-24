@@ -43,7 +43,7 @@ export default function Place({ title, year, places }) {
       delete query.types;
     }
     router.push({ query }, undefined, { shallow: true });
-  }, [selectedTypes]);
+  }, [selectedTypes, router]);
 
   // Initialize filters from URL on load
   useEffect(() => {
@@ -51,7 +51,7 @@ export default function Place({ title, year, places }) {
       const urlTypes = (router.query.types as string).split(",") as PlaceType[];
       setSelectedTypes(urlTypes);
     }
-  }, [router.isReady]);
+  }, [router.isReady, router.query.types]);
 
   // Fetch coordinates for all places
   useEffect(() => {
