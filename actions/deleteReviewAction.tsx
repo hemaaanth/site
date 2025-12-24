@@ -85,7 +85,7 @@ export const deleteReviewAction: DocumentActionComponent = (props) => {
     label: 'Delete',
     icon: TrashIcon,
     tone: 'critical',
-    disabled: isDeleting || deleteOp.disabled,
+    disabled: isDeleting || Boolean(deleteOp.disabled),
     onHandle: handleDelete,
   }
 }
