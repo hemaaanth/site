@@ -4,6 +4,9 @@ import { presentationTool } from 'sanity/presentation'
 import { schemaTypes } from './schemas'
 import { assist } from '@sanity/assist'
 import { locations, mainDocuments } from './lib/presentation/resolve'
+import { generatePreviewAction } from './actions/generatePreviewAction'
+import { deleteReviewAction } from './actions/deleteReviewAction'
+import { OpenReviewsBadge } from './components/sanity/OpenReviewsBadge'
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'ubrdxobo'
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
@@ -14,6 +17,7 @@ export default defineConfig({
   title: 'Hemanth\'s CMS',
   projectId,
   dataset,
+  basePath: '/cms',
   plugins: [
     structureTool(),
     presentationTool({
@@ -37,5 +41,27 @@ export default defineConfig({
   ],
   schema: {
     types: schemaTypes,
+  },
+  document: {
+    actions: (prev, context) => {
+      // Add generate preview action for posts and places
+      if (context.schemaType === 'post' || context.schemaType === 'place') {
+        return [...prev, generatePreviewAction]
+      }
+      // Replace default delete action with cleanup version for reviews
+      if (context.schemaType === 'review') {
+        return prev.map(action => 
+          action.action === 'delete' ? deleteReviewAction : action
+        )
+      }
+      return prev
+    },
+    badges: (prev, context) => {
+      // Add open reviews badge for posts and places
+      if (context.schemaType === 'post' || context.schemaType === 'place') {
+        return [...prev, OpenReviewsBadge]
+      }
+      return prev
+    },
   },
 })

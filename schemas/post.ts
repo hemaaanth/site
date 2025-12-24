@@ -176,11 +176,13 @@ export default defineType({
       title: 'title',
       date: 'date',
       slug: 'slug.current',
+      _id: '_id',
     },
-    prepare({ title, date, slug }) {
+    prepare({ title, date, slug, _id }) {
       return {
         title,
         subtitle: date,
+        _id,
       }
     },
   },
