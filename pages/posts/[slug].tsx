@@ -94,6 +94,7 @@ export default function Post(props) {
               <h3>Date</h3>
               <p>
                 <time className="time" dateTime={date}>
+                  <span className="sr-only">{date}</span>
                   {formatDate(date, false)}
                 </time>
               </p>
@@ -146,7 +147,7 @@ export const getStaticProps = async (context) => {
       date: post.date,
       author: post.author,
       tldr: post.tldr,
-      meta: post.meta || null,
+      meta: post.meta,
       category: post.category,
       layout,
       depth: post.depth || null,
