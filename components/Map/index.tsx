@@ -153,8 +153,10 @@ const Map: React.FC<MapProps> = ({
       map.current.fitBounds(bounds, { padding: 50 });
     }
 
+    // Capture markers in a local variable for cleanup
+    const currentMarkers = markers.current;
     return () => {
-      markers.current.forEach(({ marker }) => marker.remove());
+      currentMarkers.forEach(({ marker }) => marker.remove());
       map.current?.remove();
     };
   }, [locations]); // Re-run effect when locations change
