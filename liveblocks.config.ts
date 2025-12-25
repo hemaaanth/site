@@ -67,10 +67,7 @@ const client = createClient({
     const users = await response.json()
     return users
   },
-  resolveMentionSuggestions: async ({ text, roomId }) => {
-    // For future @mentions functionality
-    return []
-  },
+  resolveMentionSuggestions: undefined, // Disable mentions
 })
 
 // Export hooks and components from Liveblocks
