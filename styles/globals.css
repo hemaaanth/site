@@ -452,14 +452,18 @@ a[href^="mailto:"] {
   --lb-dynamic-foreground: rgb(212 212 212);
 }
 
-/* Hide attachment and emoji buttons in composer */
+/* Hide attachment, emoji, and mention buttons in composer */
 .lb-composer-editor-action[aria-label="Add emoji"],
-.lb-composer-editor-action[aria-label="Attach files"] {
+.lb-composer-editor-action[aria-label="Attach files"],
+.lb-composer-editor-action[aria-label="Mention someone"],
+.lb-composer-mention-button,
+.lb-lexical-mention-button {
   display: none !important;
 }
 
-/* Hide three-dot menu button on comments */
-.lb-comment-action[aria-label="More"] {
+/* Hide three-dot menu button and emoji picker on comments */
+.lb-comment-action[aria-label="More"],
+.lb-comment-action[aria-label="Add reaction"] {
   display: none !important;
 }
 

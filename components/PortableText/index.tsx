@@ -84,33 +84,33 @@ const defaultComponents = {
     em: ({ children }: any) => <em>{children}</em>,
   },
   block: {
-    h1: ({ children }: any) => {
+    h1: ({ children, value }: any) => {
       const id = childrenToString(children).toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '')
-      return <h1 id={id}>{children}</h1>
+      return <h1 id={id} data-block-key={value._key}>{children}</h1>
     },
-    h2: ({ children }: any) => {
+    h2: ({ children, value }: any) => {
       const id = childrenToString(children).toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '')
-      return <h2 id={id}>{children}</h2>
+      return <h2 id={id} data-block-key={value._key}>{children}</h2>
     },
-    h3: ({ children }: any) => {
+    h3: ({ children, value }: any) => {
       const id = childrenToString(children).toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '')
-      return <h3 id={id}>{children}</h3>
+      return <h3 id={id} data-block-key={value._key}>{children}</h3>
     },
-    h4: ({ children }: any) => {
+    h4: ({ children, value }: any) => {
       const id = childrenToString(children).toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '')
-      return <h4 id={id}>{children}</h4>
+      return <h4 id={id} data-block-key={value._key}>{children}</h4>
     },
-    h5: ({ children }: any) => {
+    h5: ({ children, value }: any) => {
       const id = childrenToString(children).toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '')
-      return <h5 id={id}>{children}</h5>
+      return <h5 id={id} data-block-key={value._key}>{children}</h5>
     },
-    h6: ({ children }: any) => {
+    h6: ({ children, value }: any) => {
       const id = childrenToString(children).toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '')
-      return <h6 id={id}>{children}</h6>
+      return <h6 id={id} data-block-key={value._key}>{children}</h6>
     },
-    normal: ({ children }: any) => <p>{children}</p>,
-    blockquote: ({ children }: any) => (
-      <blockquote className="border-l-4 border-neutral-300 dark:border-neutral-700 pl-4 italic text-neutral-600 dark:text-silver-dark my-6">
+    normal: ({ children, value }: any) => <p data-block-key={value._key}>{children}</p>,
+    blockquote: ({ children, value }: any) => (
+      <blockquote className="border-l-4 border-neutral-300 dark:border-neutral-700 pl-4 italic text-neutral-600 dark:text-silver-dark my-6" data-block-key={value._key}>
         {children}
       </blockquote>
     ),

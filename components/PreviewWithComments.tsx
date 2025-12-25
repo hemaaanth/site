@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { RoomProvider, useThreads, useCreateThread, useMarkThreadAsResolved } from '../liveblocks.config'
 import { ClientSideSuspense } from '@liveblocks/react'
 import { Composer, Thread, LiveblocksUiConfig } from '@liveblocks/react-ui'
@@ -61,6 +61,45 @@ function UserIdentificationModal({ onSubmit }: UserIdentificationModalProps) {
   )
 }
 
+interface FeedbackSectionProps {
+  activeThreads: any[]
+  updatedThreads: any[]
+  orphanedThreads: any[]
+  setActiveThreadId: (id: string | null) => void
+}
+
+function FeedbackSection({ activeThreads, updatedThreads, orphanedThreads, setActiveThreadId }: FeedbackSectionProps) {
+
+  return (
+    <>
+      <p className="sidebar !mb-4">{activeThreads.length} active thread(s)</p>
+      
+      {orphanedThreads.length > 0 && (
+        <>
+          <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300 pb-1">Orphaned Comments</p>
+          <div className="sidebar space-y-1">
+            {orphanedThreads.map(thread => {
+              const originalText = (thread.metadata as any)?.text || 'Unknown'
+              return (
+                <button
+                  key={thread.id}
+                  onClick={() => setActiveThreadId(thread.id)}
+                  className="block w-full text-left rounded bg-neutral-100 dark:bg-neutral-800 px-2 py-1.5 text-xs hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors truncate"
+                  title={originalText}
+                >
+                  <span className="text-neutral-700 dark:text-neutral-300 truncate block">
+                    {originalText}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+        </>
+      )}
+    </>
+  )
+}
+
 interface CommentsContentProps {
   post: any
   headers: any[]
@@ -83,10 +122,36 @@ function CommentsContent({ post, headers, readingTime, layout, mode, userInfo }:
   const [selectionInfo, setSelectionInfo] = useState<{
     text: string
     range: Range
+    blockKey?: string
   } | null>(null)
   const [activeThreadId, setActiveThreadId] = useState<string | null>(null)
   const contentRef = useRef<HTMLDivElement | null>(null)
   const composerOpenRef = useRef(false)
+  
+  // Memoize thread categorization to avoid expensive recalculation
+  const categorizedThreads = useMemo(() => {
+    const active = threads?.filter(t => !t.resolved) || []
+    const orphaned: typeof active = []
+    
+    // Simple categorization: just check if text exists in document
+    if (contentRef.current && active.length > 0) {
+      const rootText = contentRef.current.textContent || ''
+      active.forEach(thread => {
+        const metadata = thread.metadata as any
+        const text = metadata?.text
+        
+        if (text) {
+          // Check if first 50 chars of text exist in document
+          const found = rootText.toLowerCase().includes(text.toLowerCase().substring(0, 50))
+          if (!found) {
+            orphaned.push(thread)
+          }
+        }
+      })
+    }
+    
+    return { activeThreads: active, updatedThreads: [], orphanedThreads: orphaned }
+  }, [threads]) // Only depends on threads, not on any functions
   const [isDark, setIsDark] = useState(() => {
     if (typeof window !== 'undefined') {
       return window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -128,39 +193,38 @@ function CommentsContent({ post, headers, readingTime, layout, mode, userInfo }:
         setSelectionInfo(null)
         return
       }
+      
+      // Simple: just get the text as-is
       const text = selection.toString().trim()
       if (!text) {
         setSelectionInfo(null)
         return
       }
       
-      // Check if selection is within allowed areas (title, body, tldr, meta)
       const range = selection.getRangeAt(0)
       const container = range.commonAncestorContainer
       const element = container.nodeType === Node.TEXT_NODE ? container.parentElement : container as Element
       
-      // Check if the selection is within content area or sidebar metadata
+      // Check if the selection is within content area
       const isInContent = contentRef.current?.contains(element)
-      const isInSidebar = element?.closest('.list-sticky') !== null
       const isInTitle = element?.closest('h1') !== null
       
-      // Only allow comments in title, main content, or sidebar metadata (tldr/meta)
       if (!isInContent && !isInTitle) {
-        if (isInSidebar) {
-          // In sidebar, only allow tldr and meta, not TOC or Feedback
-          const isInTldr = element?.closest('.sidebar')?.previousElementSibling?.textContent === 'Tl;dr'
-          const isInMeta = element?.closest('.sidebar')?.previousElementSibling?.textContent === 'Meta'
-          if (!isInTldr && !isInMeta) {
-            setSelectionInfo(null)
-            return
-          }
-        } else {
-          setSelectionInfo(null)
-          return
-        }
+        setSelectionInfo(null)
+        return
       }
       
-      setSelectionInfo({ text, range: range.cloneRange() })
+      // Get blockKey from start of selection
+      let blockElement: HTMLElement | null = null
+      if (range.startContainer.nodeType === Node.TEXT_NODE) {
+        blockElement = range.startContainer.parentElement?.closest('[data-block-key]') as HTMLElement | null
+      } else {
+        blockElement = (range.startContainer as HTMLElement).closest('[data-block-key]')
+      }
+      
+      const blockKey = blockElement?.getAttribute('data-block-key') || undefined
+      
+      setSelectionInfo({ text, range: range.cloneRange(), blockKey })
       composerOpenRef.current = true
     }
 
@@ -196,19 +260,77 @@ function CommentsContent({ post, headers, readingTime, layout, mode, userInfo }:
     if (!root) return
     const marks = root.querySelectorAll('[data-lb-inline-thread]')
     marks.forEach((mark) => {
+      // For inline span highlights, unwrap them
       const parent = mark.parentNode
-      while (mark.firstChild) {
-        parent?.insertBefore(mark.firstChild, mark)
+      if (parent) {
+        while (mark.firstChild) {
+          parent.insertBefore(mark.firstChild, mark)
+        }
+        parent.removeChild(mark)
+        // Normalize to merge adjacent text nodes
+        parent.normalize()
       }
-      parent?.removeChild(mark)
     })
   }, [])
 
-  // Helper: find first matching text range for a snippet
-  const findRangeForText = useCallback((root: HTMLElement, text: string): Range | null => {
+  // Helper: calculate Levenshtein distance for fuzzy matching (stable, no deps)
+  const levenshteinDistance = useCallback((a: string, b: string): number => {
+    const matrix: number[][] = []
+    for (let i = 0; i <= b.length; i++) {
+      matrix[i] = [i]
+    }
+    for (let j = 0; j <= a.length; j++) {
+      matrix[0][j] = j
+    }
+    for (let i = 1; i <= b.length; i++) {
+      for (let j = 1; j <= a.length; j++) {
+        if (b.charAt(i - 1) === a.charAt(j - 1)) {
+          matrix[i][j] = matrix[i - 1][j - 1]
+        } else {
+          matrix[i][j] = Math.min(
+            matrix[i - 1][j - 1] + 1,
+            matrix[i][j - 1] + 1,
+            matrix[i - 1][j] + 1
+          )
+        }
+      }
+    }
+    return matrix[b.length][a.length]
+  }, []) // Empty deps - pure function
+
+  // Helper: find matching text range
+  const findRangeForText = useCallback((
+    root: HTMLElement, 
+    text: string, 
+    blockKey?: string
+  ): { range: Range; confidence: 'exact' | 'block-only' } | null => {
+    // Search within block if provided
+    if (blockKey) {
+      const blockElement = root.querySelector(`[data-block-key="${blockKey}"]`)
+      if (blockElement) {
+        const walker = document.createTreeWalker(blockElement, NodeFilter.SHOW_TEXT)
+        const lower = text.toLowerCase()
+        let node: Node | null = walker.nextNode()
+        
+        while (node) {
+          const content = node.textContent || ''
+          const idx = content.toLowerCase().indexOf(lower)
+          if (idx !== -1) {
+            const range = document.createRange()
+            range.setStart(node, idx)
+            range.setEnd(node, idx + text.length)
+            return { range, confidence: 'exact' }
+          }
+          node = walker.nextNode()
+        }
+      }
+    }
+    
+    // Fallback: search entire document
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT)
     const lower = text.toLowerCase()
     let node: Node | null = walker.nextNode()
+    
     while (node) {
       const content = node.textContent || ''
       const idx = content.toLowerCase().indexOf(lower)
@@ -216,10 +338,11 @@ function CommentsContent({ post, headers, readingTime, layout, mode, userInfo }:
         const range = document.createRange()
         range.setStart(node, idx)
         range.setEnd(node, idx + text.length)
-        return range
+        return { range, confidence: 'exact' }
       }
       node = walker.nextNode()
     }
+    
     return null
   }, [])
 
@@ -229,16 +352,34 @@ function CommentsContent({ post, headers, readingTime, layout, mode, userInfo }:
     if (!root) return
     clearInlineMarks()
 
-    threads?.forEach((thread) => {
-      const text = (thread.metadata as any)?.text
-      if (!text || typeof text !== 'string') return
-      const range = findRangeForText(root, text)
-      if (!range) return
+    // Only show highlights for unresolved threads
+    const unresolvedThreads = threads?.filter(t => !t.resolved) || []
 
+    unresolvedThreads.forEach((thread) => {
+      const metadata = thread.metadata as any
+      const text = metadata?.text
+      const blockKey = metadata?.blockKey
+      
+      if (!text || typeof text !== 'string') return
+      
+      const result = findRangeForText(root, text, blockKey)
+      if (!result) return
+
+      const { range, confidence } = result
       const wrapper = document.createElement('span')
       wrapper.dataset.lbInlineThread = thread.id
-      wrapper.className =
-        'rounded-[3px] px-1 cursor-pointer transition-colors bg-neutral-200 text-inherit shadow-[0_0_0_1px_rgba(0,0,0,0.12)] hover:bg-neutral-300 dark:bg-neutral-600/70 dark:text-neutral-50 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.2)] dark:hover:bg-neutral-500/80'
+      wrapper.dataset.confidence = confidence
+      
+      // Different styles based on confidence level
+      if (confidence === 'exact') {
+        wrapper.className =
+          'rounded-[3px] px-1 cursor-pointer transition-colors bg-neutral-200 text-inherit shadow-[0_0_0_1px_rgba(0,0,0,0.12)] hover:bg-neutral-300 dark:bg-neutral-600/70 dark:text-neutral-50 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.2)] dark:hover:bg-neutral-500/80'
+      } else if (confidence === 'block-only') {
+        wrapper.className =
+          'rounded-[3px] px-1 cursor-pointer transition-colors bg-neutral-200/60 text-inherit shadow-[0_0_0_1px_rgba(0,0,0,0.08)] hover:bg-neutral-300/60 dark:bg-neutral-600/50 dark:text-neutral-50 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.15)] dark:hover:bg-neutral-500/60 opacity-70'
+        wrapper.title = 'Content has been updated'
+      }
+      
       wrapper.onclick = (event) => {
         event.stopPropagation()
         setActiveThreadId(thread.id)
@@ -247,7 +388,7 @@ function CommentsContent({ post, headers, readingTime, layout, mode, userInfo }:
       try {
         range.surroundContents(wrapper)
       } catch (e) {
-        // If range cannot be surrounded (e.g., splits multiple nodes), skip gracefully
+        // Multi-paragraph - just skip for now
       }
     })
 
@@ -261,7 +402,15 @@ function CommentsContent({ post, headers, readingTime, layout, mode, userInfo }:
     if (!activeThreadId || !contentRef.current) return null
     
     const wrapper = contentRef.current.querySelector(`[data-lb-inline-thread="${activeThreadId}"]`)
-    if (!wrapper) return null
+    if (!wrapper) {
+      // Orphaned comment - center it on screen
+      const popupWidth = 380
+      return {
+        top: 100,
+        left: Math.max(20, (window.innerWidth - popupWidth) / 2),
+        isOrphaned: true,
+      }
+    }
     
     const rect = wrapper.getBoundingClientRect()
     const containerRect = contentRef.current.getBoundingClientRect()
@@ -286,6 +435,7 @@ function CommentsContent({ post, headers, readingTime, layout, mode, userInfo }:
     return {
       top: rect.top,
       left,
+      isOrphaned: false,
     }
   }
   
@@ -369,7 +519,10 @@ function CommentsContent({ post, headers, readingTime, layout, mode, userInfo }:
                   Comment on: <span className="font-medium text-neutral-900 dark:text-white truncate block">&ldquo;{selectionInfo.text}&rdquo;</span>
                 </p>
                 <Composer
-                  metadata={{ text: selectionInfo.text }}
+                  metadata={{ 
+                    text: selectionInfo.text.substring(0, 500), // Limit length
+                    blockKey: selectionInfo.blockKey || '' 
+                  }}
                   onComposerSubmit={() => {
                     window.getSelection()?.removeAllRanges()
                     setSelectionInfo(null)
@@ -378,6 +531,9 @@ function CommentsContent({ post, headers, readingTime, layout, mode, userInfo }:
                   showAttachments={false}
                   showFormattingControls={false}
                   autoFocus={false}
+                  overrides={{
+                    COMPOSER_PLACEHOLDER: 'Write a comment...',
+                  }}
                 />
               </div>
             </LiveblocksUiConfig>
@@ -414,7 +570,44 @@ function CommentsContent({ post, headers, readingTime, layout, mode, userInfo }:
                     Close
                   </button>
                 </div>
-                <Thread thread={activeThread} showComposer showActions={false} />
+                {(() => {
+                  const wrapper = contentRef.current?.querySelector(`[data-lb-inline-thread="${activeThreadId}"]`)
+                  const confidence = wrapper?.getAttribute('data-confidence')
+                  const originalText = (activeThread.metadata as any)?.text
+                  const isOrphaned = threadPopoverPos?.isOrphaned
+                  
+                  if (isOrphaned) {
+                    return (
+                      <div className="mb-3 rounded bg-neutral-100 dark:bg-neutral-800/50 px-3 py-2 text-xs border-l-2 border-neutral-400 dark:border-neutral-500">
+                        <p className="text-neutral-500 dark:text-neutral-400 mb-1">
+                          Content removed:
+                        </p>
+                        <p className="text-neutral-700 dark:text-neutral-300 italic">
+                          &ldquo;{originalText}&rdquo;
+                        </p>
+                      </div>
+                    )
+                  }
+                  
+                  return confidence === 'block-only' ? (
+                    <div className="mb-3 rounded bg-neutral-100 dark:bg-neutral-800/50 px-3 py-2 text-xs border-l-2 border-neutral-400 dark:border-neutral-500">
+                      <p className="text-neutral-500 dark:text-neutral-400 mb-1">
+                        Content updated:
+                      </p>
+                      <p className="text-neutral-700 dark:text-neutral-300 italic">
+                        &ldquo;{originalText}&rdquo;
+                      </p>
+                    </div>
+                  ) : null
+                })()}
+                <Thread 
+                  thread={activeThread} 
+                  showComposer 
+                  showActions={true}
+                  overrides={{
+                    COMPOSER_PLACEHOLDER: 'Write a comment...',
+                  }}
+                />
               </div>
             </LiveblocksUiConfig>
           </div>
@@ -497,9 +690,12 @@ function CommentsContent({ post, headers, readingTime, layout, mode, userInfo }:
               
               {/* Feedback */}
               <h3>Feedback</h3>
-              <p className="sidebar">
-                {threads?.length || 0} comment thread(s)
-              </p>
+              <FeedbackSection 
+                activeThreads={categorizedThreads.activeThreads}
+                updatedThreads={categorizedThreads.updatedThreads}
+                orphanedThreads={categorizedThreads.orphanedThreads}
+                setActiveThreadId={setActiveThreadId}
+              />
             </div>
           </div>
         </dt>
