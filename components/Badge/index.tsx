@@ -1,6 +1,6 @@
 interface BadgeProps {
   isLive?: boolean;
-  children: JSX.Element | string;
+  children: React.ReactNode;
   border?: boolean;
 }
 

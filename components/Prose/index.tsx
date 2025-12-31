@@ -3,7 +3,7 @@ import { HoverNote } from '../HoverNote';
 
 const Header = ({ level, children, ...props }: { level: number; children: React.ReactNode; [x: string]: any }) => {
   const id = children.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
-  const Tag = `h${level}` as keyof JSX.IntrinsicElements;
+  const Tag = `h${level}` as keyof React.JSX.IntrinsicElements;
   return React.createElement(Tag, { id, ...props }, children);
 };
 
