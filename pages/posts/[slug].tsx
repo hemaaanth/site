@@ -3,7 +3,6 @@ import { Main } from "../../components/Layouts";
 import { baseUrl, SEO } from "../../components/SEO";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import Badge from "../../components/Badge";
 import { LinkShare } from "../../components/Links";
 import Link from "next/link";
 import formatDate from "../../lib/formatDate";
