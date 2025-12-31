@@ -1,5 +1,4 @@
 import Head from "next/head";
-import { DefaultSeo } from "next-seo";
 
 export const baseUrl = "https://hem.so";
 
@@ -34,20 +33,33 @@ export interface SEOProps {
 }
 
 export function SEO({ seo }: { seo?: SEOProps }) {
-  
+  const title = seo?.title || defaultSEO.title;
+  const description = seo?.description || defaultSEO.description;
+  const image = seo?.image || defaultSEO.openGraph.images[0].url;
+
   return (
     <>
-      <DefaultSeo
-        {...{
-          ...defaultSEO,
-          openGraph: {
-            ...defaultSEO.openGraph,
-            images: [{ url: seo.image, alt: seo.title }],
-          },
-          ...seo,
-        }}
-      />
       <Head>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+
+        {/* Open Graph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={seo?.path ? `${baseUrl}${seo.path}` : baseUrl} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={image} />
+        <meta property="og:site_name" content={defaultSEO.openGraph.site_name} />
+        <meta property="og:locale" content="en_US" />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@hemaaanth" />
+        <meta name="twitter:creator" content="@hemaaanth" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={image} />
+
         <meta name="googlebot" content={seo?.noindex ? "noindex,nofollow" : "index,follow"} />
         {seo?.noindex && <meta name="robots" content="noindex,nofollow" />}
         <link rel="icon" href="/favicon.ico" sizes="any" />
