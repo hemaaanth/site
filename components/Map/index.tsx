@@ -18,25 +18,25 @@ const getSystemDarkMode = () => {
   return window.matchMedia("(prefers-color-scheme: dark)").matches;
 };
 
-const getMapStyle = (isDark: boolean) => ({
-  version: 8 as const,
+const getMapStyle = (isDark: boolean): mapboxgl.StyleSpecification => ({
+  version: 8,
   sources: {
     "mapbox-streets": {
-      type: "vector" as const,
+      type: "vector",
       url: "mapbox://mapbox.mapbox-streets-v8",
     },
   },
   layers: [
     {
       id: "background",
-      type: "background" as const,
+      type: "background",
       paint: {
         "background-color": isDark ? "#111111" : "#f5f5f5",
       },
     },
     {
       id: "water",
-      type: "fill" as const,
+      type: "fill",
       source: "mapbox-streets",
       "source-layer": "water",
       paint: {
@@ -45,7 +45,7 @@ const getMapStyle = (isDark: boolean) => ({
     },
     {
       id: "roads",
-      type: "line" as const,
+      type: "line",
       source: "mapbox-streets",
       "source-layer": "road",
       paint: {
@@ -55,7 +55,7 @@ const getMapStyle = (isDark: boolean) => ({
     },
     {
       id: "admin",
-      type: "line" as const,
+      type: "line",
       source: "mapbox-streets",
       "source-layer": "admin",
       paint: {
