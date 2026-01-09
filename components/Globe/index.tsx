@@ -91,6 +91,11 @@ const Globe: React.FC<GlobeProps> = ({ targetCoordinates }) => {
       map.current.on("style.load", () => {
         applyStyleCustomizations(isDark);
       });
+
+      // Also apply immediately if style is already loaded (cached)
+      if (map.current.isStyleLoaded()) {
+        applyStyleCustomizations(isDark);
+      }
     } catch (error) {
       console.error("Failed to initialize globe:", error);
     }
@@ -110,9 +115,16 @@ const Globe: React.FC<GlobeProps> = ({ targetCoordinates }) => {
       : "mapbox://styles/mapbox/light-v11";
 
     map.current.setStyle(style);
-    map.current.once("style.load", () => {
-      applyStyleCustomizations(isDark);
-    });
+
+    const applyStyles = () => applyStyleCustomizations(isDark);
+    map.current.once("style.load", applyStyles);
+
+    // Also check immediately in case style loaded from cache
+    setTimeout(() => {
+      if (map.current?.isStyleLoaded()) {
+        applyStyles();
+      }
+    }, 100);
   }, [isDark]);
 
   // Handle coordinate changes - fly to target and show marker
