@@ -109,18 +109,16 @@ export default function Home({
                     key={book.url}
                     className={`${index !== 0 ? "pt-2" : ""} truncate`}
                   >
-                    <LinkExternal href={book.url} imageUrl={book.imageUrl}>{book.title}</LinkExternal>
-                    <span className="truncate"> by {book.author}</span>
-                    <Badge>READING</Badge>
+                    <LinkExternal href={book.url} imageUrl={book.imageUrl}>{book.title.split(':')[0].trim()}</LinkExternal>
+                    {" "}by {book.author} <Badge>READING</Badge>
                   </div>
                 ))}
                 {lastCompleted && (
                   <div className="pt-2 opacity-30 dark:opacity-30 truncate">
                     <LinkExternal href={lastCompleted.url} imageUrl={lastCompleted.imageUrl}>
-                      {lastCompleted.title}
+                      {lastCompleted.title.split(':')[0].trim()}
                     </LinkExternal>
-                    <span className="truncate"> by {lastCompleted.author}</span>{" "}
-                    <Badge>DONE</Badge>
+                    {" "}by {lastCompleted.author} <Badge>DONE</Badge>
                   </div>
                 )}
               </>

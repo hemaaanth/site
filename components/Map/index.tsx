@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
-import "mapbox-gl/dist/mapbox-gl.css";
+// CSS is imported globally in _app.tsx
 
 interface Location {
   title: string;
@@ -11,63 +11,79 @@ interface Location {
 interface MapProps {
   locations: Location[];
   hoveredLocation?: Location | null;
-  showUserLocation: boolean; // New prop to control user location display
 }
+
+const getSystemDarkMode = () => {
+  if (typeof window === "undefined") return true;
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+};
+
+const getMapStyle = (isDark: boolean) => ({
+  version: 8 as const,
+  sources: {
+    "mapbox-streets": {
+      type: "vector" as const,
+      url: "mapbox://mapbox.mapbox-streets-v8",
+    },
+  },
+  layers: [
+    {
+      id: "background",
+      type: "background" as const,
+      paint: {
+        "background-color": isDark ? "#111111" : "#f5f5f5",
+      },
+    },
+    {
+      id: "water",
+      type: "fill" as const,
+      source: "mapbox-streets",
+      "source-layer": "water",
+      paint: {
+        "fill-color": isDark ? "#000000" : "#e0e0e0",
+      },
+    },
+    {
+      id: "roads",
+      type: "line" as const,
+      source: "mapbox-streets",
+      "source-layer": "road",
+      paint: {
+        "line-color": isDark ? "#333333" : "#cccccc",
+        "line-width": 0.5,
+      },
+    },
+    {
+      id: "admin",
+      type: "line" as const,
+      source: "mapbox-streets",
+      "source-layer": "admin",
+      paint: {
+        "line-color": isDark ? "#222222" : "#dddddd",
+        "line-width": 0.5,
+      },
+    },
+  ],
+});
 
 const Map: React.FC<MapProps> = ({
   locations,
   hoveredLocation,
-  showUserLocation,
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markers = useRef<{ marker: mapboxgl.Marker; location: Location }[]>([]);
-  const userMarker = useRef<mapboxgl.Marker | null>(null);
   const previousHover = useRef<Location | null>(null);
   const resetTimeout = useRef<NodeJS.Timeout | null>(null);
+  const [isDark, setIsDark] = useState(getSystemDarkMode);
 
-  // Add user location marker
+  // Listen for system color scheme changes
   useEffect(() => {
-    if (!map.current) return;
-
-    if (showUserLocation) {
-      // Check if geolocation is supported
-      if (!navigator.geolocation) {
-        console.log("Geolocation is not supported by your browser");
-        return;
-      }
-
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-
-          // Create user marker only if it doesn't exist
-          if (!userMarker.current) {
-            userMarker.current = new mapboxgl.Marker({
-              color: "#FFF", // red color
-              scale: 0.5, // slightly smaller than location markers
-            })
-              .setLngLat([longitude, latitude])
-              .addTo(map.current!);
-          } else {
-            // Update position if marker already exists
-            userMarker.current.setLngLat([longitude, latitude]);
-          }
-        },
-        (error) => {
-          console.log("Error getting user location:", error);
-        },
-      );
-    } else {
-      // Remove user marker if the toggle is off
-      userMarker.current?.remove();
-      userMarker.current = null; // Reset the reference
-    }
-
-    return () => {
-      // Do not remove the user marker on unmount
-    };
-  }, [showUserLocation]); // Add showUserLocation as a dependency
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handler = (e: MediaQueryListEvent) => setIsDark(e.matches);
+    mediaQuery.addEventListener("change", handler);
+    return () => mediaQuery.removeEventListener("change", handler);
+  }, []);
 
   // Initialize map and create markers
   useEffect(() => {
@@ -79,60 +95,14 @@ const Map: React.FC<MapProps> = ({
       container: mapContainer.current,
       zoom: 12,
       attributionControl: false, // hide attribution button
-      style: {
-        version: 8,
-        sources: {
-          "mapbox-streets": {
-            type: "vector",
-            url: "mapbox://mapbox.mapbox-streets-v8",
-          },
-        },
-        layers: [
-          {
-            id: "background",
-            type: "background",
-            paint: {
-              "background-color": "#111111",
-            },
-          },
-          {
-            id: "water",
-            type: "fill",
-            source: "mapbox-streets",
-            "source-layer": "water",
-            paint: {
-              "fill-color": "#000000",
-            },
-          },
-          {
-            id: "roads",
-            type: "line",
-            source: "mapbox-streets",
-            "source-layer": "road",
-            paint: {
-              "line-color": "#333333",
-              "line-width": 0.5,
-            },
-          },
-          {
-            id: "admin",
-            type: "line",
-            source: "mapbox-streets",
-            "source-layer": "admin",
-            paint: {
-              "line-color": "#222222",
-              "line-width": 0.5,
-            },
-          },
-        ],
-      },
+      style: getMapStyle(isDark),
     });
 
     // Create markers for all locations
     locations.forEach((location) => {
       if (location.coordinates) {
         const marker = new mapboxgl.Marker({
-          color: "#737373",
+          color: isDark ? "#737373" : "#666666",
           scale: 0.8,
         })
           .setLngLat(location.coordinates)
@@ -161,6 +131,12 @@ const Map: React.FC<MapProps> = ({
     };
   }, [locations]); // Re-run effect when locations change
 
+  // Update map style when color scheme changes
+  useEffect(() => {
+    if (!map.current) return;
+    map.current.setStyle(getMapStyle(isDark));
+  }, [isDark]);
+
   // Handle hover state changes
   useEffect(() => {
     if (!map.current) return;
@@ -170,7 +146,9 @@ const Map: React.FC<MapProps> = ({
         hoveredLocation?.coordinates?.[0] === location.coordinates?.[0] &&
         hoveredLocation?.coordinates?.[1] === location.coordinates?.[1];
 
-      marker.getElement().style.color = isHovered ? "#2563eb" : "#3b82f6";
+      const defaultColor = isDark ? "#737373" : "#666666";
+      const hoverColor = isDark ? "#3b82f6" : "#2563eb";
+      marker.getElement().style.color = isHovered ? hoverColor : defaultColor;
     });
 
     if (hoveredLocation?.coordinates) {
@@ -210,7 +188,7 @@ const Map: React.FC<MapProps> = ({
     }
 
     previousHover.current = hoveredLocation;
-  }, [hoveredLocation, locations]);
+  }, [hoveredLocation, locations, isDark]);
 
   return <div ref={mapContainer} className="w-full h-[300px] rounded-lg" />;
 };
