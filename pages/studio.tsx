@@ -52,6 +52,25 @@ export default function Studio() {
             </dd>
           </React.Fragment>
           <React.Fragment>
+            <dt className="studio-list-title mt-8">
+              <Image
+                src="/images/studio/tagtunes_header.png"
+                alt="Tagtun.es header screenshot"
+                className="studio-screenshot-placeholder object-cover rounded-md border border-neutral-200 dark:border-zinc-800"
+                width={794}
+                height={548}
+              />
+            </dt>
+            <dd className="studio-list-content mt-8">
+              <LinkExternal href="https://tagtun.es">
+                Tagtun.es
+              </LinkExternal>
+              <div className="pt-1 text-sm text-neutral-500 [font-variation-settings:'opsz'_14] dark:text-silver-dark">
+                A tags-based music manager for Spotify.
+              </div>
+            </dd>
+          </React.Fragment>
+          <React.Fragment>
             <dt className="studio-list-title mt-8 opacity-50">
               <div className="studio-screenshot-placeholder bg-gray-200 dark:bg-zinc-900" />
             </dt>
