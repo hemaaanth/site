@@ -504,3 +504,60 @@ a[href^="mailto:"] {
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
+
+/* SpeedReader Overlay Styles */
+.speedreader-overlay {
+  @apply fixed inset-0 z-50;
+  @apply bg-white dark:bg-neutral-950;
+  @apply flex flex-col items-center justify-center;
+  font-variation-settings: "opsz" 48, "wght" 500;
+}
+
+.speedreader-word-container {
+  @apply relative;
+  @apply text-5xl sm:text-7xl md:text-8xl;
+  @apply text-neutral-900 dark:text-white;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  width: 100%;
+  height: 1.2em;
+}
+
+.speedreader-before {
+  @apply absolute;
+  right: calc(50% + 0.5ch);
+  text-align: right;
+}
+
+.speedreader-orp {
+  @apply absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  @apply text-red-500 dark:text-red-400;
+}
+
+.speedreader-after {
+  @apply absolute;
+  left: calc(50% + 0.5ch);
+  text-align: left;
+}
+
+.speedreader-progress {
+  @apply absolute top-6 right-6;
+  @apply text-sm text-neutral-400 dark:text-neutral-600;
+  @apply [font-variation-settings:'opsz'_14];
+  @apply slashed-zero tabular-nums;
+}
+
+.speedreader-wpm {
+  @apply absolute top-6 left-6;
+  @apply text-sm text-neutral-400 dark:text-neutral-600;
+  @apply [font-variation-settings:'opsz'_14];
+  @apply slashed-zero tabular-nums;
+}
+
+.speedreader-legend {
+  @apply absolute bottom-6 left-1/2 -translate-x-1/2;
+  @apply flex gap-6;
+  @apply text-xs text-neutral-400 dark:text-neutral-600;
+  @apply [font-variation-settings:'opsz'_12];
+}

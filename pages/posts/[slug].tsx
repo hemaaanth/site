@@ -4,6 +4,7 @@ import { baseUrl, SEO } from "../../components/SEO";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { LinkShare } from "../../components/Links";
+import { SpeedReader } from "../../components/SpeedReader";
 import Link from "next/link";
 import formatDate from "../../lib/formatDate";
 import { getPostBySlug, getPublishedPostSlugs } from "../../lib/sanity";
@@ -53,13 +54,16 @@ export default function Post(props) {
           }} 
       /> 
       <Main>
-        <div className="flex w-full flex-col justify-between sm:flex-row sm:mb-0 mb-4"> 
+        <div className="flex w-full flex-col justify-between sm:flex-row sm:mb-0 mb-4">
           <header><h1 className="text-xl text-neutral-800 [font-variation-settings:'opsz'_32,_'wght'_500] dark:text-white sm:pb-6 sm:text-xl sm:mb-0 mb-4">
             {title}
           </h1></header>
-          <LinkShare title={title} url={url}>
+          <div className="flex gap-2">
+            <SpeedReader content={content}>Speed Read</SpeedReader>
+            <LinkShare title={title} url={url}>
               Share
             </LinkShare>
+          </div>
         </div>
         <dl className="list-container">
         <dd className={`${layout === 'wide' ? 'list-content-wide' : 'list-content'} sm:order-1 order-2`}>
