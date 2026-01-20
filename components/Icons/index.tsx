@@ -125,3 +125,13 @@ export function GlobeIcon({ size }) {
     />
   );
 }
+
+export function SpeedReaderIcon({ size }) {
+  return (
+    <PhosphorIcon
+      label="Speed Reader"
+      size={size}
+      path="M232,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H224A8,8,0,0,1,232,128ZM64,72H40a8,8,0,0,0,0,16H64a8,8,0,0,0,0-16Zm0,96H40a8,8,0,0,0,0,16H64a8,8,0,0,0,0-16Zm152-96H96a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Zm0,96H96a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"
+    />
+  );
+}
