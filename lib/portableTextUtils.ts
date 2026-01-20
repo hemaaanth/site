@@ -66,7 +66,7 @@ export function filterHeadersByDepth(headers: Header[], maxDepth: number): Heade
 
 export function calculateReadingTime(content: PortableTextBlock[]): number {
   let wordCount = 0
-  
+
   function traverse(blocks: PortableTextBlock[]) {
     for (const block of blocks) {
       if (block._type === 'block' && block.children) {
@@ -75,11 +75,11 @@ export function calculateReadingTime(content: PortableTextBlock[]): number {
             // Filter out stega-encoded metadata that might be embedded in text
             // Stega encoding can add invisible characters or metadata
             let text = child.text
-            
+
             // Remove stega markers and invisible Unicode characters
             // Stega uses zero-width spaces and other invisible characters
             text = text.replace(/[\u200B-\u200D\uFEFF\u2060]/g, '') // Remove zero-width spaces and word joiners
-            
+
             // Remove any extremely long sequences (likely encoded metadata)
             // Split on whitespace and filter
             const words = text.trim().split(/\s+/).filter(word => {
@@ -88,27 +88,63 @@ export function calculateReadingTime(content: PortableTextBlock[]): number {
               // - Empty strings
               // - Words longer than 50 chars (likely encoded data, not real words)
               // - Strings with no alphanumeric characters
-              return trimmed.length > 0 && 
-                     trimmed.length <= 50 && 
+              return trimmed.length > 0 &&
+                     trimmed.length <= 50 &&
                      /[a-zA-Z0-9\u00C0-\u017F]/.test(trimmed)
             })
             wordCount += words.length
           }
         }
       }
-      
+
       // Handle custom block types
       if (block._type === 'aside' && 'content' in block) {
         traverse((block as any).content)
       }
     }
   }
-  
+
   traverse(content)
-  
+
   const readingSpeed = 200 // words per minute
   const minutes = Math.ceil(wordCount / readingSpeed)
   // Return at least 1 minute if there's any content
   return Math.max(1, minutes)
+}
+
+export function extractPlainText(content: PortableTextBlock[]): string[] {
+  const words: string[] = []
+
+  function traverse(blocks: PortableTextBlock[]) {
+    for (const block of blocks) {
+      if (block._type === 'block' && block.children) {
+        for (const child of block.children) {
+          if (child._type === 'span' && 'text' in child) {
+            let text = child.text
+
+            // Remove stega markers and invisible Unicode characters
+            text = text.replace(/[\u200B-\u200D\uFEFF\u2060]/g, '')
+
+            // Split on whitespace and filter
+            const blockWords = text.trim().split(/\s+/).filter(word => {
+              const trimmed = word.trim()
+              return trimmed.length > 0 &&
+                     trimmed.length <= 50 &&
+                     /[a-zA-Z0-9\u00C0-\u017F]/.test(trimmed)
+            })
+            words.push(...blockWords)
+          }
+        }
+      }
+
+      // Handle custom block types
+      if (block._type === 'aside' && 'content' in block) {
+        traverse((block as any).content)
+      }
+    }
+  }
+
+  traverse(content)
+  return words
 }
 
