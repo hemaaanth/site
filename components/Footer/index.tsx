@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="max-w-main flex-1">
         <div className="flex h-full w-full items-end justify-between border-t border-solid border-neutral-500/10 pt-8 dark:border-neutral-900">
           <div className="flex-1">
-            <ul className="flex gap-4 pb-6">
+            <ul className="flex flex-wrap gap-4 pb-6">
             <li>
               <Link href="/" className="link-fade">
                 Home
