@@ -10,6 +10,7 @@ import { getCurrentlyReading } from "../lib/hardcover";
 import { getRecentlyPlayed } from "../lib/spotify";
 import { getAllPosts } from "../lib/sanity";
 import Badge from "../components/Badge";
+import NamePronunciation from "../components/NamePronunciation";
 
 export default function Home({
   recentPosts,
@@ -73,7 +74,7 @@ export default function Home({
       <Main>
         <header>
           <h1 className="text-xl text-neutral-800 [font-variation-settings:'opsz'_32,_'wght'_500] dark:text-white sm:pb-6 sm:text-xl sm:mb-0 mb-4">
-            Hemanth Soni
+            <NamePronunciation>Hemanth Soni</NamePronunciation>
           </h1>
         </header>
         <dl className="list-container">
