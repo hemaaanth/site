@@ -4,10 +4,16 @@ import React, { useRef, useState, useCallback } from "react";
 const PRONUNCIATION_FILES = [
   "/audio/name-nichalia.mp3",
   "/audio/name-george.mp3",
-  "/audio/name-brian.mp3",
   "/audio/name-alice.mp3",
   "/audio/name-matilda.mp3",
   "/audio/name-river.mp3",
+  "/audio/name-daniel.mp3",
+  "/audio/name-bella.mp3",
+  "/audio/name-charlie.mp3",
+  "/audio/name-chris.mp3",
+  "/audio/name-jessica.mp3",
+  "/audio/name-liam.mp3",
+  "/audio/name-lily.mp3",
 ];
 
 function SpeakerIcon({ size = 16, className = "" }) {
