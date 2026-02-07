@@ -24,7 +24,6 @@ export default function Post(props) {
     const handleScroll = () => {
       let currentSection = '';
       const scrollPosition = window.scrollY + 50;
-      const nearBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 300;
 
       headers.forEach(header => {
         const headerSlug = header.text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
@@ -35,10 +34,26 @@ export default function Post(props) {
         }
       });
 
-      // Activate last header when near bottom of page
-      if (nearBottom && headers.length > 0) {
+      // Activate last header when it's visible AND near page bottom
+      if (headers.length > 0) {
         const lastHeader = headers[headers.length - 1];
-        currentSection = lastHeader.text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
+        const lastHeaderSlug = lastHeader.text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
+        const lastElement = document.getElementById(lastHeaderSlug);
+        
+        if (lastElement) {
+          const lastHeaderTop = lastElement.offsetTop;
+          const viewportTop = window.scrollY;
+          const viewportBottom = window.scrollY + window.innerHeight;
+          const scrollRoomLeft = document.documentElement.scrollHeight - viewportBottom;
+          
+          // Is last header visible in viewport?
+          const lastHeaderVisible = lastHeaderTop >= viewportTop && lastHeaderTop <= viewportBottom;
+          
+          // Activate if visible AND less than 300px scroll room left
+          if (lastHeaderVisible && scrollRoomLeft < 300) {
+            currentSection = lastHeaderSlug;
+          }
+        }
       }
 
       setActiveSection(currentSection);
