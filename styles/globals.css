@@ -336,10 +336,6 @@ a[href^="mailto:"] {
     @apply hidden;
   }
 
-  .post-sidebar-sticky {
-    @apply sticky top-8;
-  }
-
   /* TOC item styles */
   .toc-item {
     @apply -mx-2 px-2 py-0.5 rounded;
@@ -352,33 +348,31 @@ a[href^="mailto:"] {
 
   /* Show sidebars on xl screens (1280px+) */
   @media (min-width: 1280px) {
-    .post-sidebar-left,
-    .post-sidebar-right {
-      @apply block absolute top-4;
-      width: 13rem;
-    }
-
     .post-sidebar-left {
-      right: calc(100% + 2rem);
+      @apply block fixed;
+      top: 8rem;
+      width: 13rem;
+      /* Position to the left of the main content area */
+      right: calc(50% + 23rem + 2rem);
     }
 
     .post-sidebar-right {
+      @apply block absolute;
+      top: 1rem;
+      width: 13rem;
       left: calc(100% + 2rem);
     }
   }
 
   /* Wider sidebars on 2xl screens (1536px+) */
   @media (min-width: 1536px) {
-    .post-sidebar-left,
+    .post-sidebar-left {
+      width: 14rem;
+      right: calc(50% + 23rem + 3rem);
+    }
+
     .post-sidebar-right {
       width: 14rem;
-    }
-
-    .post-sidebar-left {
-      right: calc(100% + 3rem);
-    }
-
-    .post-sidebar-right {
       left: calc(100% + 3rem);
     }
   }

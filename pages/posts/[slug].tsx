@@ -71,29 +71,27 @@ export default function Post(props) {
           </div>
         </div>
         <div className="post-layout">
-          {/* Left sidebar - TOC (sticky) */}
+          {/* Left sidebar - TOC (fixed on xl screens) */}
           <aside className="post-sidebar-left">
-            <div className="post-sidebar-sticky">
-              <h3 className="pb-1">Table of Contents</h3>
-              <ul className="sidebar toc w-full">
-                {headers.map((header, index) => {
-                  const headerSlug = header.text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
-                  return (
-                    <li 
-                      key={index} 
-                      className={`toc-item leading-6 truncate ${activeSection === headerSlug ? 'toc-active' : ''}`} 
-                      style={{ marginLeft: `${header.depth - 1}rem` }}
-                    >
-                      <a href={`#${headerSlug}`}>{header.text}</a>
-                    </li>
-                  );
-                })}
-              </ul>
-              <div className="mt-6">
-                <Link href="/posts" className="text-neutral-500 dark:text-silver-dark hover:text-neutral-800 dark:hover:text-silver transition-colors text-sm">
-                  ← All posts
-                </Link>
-              </div>
+            <h3 className="pb-1">Table of Contents</h3>
+            <ul className="sidebar toc w-full">
+              {headers.map((header, index) => {
+                const headerSlug = header.text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
+                return (
+                  <li 
+                    key={index} 
+                    className={`toc-item leading-6 truncate ${activeSection === headerSlug ? 'toc-active' : ''}`} 
+                    style={{ marginLeft: `${header.depth - 1}rem` }}
+                  >
+                    <a href={`#${headerSlug}`}>{header.text}</a>
+                  </li>
+                );
+              })}
+            </ul>
+            <div className="mt-6">
+              <Link href="/posts" className="text-neutral-500 dark:text-silver-dark hover:text-neutral-800 dark:hover:text-silver transition-colors text-sm">
+                ← All posts
+              </Link>
             </div>
           </aside>
 
