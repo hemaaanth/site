@@ -167,6 +167,9 @@ export default defineType({
         {
           type: 'table',
         },
+        {
+          type: 'textDiagram',
+        },
       ],
       validation: (Rule) => Rule.required(),
     }),
