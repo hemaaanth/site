@@ -53,6 +53,17 @@ export function TextDiagram({ content, caption, captionPosition = 'bottom', minW
 
   if (!content) return null
 
+  // Parse **bold** syntax into React elements
+  const renderContent = (text: string) => {
+    const parts = text.split(/(\*\*[^*]+\*\*)/g)
+    return parts.map((part, i) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return <span key={i} className="text-white font-bold" style={{ fontWeight: 700 }}>{part.slice(2, -2)}</span>
+      }
+      return part
+    })
+  }
+
   const captionElement = caption && (
     <figcaption className="text-diagram-caption text-sm text-neutral-500 dark:text-silver-dark text-center py-2">
       {caption}
@@ -87,7 +98,7 @@ export function TextDiagram({ content, caption, captionPosition = 'bottom', minW
             minWidth: minWidth ? `${minWidth}ch` : undefined,
           }}
         >
-          {content}
+          {renderContent(content)}
         </pre>
       </div>
       

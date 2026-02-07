@@ -9,6 +9,15 @@ A visual language for ASCII diagrams on hem.so. These diagrams should feel like 
 3. **Consistent borders** — Use box-drawing characters for clean lines
 4. **Dark canvas aesthetic** — Designed for dark backgrounds
 
+## Text Formatting
+
+**Bold text** is supported using markdown syntax:
+```
+**This will be bold** and this won't
+```
+
+Bold text renders in white for emphasis while maintaining monospace alignment.
+
 ---
 
 ## Box Characters
@@ -202,10 +211,30 @@ Dividers:
 ## Tips
 
 1. **Test width** — Preview on mobile to ensure it fits or scrolls gracefully
-2. **Use titles** — Put section headers above complex diagrams
+2. **Use titles** — Put section headers above complex diagrams, **ALL-CAPS**
 3. **Keep it simple** — If a diagram needs explanation, it's too complex
 4. **Consistent style** — Pick one box style per diagram
 5. **Round numbers** — `~4 hrs` reads better than `3.7 hrs`
+
+## Title Conventions
+
+**Always use ALL-CAPS for diagram section titles:**
+
+```
+     FOLDERS                              TAGS
+     ───────                              ────
+
+┌─────────────────┐              ┌─────────────────┐
+│  Single path    │              │  Multi-context  │
+└─────────────────┘              └─────────────────┘
+```
+
+Not this:
+```
+     Folders                              Tags
+```
+
+ALL-CAPS titles create visual hierarchy and match terminal/ASCII aesthetic.
 
 ## Examples in the Wild
 
