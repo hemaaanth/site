@@ -23,13 +23,12 @@ export default defineConfig({
     presentationTool({
       resolve: { locations, mainDocuments },
       previewUrl: {
-        initial: baseUrl,
+        origin: baseUrl,
         previewMode: {
           enable: '/api/draft-mode/enable',
           disable: '/api/draft-mode/disable',
         },
       },
-      allowOrigins: ['http://localhost:*', 'https://hem.so'],
     }),
     assist({
       assist: {

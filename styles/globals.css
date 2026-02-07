@@ -472,6 +472,10 @@ a[href^="mailto:"] {
   /* Responsive font sizing */
   font-size: 0.75rem;
   line-height: 1.4;
+  /* Override prose styling that adds borders to pre elements */
+  border: none !important;
+  margin: 0 !important;
+  background: transparent !important;
 }
 
 @media (min-width: 640px) {
