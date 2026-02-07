@@ -48,7 +48,6 @@ export const postBySlugQuery = `*[_type == "post" && slug.current == $slug && !(
   tldr,
   meta,
   category,
-  layout,
   depth,
   content
 }`
@@ -63,7 +62,6 @@ export const postBySlugQueryWithDrafts = `*[_type == "post" && slug.current == $
   tldr,
   meta,
   category,
-  layout,
   depth,
   content
 }`

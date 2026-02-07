@@ -14,7 +14,7 @@ import type { PortableTextBlock } from '@portabletext/types';
 
 export default function Post(props) {
   const router = useRouter();
-  const { title, date, meta, tldr, content, headers, readingTime, layout} = props;
+  const { title, date, meta, tldr, content, headers, readingTime } = props;
   const slug = router.query.slug;
   const relativeUrl = `/posts/${slug}`;
   const url = `${baseUrl}${relativeUrl}`;
@@ -23,25 +23,45 @@ export default function Post(props) {
   useEffect(() => {
     const handleScroll = () => {
       let currentSection = '';
-      // Assuming your headers are rendered with id attributes matching their text slug
+      const scrollPosition = window.scrollY + 50;
+
       headers.forEach(header => {
-        const slug = header.text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
-        const element = document.getElementById(slug);
-        // Adjust this value based on your layout/styling
-        const scrollPosition = window.scrollY + 50;
+        const headerSlug = header.text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
+        const element = document.getElementById(headerSlug);
 
         if (element && element.offsetTop <= scrollPosition) {
-          currentSection = slug;
+          currentSection = headerSlug;
         }
       });
+
+      // Activate last header when it's visible AND near page bottom
+      if (headers.length > 0) {
+        const lastHeader = headers[headers.length - 1];
+        const lastHeaderSlug = lastHeader.text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
+        const lastElement = document.getElementById(lastHeaderSlug);
+        
+        if (lastElement) {
+          const lastHeaderTop = lastElement.offsetTop;
+          const viewportTop = window.scrollY;
+          const viewportBottom = window.scrollY + window.innerHeight;
+          const scrollRoomLeft = document.documentElement.scrollHeight - viewportBottom;
+          
+          // Is last header visible in viewport?
+          const lastHeaderVisible = lastHeaderTop >= viewportTop && lastHeaderTop <= viewportBottom;
+          
+          // Activate if visible AND less than 300px scroll room left
+          if (lastHeaderVisible && scrollRoomLeft < 300) {
+            currentSection = lastHeaderSlug;
+          }
+        }
+      }
 
       setActiveSection(currentSection);
     };
 
     window.addEventListener('scroll', handleScroll);
-    // Cleanup scroll listener
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [headers]); // Depend on headers so the effect updates if headers change
+  }, [headers]);
 
   return (
     <>
@@ -65,55 +85,58 @@ export default function Post(props) {
             </LinkShare>
           </div>
         </div>
-        <dl className="list-container">
-        <dd className={`${layout === 'wide' ? 'list-content-wide' : 'list-content'} sm:order-1 order-2`}>
-        <div className="prose-custom">
-            <p className="text-neutral-700">{readingTime} minute(s)</p>
+        <div className="post-layout">
+          {/* Left sidebar - TOC (fixed on xl screens) */}
+          <aside className="post-sidebar-left">
+            <h3 className="pb-1">Table of Contents</h3>
+            <ul className="sidebar toc w-full">
+              {headers.map((header, index) => {
+                const headerSlug = header.text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
+                return (
+                  <li 
+                    key={index} 
+                    className={`toc-item leading-6 truncate ${activeSection === headerSlug ? 'toc-active' : ''}`} 
+                    style={{ marginLeft: `${header.depth - 1}rem` }}
+                  >
+                    <a href={`#${headerSlug}`}>{header.text}</a>
+                  </li>
+                );
+              })}
+            </ul>
+            <div className="mt-6">
+              <Link href="/posts" className="text-neutral-500 dark:text-silver-dark hover:text-neutral-800 dark:hover:text-silver transition-colors text-sm">
+                ← All posts
+              </Link>
+            </div>
+          </aside>
 
-            <PortableText content={content} />
-            </div>
+          {/* Main content */}
+          <div className="post-content">
+            <p className="text-neutral-700 dark:text-silver-dark mb-6">{readingTime} minute(s)</p>
             <div className="prose-custom">
-              <hr className="pb-0" />
-              <Link href="/posts" className="text-neutral-700 sm:pb-6 sm:align-left cursor-pointer">← All posts</Link>
+              <PortableText content={content} />
             </div>
-          </dd>
-          {layout !== 'wide' && (
-            <dt className="list-title sm:order-2 order-1">
-              <div className="list-sticky">
-              <h3 className="pb-1">Table of Contents</h3>
-                <ul className="sidebar toc w-full">
-                  {headers.map((header, index) => {
-                    const slug = header.text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
-                    return (
-                      <li key={index} className={`leading-6 truncate ${activeSection === slug ? 'text-white' : ''}`} style={{ marginLeft: `${header.depth * 1-1}rem` }}>
-                        <a href={`#${slug}`}>
-                          {header.text}
-                        </a>
-                      </li>
-                    );
-                  })}
-                </ul>
-              <div className="mt-8 mb-8">
-              <h3>Date</h3>
-              <p>
-                <time className="time" dateTime={date}>
-                  <span className="sr-only">{date}</span>
-                  {formatDate(date, false)}
-                </time>
-              </p>
-              <h3>Tl;dr</h3>
-              <p className="sidebar">{tldr}</p>
-              {meta && (
-                <>
-                  <h3>Meta</h3>
-                  <p className="sidebar">{meta}</p>
-                </>
-              )}
-              </div>
-              </div>
-            </dt>
-          )}
-        </dl>
+          </div>
+
+          {/* Right sidebar - Meta (not sticky) */}
+          <aside className="post-sidebar-right">
+            <h3>Date</h3>
+            <p>
+              <time className="time" dateTime={date}>
+                <span className="sr-only">{date}</span>
+                {formatDate(date, false)}
+              </time>
+            </p>
+            <h3>Tl;dr</h3>
+            <p className="sidebar">{tldr}</p>
+            {meta && (
+              <>
+                <h3>Meta</h3>
+                <p className="sidebar">{meta}</p>
+              </>
+            )}
+          </aside>
+        </div>
       </Main>
     </>
   );
@@ -132,7 +155,6 @@ export const getStaticProps = async (context) => {
   }
 
   const content = post.content as PortableTextBlock[];
-  const layout = post.layout || 'default';
   
   // Extract headers from Portable Text
   let headers = extractHeaders(content);
@@ -152,7 +174,6 @@ export const getStaticProps = async (context) => {
       tldr: post.tldr,
       meta: post.meta,
       category: post.category,
-      layout,
       depth: post.depth || null,
       content,
       headers,
