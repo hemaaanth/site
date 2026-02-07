@@ -320,6 +320,56 @@ a[href^="mailto:"] {
     @apply sticky top-4;
   }
 
+  /* Blog post layout with overflow sidebars */
+  .blog-post-layout {
+    @apply relative;
+    @apply border-t border-solid border-neutral-500/10 pt-4 dark:border-neutral-900;
+    @apply mb-12 sm:mb-16;
+  }
+
+  .blog-main {
+    @apply w-full;
+  }
+
+  .blog-sidebar-left,
+  .blog-sidebar-right {
+    @apply hidden;
+  }
+
+  /* Show sidebars on xl screens (1280px+) where there's room for overflow */
+  @media (min-width: 1280px) {
+    .blog-sidebar-left,
+    .blog-sidebar-right {
+      @apply block;
+      @apply absolute top-4;
+      @apply w-48;
+    }
+
+    .blog-sidebar-left {
+      right: calc(100% + 2rem);
+    }
+
+    .blog-sidebar-right {
+      left: calc(100% + 2rem);
+    }
+  }
+
+  /* Wider sidebars on 2xl screens (1536px+) */
+  @media (min-width: 1536px) {
+    .blog-sidebar-left,
+    .blog-sidebar-right {
+      @apply w-56;
+    }
+
+    .blog-sidebar-left {
+      right: calc(100% + 3rem);
+    }
+
+    .blog-sidebar-right {
+      left: calc(100% + 3rem);
+    }
+  }
+
   .island {
     @apply bg-white/95;
     @apply dark:bg-neutral-900/95;
