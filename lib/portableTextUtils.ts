@@ -101,6 +101,15 @@ export function calculateReadingTime(content: PortableTextBlock[]): number {
       if (block._type === 'aside' && 'content' in block) {
         traverse((block as any).content)
       }
+      
+      // Handle textDiagram - only count caption words, not ASCII content
+      if (block._type === 'textDiagram' && 'caption' in block) {
+        const caption = (block as any).caption
+        if (caption && typeof caption === 'string') {
+          const captionWords = caption.trim().split(/\s+/).filter(word => word.trim().length > 0)
+          wordCount += captionWords.length
+        }
+      }
     }
   }
 
@@ -140,6 +149,18 @@ export function extractPlainText(content: PortableTextBlock[]): string[] {
       // Handle custom block types
       if (block._type === 'aside' && 'content' in block) {
         traverse((block as any).content)
+      }
+      
+      // Handle textDiagram - only include caption, skip the ASCII content
+      if (block._type === 'textDiagram' && 'caption' in block) {
+        const caption = (block as any).caption
+        if (caption && typeof caption === 'string') {
+          const captionWords = caption.trim().split(/\s+/).filter(word => {
+            const trimmed = word.trim()
+            return trimmed.length > 0 && trimmed.length <= 50
+          })
+          words.push(...captionWords)
+        }
       }
     }
   }
