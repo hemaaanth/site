@@ -348,21 +348,17 @@ a[href^="mailto:"] {
     @apply hidden;
   }
 
+  /* Blog header stays constrained */
+  .blog-header {
+    max-width: 46rem;
+  }
+
   /* Show sidebars on xl screens (1280px+) with proper grid layout */
   @media (min-width: 1280px) {
-    /* Allow parent to show overflow sidebars */
-    article:has(.blog-post-layout) {
-      overflow: visible;
-      max-width: none;
-    }
-    
     .blog-post-layout {
-      /* Center the layout with sidebars */
-      max-width: calc(46rem + 12rem + 12rem + 4rem);
-      margin-left: auto;
-      margin-right: auto;
-      grid-template-columns: 12rem 1fr 12rem;
+      grid-template-columns: 12rem minmax(0, 46rem) 12rem;
       gap: 2rem;
+      justify-content: center;
     }
 
     .blog-sidebar-left {
@@ -380,15 +376,13 @@ a[href^="mailto:"] {
     .blog-main {
       grid-column: 2;
       grid-row: 1;
-      max-width: 46rem; /* Maintain readable line length */
     }
   }
 
   /* Wider sidebars on 2xl screens (1536px+) */
   @media (min-width: 1536px) {
     .blog-post-layout {
-      max-width: calc(46rem + 14rem + 14rem + 6rem);
-      grid-template-columns: 14rem 1fr 14rem;
+      grid-template-columns: 14rem minmax(0, 46rem) 14rem;
       gap: 3rem;
     }
   }
