@@ -51,6 +51,18 @@ export default function Colophon({ coffeeData }: { coffeeData: CoffeeData | null
         <dl className="list-container">
           <dt className="list-title">
             <h3 className="text-neutral-500 dark:text-silver-dark">
+              Inspiration
+            </h3>
+          </dt>
+          <dd className="list-content">
+            <p>
+              Text diagram style inspired by <a className="link" target="_blank" href="https://drew.tech">Drew DeVault</a>.
+            </p>
+          </dd>
+        </dl>
+        <dl className="list-container">
+          <dt className="list-title">
+            <h3 className="text-neutral-500 dark:text-silver-dark">
               Caffeine
             </h3>
           </dt>
