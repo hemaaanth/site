@@ -27,6 +27,7 @@ const TextDiagramBlock = ({ value }: { value: any }) => {
     <TextDiagram 
       content={value.content} 
       caption={value.caption}
+      captionPosition={value.captionPosition}
       minWidth={value.minWidth}
     />
   )

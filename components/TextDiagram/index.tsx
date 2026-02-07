@@ -1,19 +1,19 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 
 interface TextDiagramProps {
   content: string
   caption?: string
+  captionPosition?: 'top' | 'bottom'
   minWidth?: number
 }
 
-export function TextDiagram({ content, caption, minWidth }: TextDiagramProps) {
+export function TextDiagram({ content, caption, captionPosition = 'bottom', minWidth }: TextDiagramProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const preRef = useRef<HTMLPreElement>(null)
   const [isOverflowing, setIsOverflowing] = useState(false)
-
-  // Calculate the natural width of the diagram in characters
-  const lines = content?.split('\n') || []
-  const maxLineLength = Math.max(...lines.map(line => line.length), minWidth || 0)
+  const [isDragging, setIsDragging] = useState(false)
+  const [startX, setStartX] = useState(0)
+  const [scrollLeft, setScrollLeft] = useState(0)
 
   useEffect(() => {
     const checkOverflow = () => {
@@ -27,26 +27,63 @@ export function TextDiagram({ content, caption, minWidth }: TextDiagramProps) {
     return () => window.removeEventListener('resize', checkOverflow)
   }, [content])
 
+  // Drag-to-scroll handlers for canvas-like panning
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    if (!containerRef.current || !isOverflowing) return
+    setIsDragging(true)
+    setStartX(e.pageX - containerRef.current.offsetLeft)
+    setScrollLeft(containerRef.current.scrollLeft)
+  }, [isOverflowing])
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false)
+  }, [])
+
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!isDragging || !containerRef.current) return
+    e.preventDefault()
+    const x = e.pageX - containerRef.current.offsetLeft
+    const walk = (x - startX) * 1.5 // Scroll speed multiplier
+    containerRef.current.scrollLeft = scrollLeft - walk
+  }, [isDragging, startX, scrollLeft])
+
+  const handleMouseLeave = useCallback(() => {
+    setIsDragging(false)
+  }, [])
+
   if (!content) return null
+
+  const captionElement = caption && (
+    <figcaption className="text-diagram-caption text-sm text-neutral-500 dark:text-silver-dark text-center py-2">
+      {caption}
+    </figcaption>
+  )
 
   return (
     <figure className="text-diagram my-8">
+      {captionPosition === 'top' && captionElement}
+      
       <div 
         ref={containerRef}
-        className="text-diagram-container relative overflow-x-auto"
+        className={`text-diagram-container relative overflow-x-auto rounded-lg border border-neutral-700 bg-neutral-950 ${
+          isOverflowing ? (isDragging ? 'cursor-grabbing' : 'cursor-grab') : ''
+        }`}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
       >
-        {/* Scroll hint for mobile */}
-        {isOverflowing && (
-          <div className="absolute right-0 top-0 bottom-0 w-8 pointer-events-none bg-gradient-to-l from-neutral-900/80 to-transparent z-10 flex items-center justify-end pr-1">
-            <span className="text-neutral-500 text-xs">→</span>
+        {/* Scroll hint */}
+        {isOverflowing && !isDragging && (
+          <div className="absolute right-2 top-2 px-2 py-1 rounded bg-neutral-800/80 text-neutral-500 text-xs pointer-events-none z-10">
+            drag to pan →
           </div>
         )}
         
         <pre
           ref={preRef}
-          className="text-diagram-content font-mono text-sm leading-relaxed whitespace-pre overflow-x-auto p-4 sm:p-6 rounded-lg bg-neutral-900 border border-neutral-800 text-neutral-300"
+          className="text-diagram-content font-mono text-sm leading-relaxed whitespace-pre p-6 sm:p-8 text-neutral-300 select-none"
           style={{
-            // Ensure the content doesn't get smaller than needed
             minWidth: minWidth ? `${minWidth}ch` : undefined,
           }}
         >
@@ -54,11 +91,7 @@ export function TextDiagram({ content, caption, minWidth }: TextDiagramProps) {
         </pre>
       </div>
       
-      {caption && (
-        <figcaption className="text-diagram-caption mt-3 text-sm text-neutral-500 dark:text-silver-dark text-center">
-          {caption}
-        </figcaption>
-      )}
+      {captionPosition === 'bottom' && captionElement}
     </figure>
   )
 }

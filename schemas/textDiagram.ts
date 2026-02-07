@@ -16,7 +16,19 @@ export default defineType({
       name: 'caption',
       title: 'Caption',
       type: 'string',
-      description: 'Optional caption below the diagram',
+      description: 'Optional caption for the diagram',
+    }),
+    defineField({
+      name: 'captionPosition',
+      title: 'Caption Position',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Top', value: 'top' },
+          { title: 'Bottom', value: 'bottom' },
+        ],
+      },
+      initialValue: 'bottom',
     }),
     defineField({
       name: 'minWidth',
