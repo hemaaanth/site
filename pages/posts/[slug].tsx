@@ -61,7 +61,7 @@ export default function Post(props) {
           }} 
       /> 
       <Main>
-        <div className="blog-header flex w-full flex-col justify-between sm:flex-row sm:mb-0 mb-4">
+        <div className="flex w-full flex-col justify-between sm:flex-row sm:mb-0 mb-4">
           <header><h1 className="text-xl text-neutral-800 [font-variation-settings:'opsz'_32,_'wght'_500] dark:text-white sm:pb-6 sm:text-xl sm:mb-0 mb-4">
             {title}
           </h1></header>

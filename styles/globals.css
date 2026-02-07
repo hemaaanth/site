@@ -329,18 +329,15 @@ a[href^="mailto:"] {
     @apply sticky top-4;
   }
 
-  /* Blog post layout with overflow sidebars using CSS Grid */
+  /* Blog post layout with overflow sidebars */
   .blog-post-layout {
+    @apply relative;
     @apply border-t border-solid border-neutral-500/10 pt-4 dark:border-neutral-900;
     @apply mb-12 sm:mb-16;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
   }
 
   .blog-main {
     @apply w-full;
-    min-width: 0; /* Prevent grid blowout */
   }
 
   .blog-sidebar-left,
@@ -348,42 +345,49 @@ a[href^="mailto:"] {
     @apply hidden;
   }
 
-  /* Blog header stays constrained */
-  .blog-header {
-    max-width: 46rem;
-  }
-
-  /* Show sidebars on xl screens (1280px+) with proper grid layout */
+  /* Show sidebars on xl screens (1280px+) - overflow outside main content */
   @media (min-width: 1280px) {
     .blog-post-layout {
-      grid-template-columns: 12rem minmax(0, 46rem) 12rem;
-      gap: 2rem;
-      justify-content: center;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .blog-sidebar-left,
+    .blog-sidebar-right {
+      @apply block;
+      position: absolute;
+      top: 1rem;
+      width: 12rem;
+      /* Match height of main content for sticky to work */
+      height: calc(100% - 1rem);
     }
 
     .blog-sidebar-left {
-      @apply block;
-      grid-column: 1;
-      grid-row: 1;
+      right: calc(100% + 2rem);
     }
 
     .blog-sidebar-right {
-      @apply block;
-      grid-column: 3;
-      grid-row: 1;
+      left: calc(100% + 2rem);
     }
 
     .blog-main {
-      grid-column: 2;
-      grid-row: 1;
+      flex: 1;
     }
   }
 
-  /* Wider sidebars on 2xl screens (1536px+) */
+  /* Wider gap on 2xl screens */
   @media (min-width: 1536px) {
-    .blog-post-layout {
-      grid-template-columns: 14rem minmax(0, 46rem) 14rem;
-      gap: 3rem;
+    .blog-sidebar-left,
+    .blog-sidebar-right {
+      width: 14rem;
+    }
+
+    .blog-sidebar-left {
+      right: calc(100% + 3rem);
+    }
+
+    .blog-sidebar-right {
+      left: calc(100% + 3rem);
     }
   }
 
