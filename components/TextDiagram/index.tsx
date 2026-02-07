@@ -65,7 +65,7 @@ export function TextDiagram({ content, caption, captionPosition = 'bottom', minW
   }
 
   const captionElement = caption && (
-    <figcaption className="text-diagram-caption text-sm text-neutral-500 dark:text-silver-dark text-center py-2">
+    <figcaption className="text-diagram-caption text-sm text-neutral-500 dark:text-silver-dark text-left py-2">
       {caption}
     </figcaption>
   )
