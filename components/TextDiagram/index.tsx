@@ -58,7 +58,7 @@ export function TextDiagram({ content, caption, captionPosition = 'bottom', minW
     const parts = text.split(/(\*\*[^*]+\*\*)/g)
     return parts.map((part, i) => {
       if (part.startsWith('**') && part.endsWith('**')) {
-        return <strong key={i} className="text-white font-bold">{part.slice(2, -2)}</strong>
+        return <span key={i} className="text-white font-bold" style={{ fontWeight: 700 }}>{part.slice(2, -2)}</span>
       }
       return part
     })

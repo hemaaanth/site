@@ -211,10 +211,30 @@ Dividers:
 ## Tips
 
 1. **Test width** — Preview on mobile to ensure it fits or scrolls gracefully
-2. **Use titles** — Put section headers above complex diagrams
+2. **Use titles** — Put section headers above complex diagrams, **ALL-CAPS**
 3. **Keep it simple** — If a diagram needs explanation, it's too complex
 4. **Consistent style** — Pick one box style per diagram
 5. **Round numbers** — `~4 hrs` reads better than `3.7 hrs`
+
+## Title Conventions
+
+**Always use ALL-CAPS for diagram section titles:**
+
+```
+     FOLDERS                              TAGS
+     ───────                              ────
+
+┌─────────────────┐              ┌─────────────────┐
+│  Single path    │              │  Multi-context  │
+└─────────────────┘              └─────────────────┘
+```
+
+Not this:
+```
+     Folders                              Tags
+```
+
+ALL-CAPS titles create visual hierarchy and match terminal/ASCII aesthetic.
 
 ## Examples in the Wild
 
