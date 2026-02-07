@@ -72,7 +72,7 @@ export default function Post(props) {
                 {headers.map((header, index) => {
                   const headerSlug = header.text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
                   return (
-                    <li key={index} className={`leading-6 truncate ${activeSection === headerSlug ? 'text-white' : ''}`} style={{ marginLeft: `${header.depth * 1-1}rem` }}>
+                    <li key={index} className={`toc-item leading-6 truncate ${activeSection === headerSlug ? 'toc-active' : ''}`} style={{ marginLeft: `${header.depth * 1-1}rem` }}>
                       <a href={`#${headerSlug}`}>
                         {header.text}
                       </a>
@@ -80,6 +80,9 @@ export default function Post(props) {
                   );
                 })}
               </ul>
+              <div className="mt-6">
+                <Link href="/posts" className="text-neutral-500 dark:text-silver-dark hover:text-neutral-800 dark:hover:text-silver transition-colors text-sm">← All posts</Link>
+              </div>
             </div>
           </aside>
 
@@ -89,31 +92,25 @@ export default function Post(props) {
               <p className="text-neutral-700">{readingTime} minute(s)</p>
               <PortableText content={content} />
             </div>
-            <div className="prose-custom">
-              <hr className="pb-0" />
-              <Link href="/posts" className="text-neutral-700 sm:pb-6 sm:align-left cursor-pointer">← All posts</Link>
-            </div>
           </div>
 
-          {/* Right sidebar - Meta info */}
+          {/* Right sidebar - Meta info (not sticky) */}
           <aside className="blog-sidebar-right">
-            <div className="list-sticky">
-              <h3>Date</h3>
-              <p>
-                <time className="time" dateTime={date}>
-                  <span className="sr-only">{date}</span>
-                  {formatDate(date, false)}
-                </time>
-              </p>
-              <h3>Tl;dr</h3>
-              <p className="sidebar">{tldr}</p>
-              {meta && (
-                <>
-                  <h3>Meta</h3>
-                  <p className="sidebar">{meta}</p>
-                </>
-              )}
-            </div>
+            <h3>Date</h3>
+            <p>
+              <time className="time" dateTime={date}>
+                <span className="sr-only">{date}</span>
+                {formatDate(date, false)}
+              </time>
+            </p>
+            <h3>Tl;dr</h3>
+            <p className="sidebar">{tldr}</p>
+            {meta && (
+              <>
+                <h3>Meta</h3>
+                <p className="sidebar">{meta}</p>
+              </>
+            )}
           </aside>
         </div>
       </Main>

@@ -274,6 +274,15 @@ a[href^="mailto:"] {
     @apply p-0;
   }
 
+  .toc-item {
+    @apply -mx-2 px-2 py-0.5 rounded;
+    @apply transition-colors duration-150;
+  }
+
+  .toc-active {
+    @apply bg-neutral-800 text-white;
+  }
+
   .time {
     @apply font-sans;
     @apply block;
