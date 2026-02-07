@@ -423,6 +423,49 @@ a[href^="mailto:"] {
   }
 }
 
+/* Text Diagram Styles */
+.text-diagram-container {
+  /* Enable smooth horizontal scrolling on touch devices */
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.text-diagram-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.text-diagram-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.text-diagram-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.text-diagram-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.text-diagram-content {
+  /* Responsive font sizing */
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+@media (min-width: 640px) {
+  .text-diagram-content {
+    font-size: 0.875rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .text-diagram-content {
+    font-size: 0.9rem;
+  }
+}
+
 .mapboxgl-control-container {
   display: none !important;
 }
