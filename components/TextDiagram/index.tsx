@@ -82,7 +82,7 @@ export function TextDiagram({ content, caption, captionPosition = 'bottom', minW
         
         <pre
           ref={preRef}
-          className="text-diagram-content font-mono text-sm leading-relaxed whitespace-pre p-6 sm:p-8 text-neutral-300 select-none"
+          className="text-diagram-content font-mono text-sm leading-relaxed whitespace-pre p-4 sm:p-5 text-neutral-300 select-none"
           style={{
             minWidth: minWidth ? `${minWidth}ch` : undefined,
           }}
