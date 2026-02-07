@@ -44,4 +44,4 @@ sitemap.xml
 sitemap-*.xml
 
 # draft blog posts
-/pages/posts/drafts/
+/pages/posts/drafts/tsconfig.tsbuildinfo

@@ -2,6 +2,7 @@ import { PortableText as SanityPortableText } from '@portabletext/react'
 import type { PortableTextBlock, PortableTextMarkDefinition } from '@portabletext/types'
 import { LinkExternal } from '../Links'
 import { HoverNote } from '../HoverNote'
+import { TextDiagram } from '../TextDiagram'
 
 interface PortableTextProps {
   content: PortableTextBlock[]
@@ -15,6 +16,20 @@ const AsideBlock = ({ value }: { value: any }) => {
     <div className="prose-p:text-neutral-600">
       <SanityPortableText value={value.content} components={defaultComponents} />
     </div>
+  )
+}
+
+// Custom block renderer for Text Diagram
+const TextDiagramBlock = ({ value }: { value: any }) => {
+  if (!value.content) return null
+  
+  return (
+    <TextDiagram 
+      content={value.content} 
+      caption={value.caption}
+      captionPosition={value.captionPosition}
+      minWidth={value.minWidth}
+    />
   )
 }
 
@@ -65,6 +80,7 @@ const defaultComponents = {
   types: {
     aside: AsideBlock,
     table: TableBlock,
+    textDiagram: TextDiagramBlock,
   },
   marks: {
     link: ({ value, children }: any) => {
