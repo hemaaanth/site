@@ -423,6 +423,77 @@ a[href^="mailto:"] {
   }
 }
 
+/* Text Diagram Styles */
+.text-diagram-container {
+  /* Enable smooth horizontal scrolling on touch devices */
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+  /* Hide scrollbar by default, show on hover */
+  scrollbar-width: none;
+}
+
+.text-diagram-container:hover {
+  scrollbar-width: thin;
+}
+
+.text-diagram-container::-webkit-scrollbar {
+  height: 6px;
+  display: none;
+}
+
+.text-diagram-container:hover::-webkit-scrollbar {
+  display: block;
+}
+
+.text-diagram-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.text-diagram-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+.text-diagram-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Canvas-like drag behavior */
+.text-diagram-container.cursor-grab {
+  cursor: grab;
+}
+
+.text-diagram-container.cursor-grabbing {
+  cursor: grabbing;
+}
+
+.text-diagram-content {
+  /* Responsive font sizing */
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+@media (min-width: 640px) {
+  .text-diagram-content {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+  }
+}
+
+@media (min-width: 768px) {
+  .text-diagram-content {
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+}
+
+@media (min-width: 1024px) {
+  .text-diagram-content {
+    font-size: 0.9rem;
+  }
+}
+
 .mapboxgl-control-container {
   display: none !important;
 }
