@@ -9,6 +9,15 @@ A visual language for ASCII diagrams on hem.so. These diagrams should feel like 
 3. **Consistent borders** — Use box-drawing characters for clean lines
 4. **Dark canvas aesthetic** — Designed for dark backgrounds
 
+## Text Formatting
+
+**Bold text** is supported using markdown syntax:
+```
+**This will be bold** and this won't
+```
+
+Bold text renders in white for emphasis while maintaining monospace alignment.
+
 ---
 
 ## Box Characters
