@@ -320,6 +320,69 @@ a[href^="mailto:"] {
     @apply sticky top-4;
   }
 
+  /* Post layout with overflow sidebars */
+  .post-layout {
+    @apply relative;
+    @apply border-t border-solid border-neutral-500/10 pt-4 dark:border-neutral-900;
+    @apply mb-12 sm:mb-16;
+  }
+
+  .post-content {
+    @apply w-full;
+  }
+
+  .post-sidebar-left,
+  .post-sidebar-right {
+    @apply hidden;
+  }
+
+  .post-sidebar-sticky {
+    @apply sticky top-8;
+  }
+
+  /* TOC item styles */
+  .toc-item {
+    @apply -mx-2 px-2 py-0.5 rounded;
+    @apply transition-colors duration-150;
+  }
+
+  .toc-active {
+    @apply bg-neutral-800 text-white;
+  }
+
+  /* Show sidebars on xl screens (1280px+) */
+  @media (min-width: 1280px) {
+    .post-sidebar-left,
+    .post-sidebar-right {
+      @apply block absolute top-4;
+      width: 13rem;
+    }
+
+    .post-sidebar-left {
+      right: calc(100% + 2rem);
+    }
+
+    .post-sidebar-right {
+      left: calc(100% + 2rem);
+    }
+  }
+
+  /* Wider sidebars on 2xl screens (1536px+) */
+  @media (min-width: 1536px) {
+    .post-sidebar-left,
+    .post-sidebar-right {
+      width: 14rem;
+    }
+
+    .post-sidebar-left {
+      right: calc(100% + 3rem);
+    }
+
+    .post-sidebar-right {
+      left: calc(100% + 3rem);
+    }
+  }
+
   .island {
     @apply bg-white/95;
     @apply dark:bg-neutral-900/95;

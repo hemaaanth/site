@@ -51,18 +51,6 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'layout',
-      title: 'Layout',
-      type: 'string',
-      options: {
-        list: [
-          { title: 'Default', value: 'default' },
-          { title: 'Wide', value: 'wide' },
-        ],
-      },
-      initialValue: 'default',
-    }),
-    defineField({
       name: 'depth',
       title: 'TOC Depth',
       type: 'number',
