@@ -56,7 +56,7 @@ export default function Colophon({ coffeeData }: { coffeeData: CoffeeData | null
           </dt>
           <dd className="list-content">
             <p>
-              Text diagram style inspired by <a className="link" target="_blank" href="https://drew.tech">Drew DeVault</a>.
+              Text diagram style inspired by <a className="link" target="_blank" href="https://drew.tech">Drew Bredvick</a>.
             </p>
           </dd>
         </dl>

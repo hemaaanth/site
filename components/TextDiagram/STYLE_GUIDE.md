@@ -209,6 +209,6 @@ Dividers:
 
 ## Examples in the Wild
 
-- Drew DeVault (drew.tech) — Heavy use of ASCII for technical diagrams
+- Drew Bredvick (drew.tech) — Heavy use of ASCII for technical diagrams
 - Simon Willison — Text diagrams in blog posts
 - Mermaid.js — Inspiration for structured diagrams (but we stay raw ASCII)
