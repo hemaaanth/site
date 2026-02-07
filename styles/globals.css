@@ -350,7 +350,7 @@ a[href^="mailto:"] {
   @media (min-width: 1280px) {
     .post-sidebar-left {
       @apply block fixed;
-      top: 8rem;
+      top: 12rem;
       width: 13rem;
       /* Position to the left of the main content area */
       right: calc(50% + 23rem + 2rem);
