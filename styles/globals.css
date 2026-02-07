@@ -329,15 +329,18 @@ a[href^="mailto:"] {
     @apply sticky top-4;
   }
 
-  /* Blog post layout with overflow sidebars */
+  /* Blog post layout with overflow sidebars using CSS Grid */
   .blog-post-layout {
-    @apply relative;
     @apply border-t border-solid border-neutral-500/10 pt-4 dark:border-neutral-900;
     @apply mb-12 sm:mb-16;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
 
   .blog-main {
     @apply w-full;
+    min-width: 0; /* Prevent grid blowout */
   }
 
   .blog-sidebar-left,
@@ -345,37 +348,48 @@ a[href^="mailto:"] {
     @apply hidden;
   }
 
-  /* Show sidebars on xl screens (1280px+) where there's room for overflow */
+  /* Show sidebars on xl screens (1280px+) with proper grid layout */
   @media (min-width: 1280px) {
-    .blog-sidebar-left,
-    .blog-sidebar-right {
-      @apply block;
-      @apply absolute top-4;
-      @apply w-48;
+    /* Allow parent to show overflow sidebars */
+    article:has(.blog-post-layout) {
+      overflow: visible;
+      max-width: none;
+    }
+    
+    .blog-post-layout {
+      /* Center the layout with sidebars */
+      max-width: calc(46rem + 12rem + 12rem + 4rem);
+      margin-left: auto;
+      margin-right: auto;
+      grid-template-columns: 12rem 1fr 12rem;
+      gap: 2rem;
     }
 
     .blog-sidebar-left {
-      right: calc(100% + 2rem);
+      @apply block;
+      grid-column: 1;
+      grid-row: 1;
     }
 
     .blog-sidebar-right {
-      left: calc(100% + 2rem);
+      @apply block;
+      grid-column: 3;
+      grid-row: 1;
+    }
+
+    .blog-main {
+      grid-column: 2;
+      grid-row: 1;
+      max-width: 46rem; /* Maintain readable line length */
     }
   }
 
   /* Wider sidebars on 2xl screens (1536px+) */
   @media (min-width: 1536px) {
-    .blog-sidebar-left,
-    .blog-sidebar-right {
-      @apply w-56;
-    }
-
-    .blog-sidebar-left {
-      right: calc(100% + 3rem);
-    }
-
-    .blog-sidebar-right {
-      left: calc(100% + 3rem);
+    .blog-post-layout {
+      max-width: calc(46rem + 14rem + 14rem + 6rem);
+      grid-template-columns: 14rem 1fr 14rem;
+      gap: 3rem;
     }
   }
 
