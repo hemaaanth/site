@@ -31,8 +31,8 @@ export default function Colophon({ coffeeData }: { coffeeData: CoffeeData | null
             </h3>
           </dt>
           <dd className="list-content">
-          <p>
-              The majority of this website&apos;s code is forked from <a className="link" target="_blank" href="https://www.fabianschultz.com/">Fabian Schultz</a>, which is open source and available on <a className="link" target="_blank" href="https://github.com/fabe/site">Github</a>.
+            <p>
+              The majority of this website&apos;s code is forked from <a className="link" target="_blank" href="https://www.fabianschultz.com/">Fabian Schultz</a>, which is open source and available on <a className="link" target="_blank" href="https://github.com/fabe/site">Github</a>. Text diagram style inspired by <a className="link" target="_blank" href="https://drew.tech">Drew Bredvick</a>.
             </p>
           </dd>
         </dl>
@@ -45,18 +45,6 @@ export default function Colophon({ coffeeData }: { coffeeData: CoffeeData | null
           <dd className="list-content">
             <p>
               Built with <a className="link" target="_blank" href="https://nextjs.org">Next.js</a> and <a className="link" target="_blank" href="https://tailwindcss.com">Tailwind</a>, hosted on <a className="link" target="_blank" href="https://vercel.com">Vercel</a>. Vibe-coded with <a className="link" target="_blank" href="https://windsurf.com/">Windsurf</a> and <a className="link" target="_blank" href="https://ampcode.com">Amp</a>. The font face is <a className="link" target="_blank" href="https://rsms.me/inter/">Inter</a> by <a className="link" target="_blank" href="https://rsms.me">Rasmus Andersson</a>.
-            </p>
-          </dd>
-        </dl>
-        <dl className="list-container">
-          <dt className="list-title">
-            <h3 className="text-neutral-500 dark:text-silver-dark">
-              Inspiration
-            </h3>
-          </dt>
-          <dd className="list-content">
-            <p>
-              Text diagram style inspired by <a className="link" target="_blank" href="https://drew.tech">Drew Bredvick</a>.
             </p>
           </dd>
         </dl>
