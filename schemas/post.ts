@@ -153,6 +153,34 @@ export default defineType({
           },
         },
         {
+          type: 'object',
+          name: 'note',
+          title: 'Note',
+          fields: [
+            {
+              name: 'content',
+              type: 'array',
+              of: [{ type: 'block' }],
+            },
+          ],
+          preview: {
+            select: {
+              content: 'content',
+            },
+            prepare({ content }) {
+              const block = (content || []).find((item) => item._type === 'block')
+              return {
+                title: block
+                  ? block.children
+                      .filter((child) => child._type === 'span')
+                      .map((span) => span.text)
+                      .join('')
+                  : 'Note',
+              }
+            },
+          },
+        },
+        {
           type: 'table',
         },
         {
