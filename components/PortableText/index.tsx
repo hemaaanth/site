@@ -8,12 +8,23 @@ interface PortableTextProps {
   content: PortableTextBlock[]
 }
 
-// Custom block renderer for Aside
+// Custom block renderer for Aside (grayed out text)
 const AsideBlock = ({ value }: { value: any }) => {
   if (!value.content) return null
   
   return (
-    <div className="prose-p:text-neutral-600">
+    <div className="aside-block text-neutral-500 dark:text-silver-dark [&_h1]:text-neutral-500 [&_h2]:text-neutral-500 [&_h3]:text-neutral-500 [&_h4]:text-neutral-500 [&_li]:text-neutral-500 dark:[&_h1]:text-silver-dark dark:[&_h2]:text-silver-dark dark:[&_h3]:text-silver-dark dark:[&_h4]:text-silver-dark dark:[&_li]:text-silver-dark">
+      <SanityPortableText value={value.content} components={defaultComponents} />
+    </div>
+  )
+}
+
+// Custom block renderer for Note (bordered box)
+const NoteBlock = ({ value }: { value: any }) => {
+  if (!value.content) return null
+  
+  return (
+    <div className="note my-6">
       <SanityPortableText value={value.content} components={defaultComponents} />
     </div>
   )
@@ -79,6 +90,7 @@ const TableBlock = ({ value }: { value: any }) => {
 const defaultComponents = {
   types: {
     aside: AsideBlock,
+    note: NoteBlock,
     table: TableBlock,
     textDiagram: TextDiagramBlock,
   },
