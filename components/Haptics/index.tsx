@@ -1,66 +1,53 @@
 "use client";
 
-import { createContext, useContext, useCallback, useEffect, useState, ReactNode } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import { WebHaptics, defaultPatterns } from "web-haptics";
 
-// HapticInput can be number, string, pattern array, or preset object
 type HapticInput = Parameters<WebHaptics["trigger"]>[0];
+type TriggerOptions = Parameters<WebHaptics["trigger"]>[1];
 
-interface HapticsContextType {
-  trigger: (input?: HapticInput) => void;
-  isSupported: boolean;
+interface UseHapticsOptions {
+  debug?: boolean;
+  showSwitch?: boolean;
 }
 
-const HapticsContext = createContext<HapticsContextType>({
-  trigger: () => {},
-  isSupported: false,
-});
-
-export function useHaptics() {
-  return useContext(HapticsContext);
-}
-
-interface HapticsProviderProps {
-  children: ReactNode;
-}
-
-export function HapticsProvider({ children }: HapticsProviderProps) {
-  const [haptics, setHaptics] = useState<WebHaptics | null>(null);
-  const [isSupported, setIsSupported] = useState(false);
+/**
+ * React hook for haptic feedback on mobile devices.
+ * Based on web-haptics library.
+ */
+export function useHaptics(options?: UseHapticsOptions) {
+  const hapticsRef = useRef<WebHaptics | null>(null);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    
-    // Check if vibration API is supported (typically mobile only)
-    const supported = "vibrate" in navigator;
-    setIsSupported(supported);
-    
-    if (supported) {
-      const instance = new WebHaptics();
-      setHaptics(instance);
-      
-      return () => {
-        instance.destroy();
-      };
-    }
+    hapticsRef.current = new WebHaptics(options);
+    return () => {
+      hapticsRef.current?.destroy();
+      hapticsRef.current = null;
+    };
   }, []);
 
+  useEffect(() => {
+    hapticsRef.current?.setDebug(options?.debug ?? false);
+  }, [options?.debug]);
+
+  useEffect(() => {
+    hapticsRef.current?.setShowSwitch(options?.showSwitch ?? false);
+  }, [options?.showSwitch]);
+
   const trigger = useCallback(
-    (input?: HapticInput) => {
-      if (haptics) {
-        haptics.trigger(input);
-      }
+    (input?: HapticInput, triggerOptions?: TriggerOptions) => {
+      return hapticsRef.current?.trigger(input, triggerOptions);
     },
-    [haptics]
+    []
   );
 
-  return (
-    <HapticsContext.Provider value={{ trigger, isSupported }}>
-      {children}
-    </HapticsContext.Provider>
-  );
+  const cancel = useCallback(() => {
+    return hapticsRef.current?.cancel();
+  }, []);
+
+  const isSupported = WebHaptics.isSupported;
+
+  return { trigger, cancel, isSupported };
 }
 
-// Re-export patterns for easy use
 export { defaultPatterns };
-export type { HapticInput };
