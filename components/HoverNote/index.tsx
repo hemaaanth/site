@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { useHaptics } from '../Haptics';
 
 interface HoverNoteProps {
   children: React.ReactNode;
@@ -13,6 +14,7 @@ export const HoverNote: React.FC<HoverNoteProps> = ({ children }) => {
   const triggerRef = useRef<HTMLSpanElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const uniqueId = useRef(`hovernote-${Math.random().toString(36).substr(2, 9)}`);
+  const { trigger } = useHaptics();
 
   // Create portal container on mount
   useEffect(() => {
@@ -97,6 +99,7 @@ export const HoverNote: React.FC<HoverNoteProps> = ({ children }) => {
   const handleClick = useCallback((e: React.MouseEvent) => {
     if (isMobile) {
       e.preventDefault();
+      trigger("selection");
       setIsVisible((prev) => {
         if (!prev) {
           calculatePosition();
@@ -104,7 +107,7 @@ export const HoverNote: React.FC<HoverNoteProps> = ({ children }) => {
         return !prev;
       });
     }
-  }, [isMobile, calculatePosition]);
+  }, [isMobile, calculatePosition, trigger]);
 
   // Keyboard support
   const handleFocus = useCallback(() => {

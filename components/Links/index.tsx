@@ -4,7 +4,7 @@ import { ExternalIcon, ShareIcon } from "../Icons";
 import { Tooltip } from "../Tooltip";
 import useCopy from "@react-hook/copy";
 import { HoverPreview } from "../HoverPreview";
-import { useHaptics, defaultPatterns } from "../Haptics";
+import { useHaptics } from "../Haptics";
 
 interface LinkExternalProps {
   href: string;
@@ -44,7 +44,7 @@ export function LinkShare({ title, url, children }) {
         .catch(console.error);
     } else {
       await copy();
-      trigger(defaultPatterns.success);
+      trigger("success");
       setTooltipOpen(true);
 
       setTimeout(() => {
