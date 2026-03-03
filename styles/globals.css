@@ -681,15 +681,46 @@ a[href^="mailto:"] {
 }
 
 .speedreader-wpm {
-  @apply absolute top-6 left-6;
+  @apply absolute bottom-6 left-1/2 -translate-x-1/2;
   @apply text-sm text-neutral-400 dark:text-neutral-600;
   @apply [font-variation-settings:'opsz'_14];
   @apply slashed-zero tabular-nums;
 }
 
-.speedreader-legend {
-  @apply absolute bottom-6 left-1/2 -translate-x-1/2;
-  @apply flex gap-6;
-  @apply text-xs text-neutral-400 dark:text-neutral-600;
-  @apply [font-variation-settings:'opsz'_12];
+.speedreader-close {
+  @apply absolute top-4 right-4;
+  @apply w-10 h-10;
+  @apply flex items-center justify-center;
+  @apply text-xl text-neutral-400 dark:text-neutral-600;
+  @apply hover:text-neutral-800 dark:hover:text-neutral-200;
+  @apply transition-colors;
+  @apply rounded-full;
+  @apply hover:bg-neutral-100 dark:hover:bg-neutral-800;
+}
+
+.speedreader-controls {
+  @apply absolute bottom-20;
+  @apply flex items-center gap-4;
+}
+
+.speedreader-btn {
+  @apply w-14 h-14;
+  @apply flex items-center justify-center;
+  @apply text-2xl;
+  @apply text-neutral-600 dark:text-neutral-400;
+  @apply bg-neutral-100 dark:bg-neutral-800;
+  @apply rounded-full;
+  @apply hover:bg-neutral-200 dark:hover:bg-neutral-700;
+  @apply active:bg-neutral-300 dark:active:bg-neutral-600;
+  @apply transition-colors;
+  font-family: system-ui, sans-serif;
+}
+
+.speedreader-btn-play {
+  @apply w-16 h-16;
+  @apply text-xl;
+  @apply bg-neutral-900 dark:bg-white;
+  @apply text-white dark:text-neutral-900;
+  @apply hover:bg-neutral-700 dark:hover:bg-neutral-200;
+  @apply active:bg-neutral-600 dark:active:bg-neutral-300;
 }
