@@ -10,6 +10,7 @@ import { Router } from 'next/router'
 import posthog from 'posthog-js'
 import { PostHogProvider } from 'posthog-js/react'
 import { enableVisualEditing } from '@sanity/visual-editing'
+import { HapticsProvider } from '../components/Haptics'
 
 const sansFont = localFont({
   src: "../public/inter.roman.var.woff2",
@@ -81,9 +82,11 @@ export default function MyApp({
             }
           `}
         </style>
-        <PostHogProvider client={posthog}>
-          <Component {...pageProps} />
-        </PostHogProvider>
+        <HapticsProvider>
+          <PostHogProvider client={posthog}>
+            <Component {...pageProps} />
+          </PostHogProvider>
+        </HapticsProvider>
     </>
   );
 }

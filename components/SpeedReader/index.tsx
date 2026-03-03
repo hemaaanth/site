@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { extractPlainText } from '../../lib/portableTextUtils';
 import { SpeedReaderIcon } from '../Icons';
+import { useHaptics } from '../Haptics';
 import type { PortableTextBlock } from '@portabletext/types';
 
 interface SpeedReaderProps {
@@ -44,6 +45,7 @@ export function SpeedReader({ content, children }: SpeedReaderProps) {
   const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
   const wordsRef = useRef<string[]>([]);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const { trigger } = useHaptics();
 
   // Extract words on mount
   useEffect(() => {
@@ -152,12 +154,14 @@ export function SpeedReader({ content, children }: SpeedReaderProps) {
   }, [isActive, handleKeyDown]);
 
   const handleOpen = () => {
+    trigger();
     setCurrentWordIndex(0);
     setIsPlaying(false);
     setIsActive(true);
   };
 
   const handleClose = () => {
+    trigger();
     setIsActive(false);
     setIsPlaying(false);
     if (timeoutRef.current) {

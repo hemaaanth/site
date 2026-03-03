@@ -40,7 +40,8 @@
     "resend": "^6.6.0",
     "sanity": "^5.1.0",
     "sharp": "^0.34.5",
-    "styled-components": "^6.1.19"
+    "styled-components": "^6.1.19",
+    "web-haptics": "^0.0.6"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^16.1.1",
