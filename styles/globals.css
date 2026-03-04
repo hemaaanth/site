@@ -642,6 +642,8 @@ a[href^="mailto:"] {
   @apply fixed inset-0 z-50;
   @apply bg-white dark:bg-neutral-950;
   @apply flex flex-col items-center justify-center;
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
   font-variation-settings: "opsz" 48, "wght" 500;
 }
 
@@ -674,7 +676,7 @@ a[href^="mailto:"] {
 }
 
 .speedreader-progress {
-  @apply absolute top-6 right-6;
+  @apply absolute top-6 left-6;
   @apply text-sm text-neutral-400 dark:text-neutral-600;
   @apply [font-variation-settings:'opsz'_14];
   @apply slashed-zero tabular-nums;
