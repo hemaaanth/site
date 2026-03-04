@@ -8,12 +8,14 @@ import PlaceItem, { PlaceType } from "../../components/Places";
 import Map from "../../components/Map";
 import { shuffle } from "lodash";
 import { getPlaceBySlug, getPublishedPlaceSlugs } from "../../lib/sanity";
+import { useHaptics } from "../../components/Haptics";
 
 export default function Place({ title, year, places }) {
   const router = useRouter();
   const slug = router.query.slug;
   const relativeUrl = `/places/${slug}`;
   const url = `${baseUrl}${relativeUrl}`;
+  const { trigger } = useHaptics();
 
   // Add state and filter logic
   const [selectedTypes, setSelectedTypes] = useState<PlaceType[]>([]);
@@ -121,7 +123,10 @@ export default function Place({ title, year, places }) {
                 <p>
                   No matches for current filters, please{" "}
                   <span
-                    onClick={() => setSelectedTypes([])}
+                    onClick={() => {
+                      trigger();
+                      setSelectedTypes([]);
+                    }}
                     className="underline cursor-pointer"
                   >
                     reset
@@ -152,7 +157,10 @@ export default function Place({ title, year, places }) {
                   />
                 </div>
                 <span
-                  onClick={() => setShowUserLocation((prev) => !prev)}
+                  onClick={() => {
+                    trigger("selection");
+                    setShowUserLocation((prev) => !prev);
+                  }}
                   className="mt-2 text-sm text-neutral-300 cursor-pointer hover:underline"
                 >
                   {showUserLocation ? "Hide my location" : "Show my location"}
@@ -174,6 +182,7 @@ export default function Place({ title, year, places }) {
                     <span
                       key={type as string}
                       onClick={() => {
+                        trigger("selection");
                         setSelectedTypes((prev: PlaceType[]) =>
                           prev.includes(type as PlaceType)
                             ? prev.filter((t: PlaceType) => t !== type)

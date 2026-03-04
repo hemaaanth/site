@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { extractPlainText } from '../../lib/portableTextUtils';
 import { SpeedReaderIcon } from '../Icons';
+import { useHaptics } from '../Haptics';
 import type { PortableTextBlock } from '@portabletext/types';
 
 interface SpeedReaderProps {
@@ -44,6 +45,7 @@ export function SpeedReader({ content, children }: SpeedReaderProps) {
   const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
   const wordsRef = useRef<string[]>([]);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const { trigger } = useHaptics();
 
   // Extract words on mount
   useEffect(() => {
@@ -152,12 +154,14 @@ export function SpeedReader({ content, children }: SpeedReaderProps) {
   }, [isActive, handleKeyDown]);
 
   const handleOpen = () => {
+    trigger();
     setCurrentWordIndex(0);
     setIsPlaying(false);
     setIsActive(true);
   };
 
   const handleClose = () => {
+    trigger();
     setIsActive(false);
     setIsPlaying(false);
     if (timeoutRef.current) {
@@ -182,7 +186,15 @@ export function SpeedReader({ content, children }: SpeedReaderProps) {
 
       {isActive && portalContainer && createPortal(
         <div className="speedreader-overlay">
-          <div className="speedreader-wpm">{wpm} WPM</div>
+          {/* Close button */}
+          <button 
+            className="speedreader-close"
+            onClick={handleClose}
+            aria-label="Close speed reader"
+          >
+            ✕
+          </button>
+
           <div className="speedreader-progress">
             {currentWordIndex + 1} / {totalWords}
           </div>
@@ -193,11 +205,43 @@ export function SpeedReader({ content, children }: SpeedReaderProps) {
             <span className="speedreader-after">{after}</span>
           </div>
 
-          <div className="speedreader-legend">
-            <span>Space: {isPlaying ? 'Pause' : 'Play'}</span>
-            <span>←/→: Speed</span>
-            <span>Esc: Exit</span>
+          {/* Touch-friendly controls */}
+          <div className="speedreader-controls">
+            <button 
+              className="speedreader-btn"
+              onClick={() => {
+                trigger("selection");
+                setWpm(prev => Math.max(100, prev - 50));
+              }}
+              aria-label="Decrease speed"
+            >
+              −
+            </button>
+            
+            <button 
+              className="speedreader-btn speedreader-btn-play"
+              onClick={() => {
+                trigger();
+                setIsPlaying(prev => !prev);
+              }}
+              aria-label={isPlaying ? 'Pause' : 'Play'}
+            >
+              {isPlaying ? '❚❚' : '▶'}
+            </button>
+            
+            <button 
+              className="speedreader-btn"
+              onClick={() => {
+                trigger("selection");
+                setWpm(prev => Math.min(800, prev + 50));
+              }}
+              aria-label="Increase speed"
+            >
+              +
+            </button>
           </div>
+
+          <div className="speedreader-wpm">{wpm} WPM</div>
         </div>,
         portalContainer
       )}

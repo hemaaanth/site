@@ -657,9 +657,21 @@ a[href^="mailto:"] {
 
 /* SpeedReader Overlay Styles */
 .speedreader-overlay {
-  @apply fixed inset-0 z-50;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
   @apply bg-white dark:bg-neutral-950;
   @apply flex flex-col items-center justify-center;
+  /* iOS safe areas */
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
   font-variation-settings: "opsz" 48, "wght" 500;
 }
 
@@ -692,22 +704,53 @@ a[href^="mailto:"] {
 }
 
 .speedreader-progress {
-  @apply absolute top-6 right-6;
-  @apply text-sm text-neutral-400 dark:text-neutral-600;
-  @apply [font-variation-settings:'opsz'_14];
-  @apply slashed-zero tabular-nums;
-}
-
-.speedreader-wpm {
   @apply absolute top-6 left-6;
   @apply text-sm text-neutral-400 dark:text-neutral-600;
   @apply [font-variation-settings:'opsz'_14];
   @apply slashed-zero tabular-nums;
 }
 
-.speedreader-legend {
+.speedreader-wpm {
   @apply absolute bottom-6 left-1/2 -translate-x-1/2;
-  @apply flex gap-6;
-  @apply text-xs text-neutral-400 dark:text-neutral-600;
-  @apply [font-variation-settings:'opsz'_12];
+  @apply text-sm text-neutral-400 dark:text-neutral-600;
+  @apply [font-variation-settings:'opsz'_14];
+  @apply slashed-zero tabular-nums;
+}
+
+.speedreader-close {
+  @apply absolute top-4 right-4;
+  @apply w-10 h-10;
+  @apply flex items-center justify-center;
+  @apply text-xl text-neutral-400 dark:text-neutral-600;
+  @apply hover:text-neutral-800 dark:hover:text-neutral-200;
+  @apply transition-colors;
+  @apply rounded-full;
+  @apply hover:bg-neutral-100 dark:hover:bg-neutral-800;
+}
+
+.speedreader-controls {
+  @apply absolute bottom-20;
+  @apply flex items-center gap-4;
+}
+
+.speedreader-btn {
+  @apply w-14 h-14;
+  @apply flex items-center justify-center;
+  @apply text-2xl;
+  @apply text-neutral-600 dark:text-neutral-400;
+  @apply bg-neutral-100 dark:bg-neutral-800;
+  @apply rounded-full;
+  @apply hover:bg-neutral-200 dark:hover:bg-neutral-700;
+  @apply active:bg-neutral-300 dark:active:bg-neutral-600;
+  @apply transition-colors;
+  font-family: system-ui, sans-serif;
+}
+
+.speedreader-btn-play {
+  @apply w-16 h-16;
+  @apply text-xl;
+  @apply bg-neutral-900 dark:bg-white;
+  @apply text-white dark:text-neutral-900;
+  @apply hover:bg-neutral-700 dark:hover:bg-neutral-200;
+  @apply active:bg-neutral-600 dark:active:bg-neutral-300;
 }

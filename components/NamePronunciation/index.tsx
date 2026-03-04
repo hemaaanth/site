@@ -1,11 +1,14 @@
 import React, { useRef, useState, useCallback } from "react";
 import { SpeakerIcon } from "../Icons";
+import { useHaptics } from "../Haptics";
 
 export default function NamePronunciation({ children }: { children: React.ReactNode }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const { trigger } = useHaptics();
 
   const playPronunciation = useCallback(() => {
+    trigger();
     // Stop any currently playing audio
     if (audioRef.current) {
       audioRef.current.pause();
