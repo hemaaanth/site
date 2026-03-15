@@ -11,63 +11,17 @@ interface Location {
 interface MapProps {
   locations: Location[];
   hoveredLocation?: Location | null;
-  showUserLocation: boolean; // New prop to control user location display
 }
 
 const Map: React.FC<MapProps> = ({
   locations,
   hoveredLocation,
-  showUserLocation,
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markers = useRef<{ marker: mapboxgl.Marker; location: Location }[]>([]);
-  const userMarker = useRef<mapboxgl.Marker | null>(null);
   const previousHover = useRef<Location | null>(null);
   const resetTimeout = useRef<NodeJS.Timeout | null>(null);
-
-  // Add user location marker
-  useEffect(() => {
-    if (!map.current) return;
-
-    if (showUserLocation) {
-      // Check if geolocation is supported
-      if (!navigator.geolocation) {
-        console.log("Geolocation is not supported by your browser");
-        return;
-      }
-
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-
-          // Create user marker only if it doesn't exist
-          if (!userMarker.current) {
-            userMarker.current = new mapboxgl.Marker({
-              color: "#FFF", // red color
-              scale: 0.5, // slightly smaller than location markers
-            })
-              .setLngLat([longitude, latitude])
-              .addTo(map.current!);
-          } else {
-            // Update position if marker already exists
-            userMarker.current.setLngLat([longitude, latitude]);
-          }
-        },
-        (error) => {
-          console.log("Error getting user location:", error);
-        },
-      );
-    } else {
-      // Remove user marker if the toggle is off
-      userMarker.current?.remove();
-      userMarker.current = null; // Reset the reference
-    }
-
-    return () => {
-      // Do not remove the user marker on unmount
-    };
-  }, [showUserLocation]); // Add showUserLocation as a dependency
 
   // Initialize map and create markers
   useEffect(() => {

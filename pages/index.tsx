@@ -86,12 +86,12 @@ export default function Home({
             <NamePronunciation>Hemanth Soni</NamePronunciation>
           </h1>
         </header>
-        <dl className="list-container">
-          <dt className="list-title">
-            <h3 className="text-neutral-500 dark:text-silver-dark">Intro</h3>
-          </dt>
-          <dd className="list-content">
-            <div>
+        <section className="list-container" aria-label="Introduction">
+          <div className="list-title">
+            <h2 className="text-neutral-500 dark:text-silver-dark text-base [font-variation-settings:'wght'_400]">Intro</h2>
+          </div>
+          <div className="list-content">
+            <p>
               I build products & companies in financial services, data
               infrastructure, crypto, and various mixes of the three. Currently,
               I lead growth at Goldsky. More about me{" "}
@@ -102,16 +102,16 @@ export default function Home({
                 here
               </Link>
               .
-            </div>
-          </dd>
-        </dl>
+            </p>
+          </div>
+        </section>
         <Writing posts={recentPosts} />
 <Tinkering />
-        <dl className="list-container">
-          <dt className="list-title">
-            <h3 className="text-neutral-500 dark:text-silver-dark">Reading</h3>
-          </dt>
-          <dd className="list-content">
+        <section className="list-container" aria-label="Reading">
+          <div className="list-title">
+            <h2 className="text-neutral-500 dark:text-silver-dark text-base [font-variation-settings:'wght'_400]">Reading</h2>
+          </div>
+          <div className="list-content">
             {currentlyReading.length > 0 ? (
               <>
                 {currentlyReading.map((book, index) => (
@@ -137,15 +137,15 @@ export default function Home({
             ) : (
               <div>Not currently reading anything</div>
             )}
-          </dd>
-        </dl>
-        <dl className="list-container">
-          <dt className="list-title">
-            <h3 className="text-neutral-500 dark:text-silver-dark">
+          </div>
+        </section>
+        <section className="list-container" aria-label="Listening">
+          <div className="list-title">
+            <h2 className="text-neutral-500 dark:text-silver-dark text-base [font-variation-settings:'wght'_400]">
               Listening
-            </h3>
-          </dt>
-          <dd className="list-content">
+            </h2>
+          </div>
+          <div className="list-content">
             {recentlyPlayed.length > 0 ? (
               recentlyPlayed.map((track, index) => (
                 <div
@@ -159,8 +159,8 @@ export default function Home({
             ) : (
               <div>No recently played tracks</div>
             )}
-          </dd>
-        </dl>
+          </div>
+        </section>
       </Main>
     </>
   );

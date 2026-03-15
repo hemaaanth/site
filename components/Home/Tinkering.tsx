@@ -25,11 +25,11 @@ const PROJECTS = [
 
 export default function Tinkering() {
   return (
-    <dl className="list-container">
-      <dt className="list-title">
-        <h3 className="text-neutral-500 dark:text-silver-dark">Tinkering</h3>
-      </dt>
-      <dd className="list-content">
+    <section className="list-container" aria-label="Tinkering">
+      <div className="list-title">
+        <h2 className="text-neutral-500 dark:text-silver-dark text-base [font-variation-settings:'wght'_400]">Tinkering</h2>
+      </div>
+      <div className="list-content">
         {PROJECTS.map((project) => (
           <div key={project.url} className="pb-4 last-of-type:pb-0">
             <div className="studio-list-title" />
@@ -48,7 +48,7 @@ export default function Tinkering() {
             View all
           </Link>
         </div>
-      </dd>
-    </dl>
+      </div>
+    </section>
   );
 }

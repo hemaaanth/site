@@ -6,11 +6,11 @@ import Badge from "../../components/Badge";
 
 export default function Writing({ posts }) {
   return (
-    <dl className="list-container">
-      <dt className="list-title">
-        <h3 className="text-neutral-500 dark:text-silver-dark">Writing</h3>
-      </dt>
-      <dd className="list-content">
+    <section className="list-container" aria-label="Writing">
+      <div className="list-title">
+        <h2 className="text-neutral-500 dark:text-silver-dark text-base [font-variation-settings:'wght'_400]">Writing</h2>
+      </div>
+      <div className="list-content">
         {posts.map((post) => (
           <div key={post.slug} className={`pb-2 last-of-type:pb-0 ${post.status === 'draft' ? 'opacity-30 dark:opacity-30' : ''}`}>
             {post.status === 'draft' ? (
@@ -37,7 +37,7 @@ export default function Writing({ posts }) {
             View all
           </Link>
         </div>
-      </dd>
-    </dl>
+      </div>
+    </section>
   );
 }

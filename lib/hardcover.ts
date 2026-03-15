@@ -8,7 +8,8 @@ async function fetchHardcoverGraphQL(operation: string) {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${process.env.HARDCOVER_TOKEN}`
       },
-      body: JSON.stringify({ query: operation })
+      body: JSON.stringify({ query: operation }),
+      signal: AbortSignal.timeout(5000),
     });
 
     if (!response.ok) {

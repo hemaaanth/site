@@ -1,0 +1,23 @@
+# Hemanth Soni
+
+> Personal website of Hemanth Soni — builder, writer, and Head of Growth at Goldsky.
+
+## About
+
+Hemanth builds products and companies in financial services, data infrastructure, crypto, and various mixes of the three. He currently leads growth at Goldsky, a realtime data infrastructure company. Previously, he co-founded GroceryHero, built ventures at Diagram ($150M venture studio), led research at the World Economic Forum, and worked as a strategy consultant at Monitor Deloitte.
+
+## Sections
+
+- [Home](https://hem.so/): Overview with recent writing, projects, reading, and listening.
+- [About](https://hem.so/about): Career history and background.
+- [Writing](https://hem.so/posts): Blog posts on data indexing, crypto, SaaS pricing, fintech, and more.
+- [Studio](https://hem.so/studio): Side projects and tools.
+- [Places](https://hem.so/places): City guides with curated locations.
+- [Colophon](https://hem.so/colophon): How this site was built.
+- [Links](https://hem.so/links): Social and contact links.
+
+## Contact
+
+- Twitter: https://twitter.com/hemaaanth
+- LinkedIn: https://www.linkedin.com/in/hemanthsoni
+- Website: https://hem.so

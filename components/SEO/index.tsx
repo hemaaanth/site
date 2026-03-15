@@ -30,6 +30,10 @@ export interface SEOProps {
   image?: string;
   path?: string;
   noindex?: boolean;
+  article?: {
+    datePublished?: string;
+    author?: string;
+  };
 }
 
 export function SEO({ seo }: { seo?: SEOProps }) {
@@ -92,18 +96,29 @@ export function SEO({ seo }: { seo?: SEOProps }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
-              "@context": "http://schema.org",
+              "@context": "https://schema.org",
               "@type": "WebSite",
               name: defaultSEO.title,
               url: baseUrl,
               image: defaultSEO.openGraph.images[0].url,
               author: {
-                "@context": "http://schema.org",
                 "@type": "Person",
                 name: defaultSEO.title,
                 url: baseUrl,
-                jobTitle: "Builder",
+                jobTitle: "Head of Growth at Goldsky",
                 image: defaultSEO.openGraph.images[0].url,
+                knowsAbout: [
+                  "Financial Services",
+                  "Data Infrastructure",
+                  "Crypto",
+                  "SaaS",
+                  "Growth",
+                ],
+                worksFor: {
+                  "@type": "Organization",
+                  name: "Goldsky",
+                  url: "https://goldsky.com",
+                },
                 sameAs: [
                   "https://twitter.com/hemaaanth",
                   "https://www.linkedin.com/in/hemanthsoni",
@@ -112,6 +127,33 @@ export function SEO({ seo }: { seo?: SEOProps }) {
             }),
           }}
         />
+
+        {seo?.article?.datePublished && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "Article",
+                headline: title,
+                description: description,
+                image: image,
+                datePublished: seo.article.datePublished,
+                url: seo.path ? `${baseUrl}${seo.path}` : baseUrl,
+                author: {
+                  "@type": "Person",
+                  name: seo.article.author || defaultSEO.title,
+                  url: baseUrl,
+                },
+                publisher: {
+                  "@type": "Person",
+                  name: defaultSEO.title,
+                  url: baseUrl,
+                },
+              }),
+            }}
+          />
+        )}
 
         <meta name="author" content="Hemanth Soni" />
         <meta

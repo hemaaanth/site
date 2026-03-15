@@ -4,7 +4,6 @@ import { baseUrl, SEO } from "../../components/SEO";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { LinkShare } from "../../components/Links";
-import { SpeedReader } from "../../components/SpeedReader";
 import Link from "next/link";
 import formatDate from "../../lib/formatDate";
 import { getPostBySlug, getPublishedPostSlugs } from "../../lib/sanity";
@@ -14,7 +13,7 @@ import type { PortableTextBlock } from '@portabletext/types';
 
 export default function Post(props) {
   const router = useRouter();
-  const { title, date, meta, tldr, content, headers, readingTime } = props;
+  const { title, date, meta, tldr, content, headers, readingTime, author } = props;
   const slug = router.query.slug;
   const relativeUrl = `/posts/${slug}`;
   const url = `${baseUrl}${relativeUrl}`;
@@ -71,6 +70,10 @@ export default function Post(props) {
           description: tldr,
           path: relativeUrl,
           image: `${baseUrl}/api/og?title=${encodeURIComponent(title)}`,
+          article: {
+            datePublished: date,
+            author: author,
+          },
           }} 
       /> 
       <Main>
@@ -79,7 +82,6 @@ export default function Post(props) {
             {title}
           </h1></header>
           <div className="flex gap-2">
-            <SpeedReader content={content}>Speed Read</SpeedReader>
             <LinkShare title={title} url={url}>
               Share
             </LinkShare>

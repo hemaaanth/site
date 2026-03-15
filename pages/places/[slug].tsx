@@ -20,8 +20,6 @@ export default function Place({ title, year, places }) {
   const [hoveredPlace, setHoveredPlace] = useState(null);
   const [placesWithCoordinates, setPlacesWithCoordinates] = useState([]);
   const [allPlacesWithCoordinates, setAllPlacesWithCoordinates] = useState([]);
-  const [showUserLocation, setShowUserLocation] = useState(false); // New state for user location toggle
-
   // Get unique types from all places
   const allTypes = Array.from(
     new Set(places.flatMap((place) => place.types)),
@@ -36,14 +34,13 @@ export default function Place({ title, year, places }) {
 
   // Update URL when filters change
   useEffect(() => {
-    const query = { ...router.query };
+    const query: Record<string, string> = { slug: slug as string };
     if (selectedTypes.length > 0) {
       query.types = selectedTypes.join(",");
-    } else {
-      delete query.types;
     }
     router.push({ query }, undefined, { shallow: true });
-  }, [selectedTypes, router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTypes]);
 
   // Initialize filters from URL on load
   useEffect(() => {
@@ -148,18 +145,8 @@ export default function Place({ title, year, places }) {
                   <Map
                     locations={placesWithCoordinates}
                     hoveredLocation={hoveredPlace}
-                    showUserLocation={showUserLocation} // Pass the toggle state to the Map component
                   />
                 </div>
-                <span
-                  onClick={() => setShowUserLocation((prev) => !prev)}
-                  className="mt-2 text-sm text-neutral-300 cursor-pointer hover:underline"
-                >
-                  {showUserLocation ? "Hide my location" : "Show my location"}
-                </span>
-                <p className="text-sm text-neutral-500">
-                  Only shows pin if it is within bounds of the city map.
-                </p>
               </div>
 
               <div className="sm:mt-8 mt-4 mb-8">

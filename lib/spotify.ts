@@ -24,6 +24,7 @@ async function getAccessToken() {
         grant_type: 'refresh_token',
         refresh_token,
       }),
+      signal: AbortSignal.timeout(5000),
     });
 
     const data = await response.json();
@@ -49,6 +50,7 @@ export async function getRecentlyPlayed() {
       headers: {
         Authorization: `Bearer ${access_token}`,
       },
+      signal: AbortSignal.timeout(5000),
     });
 
     if (!response.ok) {
