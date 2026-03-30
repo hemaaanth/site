@@ -101,6 +101,9 @@ const Globe: React.FC<GlobeProps> = ({ targetCoordinates }) => {
         style,
       });
 
+      if (map.current.isStyleLoaded()) {
+        applyStyleCustomizations(isDark);
+      }
       map.current.on("style.load", () => {
         applyStyleCustomizations(isDark);
       });
