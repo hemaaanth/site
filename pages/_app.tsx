@@ -11,6 +11,10 @@ import { Router } from 'next/router'
 import posthog from 'posthog-js'
 import { PostHogProvider } from 'posthog-js/react'
 import { enableVisualEditing } from '@sanity/visual-editing'
+import dynamic from 'next/dynamic'
+import { GlobeProvider, useGlobe } from '../components/Globe/context'
+
+const Globe = dynamic(() => import('../components/Globe'), { ssr: false })
 
 const sansFont = localFont({
   src: "../public/inter.roman.var.woff2",
@@ -73,6 +77,8 @@ export default function MyApp({
     return () => mediaQuery.removeEventListener('change', updateDarkClass)
   }, [])
   
+  const isPlacesPage = router.asPath.startsWith('/places');
+
   return (
     <>
         <style jsx global>
@@ -83,8 +89,23 @@ export default function MyApp({
           `}
         </style>
         <PostHogProvider client={posthog}>
-          <Component {...pageProps} />
+          <GlobeProvider>
+            {isPlacesPage && <PersistentGlobe />}
+            <Component {...pageProps} />
+          </GlobeProvider>
         </PostHogProvider>
     </>
+  );
+}
+
+function PersistentGlobe() {
+  const { targetCoordinates, venues, cityCoordinates, onCityReady } = useGlobe();
+  return (
+    <Globe
+      targetCoordinates={targetCoordinates}
+      venues={venues}
+      cityCoordinates={cityCoordinates}
+      onCityReady={onCityReady}
+    />
   );
 }

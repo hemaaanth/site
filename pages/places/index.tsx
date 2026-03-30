@@ -1,13 +1,11 @@
 import type { GetStaticProps } from "next";
-import dynamic from "next/dynamic";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Main } from "../../components/Layouts";
 import { SEO } from "../../components/SEO";
 import Badge from "../../components/Badge";
 import { getAllPlaces } from "../../lib/sanity";
-
-const Globe = dynamic(() => import("../../components/Globe"), { ssr: false });
+import { useGlobe } from "../../components/Globe/context";
 
 interface Place {
   slug: string;
@@ -19,7 +17,12 @@ interface Place {
 }
 
 export default function Places({ places }: { places: Place[] }) {
-  const [hoveredCoordinates, setHoveredCoordinates] = useState<[number, number] | null>(null);
+  const { setTargetCoordinates, exitCityView } = useGlobe();
+
+  // Reset to globe view when navigating back to this page
+  useEffect(() => {
+    exitCityView();
+  }, [exitCityView]);
 
   return (
     <>
@@ -29,7 +32,6 @@ export default function Places({ places }: { places: Place[] }) {
           path: "/places",
         }}
       />
-      <Globe targetCoordinates={hoveredCoordinates} />
       <div className="relative z-20 dark:[&_*]:border-neutral-700/40">
         <Main>
           <header><h1 className="text-xl text-neutral-800 [font-variation-settings:'opsz'32,'wght'500] dark:text-white sm:pb-6 sm:text-xl">Places</h1></header>
@@ -43,8 +45,8 @@ export default function Places({ places }: { places: Place[] }) {
                 </dt>
                 <dd
                   className={`list-content border-none pb-4 pt-0 sm:pb-0 ${isDraft ? 'opacity-30 dark:opacity-30' : ''}`}
-                  onMouseEnter={() => coordinates && setHoveredCoordinates(coordinates)}
-                  onMouseLeave={() => setHoveredCoordinates(null)}
+                  onMouseEnter={() => coordinates && setTargetCoordinates(coordinates)}
+                  onMouseLeave={() => setTargetCoordinates(null)}
                 >
                   <div className="inline-flex items-center gap-1">
                     {!isDraft ? (

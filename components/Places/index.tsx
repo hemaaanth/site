@@ -27,8 +27,7 @@ export type PlaceType =
   | "coffee"
   | "work"
   | "party"
-  | "landmark"
-  | "favourite";
+  | "landmark";
 
 interface PlaceItemProps {
   title: string;

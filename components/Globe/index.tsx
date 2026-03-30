@@ -1,22 +1,77 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import mapboxgl from "mapbox-gl";
-// CSS is imported globally in _app.tsx
+import { createRoot } from "react-dom/client";
+import {
+  UtensilsCrossed,
+  Beer,
+  Martini,
+  Wine,
+  Landmark,
+  Store,
+  BedDouble,
+  Coffee,
+  Briefcase,
+  PartyPopper,
+  Star,
+} from "lucide-react";
+import type { PlaceType } from "../Places";
+
+export interface Venue {
+  title: string;
+  location: string;
+  description: string;
+  types: PlaceType[];
+  favourite?: boolean;
+  coordinates?: [number, number] | null;
+  googleMapsUrl?: string;
+}
 
 interface GlobeProps {
   targetCoordinates?: [number, number] | null;
+  venues?: Venue[] | null;
+  cityCoordinates?: [number, number] | null;
+  onCityReady?: (() => void) | null;
 }
+
+const typeIcons: Record<string, React.FC<{ size?: number; className?: string; fill?: string }>> = {
+  food: UtensilsCrossed,
+  beer: Beer,
+  cocktails: Martini,
+  wine: Wine,
+  activity: Landmark,
+  sight: Landmark,
+  shop: Store,
+  hotel: BedDouble,
+  coffee: Coffee,
+  work: Briefcase,
+  party: PartyPopper,
+  favourite: Star,
+};
 
 const getSystemDarkMode = () => {
   if (typeof window === "undefined") return true;
   return window.matchMedia("(prefers-color-scheme: dark)").matches;
 };
 
-const Globe: React.FC<GlobeProps> = ({ targetCoordinates }) => {
+const Globe: React.FC<GlobeProps> = ({ targetCoordinates, venues, cityCoordinates, onCityReady }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const marker = useRef<mapboxgl.Marker | null>(null);
+  const venueMarkers = useRef<{ marker: mapboxgl.Marker; root: ReturnType<typeof createRoot> }[]>([]);
   const flyToTimeout = useRef<NodeJS.Timeout | null>(null);
   const [isDark, setIsDark] = useState(getSystemDarkMode);
+  const [selectedVenue, setSelectedVenue] = useState<Venue | null>(null);
+  const popupRef = useRef<mapboxgl.Popup | null>(null);
+  const handlePopupClose = useCallback(() => setSelectedVenue(null), []);
+  const [mapReady, setMapReady] = useState(false);
+  // Track which city's venues are currently rendered to avoid re-adding
+  const currentCityKey = useRef<string | null>(null);
+
+  const isCityView = !!(venues && venues.length > 0 && cityCoordinates);
+  const isCityViewRef = useRef(isCityView);
+  isCityViewRef.current = isCityView;
+  const isDarkRef = useRef(isDark);
+  isDarkRef.current = isDark;
 
   // Listen for system color scheme changes
   useEffect(() => {
@@ -26,30 +81,35 @@ const Globe: React.FC<GlobeProps> = ({ targetCoordinates }) => {
     return () => mediaQuery.removeEventListener("change", handler);
   }, []);
 
-  const applyStyleCustomizations = (isDarkMode: boolean) => {
-    if (!map.current) return;
+  // Layers to hide in globe overview (cause jitter during flyTo)
+  const globeHideLayers = useRef(new Set([
+    "national-park", "landuse", "waterway", "land-structure-polygon", "land-structure-line",
+    "aeroway-polygon", "aeroway-line", "building",
+    "tunnel-path-trail", "tunnel-path-cycleway-piste", "tunnel-path", "tunnel-steps",
+    "tunnel-pedestrian", "tunnel-simple",
+    "road-path-trail", "road-path-cycleway-piste", "road-path", "road-steps",
+    "road-pedestrian", "road-simple", "road-rail",
+    "bridge-path-trail", "bridge-path-cycleway-piste", "bridge-path", "bridge-steps",
+    "bridge-pedestrian", "bridge-case-simple", "bridge-simple", "bridge-rail",
+    "admin-1-boundary-bg", "admin-1-boundary",
+  ]));
+
+  const applyStyleCustomizations = useCallback((isDarkMode: boolean, showDetails: boolean) => {
+    if (!map.current || !map.current.isStyleLoaded()) return;
 
     const layers = map.current.getStyle().layers;
-    if (process.env.NODE_ENV === "development") {
-      console.log("Globe layers:", layers?.map(l => `${l.id} (${l.type})`));
-    }
     if (layers) {
       layers.forEach((layer) => {
-        // Remove all text labels but keep icons/symbols
+        // Remove all text labels
         if (layer.type === "symbol") {
           map.current?.setLayoutProperty(layer.id, "text-field", "");
         }
 
-        // Only keep essential layers; hide everything else that pops in during flyTo
-        const keepLayers = new Set([
-          "land", "water", "admin-0-boundary", "admin-0-boundary-bg", "admin-0-boundary-disputed",
-        ]);
-        if (!keepLayers.has(layer.id) && layer.type !== "symbol" && layer.type !== "background") {
-          map.current?.setLayoutProperty(layer.id, "visibility", "none");
+        // In city view, restore all detail layers; in globe view, hide them
+        if (globeHideLayers.current.has(layer.id)) {
+          map.current?.setLayoutProperty(layer.id, "visibility", showDetails ? "visible" : "none");
         }
 
-
-        // Darken land in light mode for better contrast with sky
         if (!isDarkMode && layer.type === "background") {
           map.current?.setPaintProperty(layer.id, "background-color", "#EFEFEF");
         }
@@ -63,25 +123,25 @@ const Globe: React.FC<GlobeProps> = ({ targetCoordinates }) => {
       map.current.setFog({
         color: "#0A0B0B",
         "high-color": "#0A0B0B",
-        "horizon-blend": 0.1,
+        "horizon-blend": showDetails ? 0.02 : 0.1,
         "space-color": "#0A0B0B",
-        "star-intensity": 0.15,
+        "star-intensity": showDetails ? 0 : 0.15,
       });
     } else {
       map.current.setFog({
         color: "#F9FAFB",
         "high-color": "#F9FAFB",
-        "horizon-blend": 0.1,
+        "horizon-blend": showDetails ? 0.02 : 0.1,
         "space-color": "#F9FAFB",
         "star-intensity": 0,
       });
     }
-  };
+  }, []);
 
-  // Initialize map
+  // Initialize map (once)
   useEffect(() => {
     if (!mapContainer.current) return;
-    if (map.current) return; // Prevent re-initialization
+    if (map.current) return;
 
     mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || "";
 
@@ -102,10 +162,12 @@ const Globe: React.FC<GlobeProps> = ({ targetCoordinates }) => {
       });
 
       if (map.current.isStyleLoaded()) {
-        applyStyleCustomizations(isDark);
+        applyStyleCustomizations(isDarkRef.current, isCityViewRef.current);
+        setMapReady(true);
       }
       map.current.on("style.load", () => {
-        applyStyleCustomizations(isDark);
+        applyStyleCustomizations(isDarkRef.current, isCityViewRef.current);
+        setMapReady(true);
       });
     } catch (error) {
       console.error("Failed to initialize globe:", error);
@@ -127,26 +189,219 @@ const Globe: React.FC<GlobeProps> = ({ targetCoordinates }) => {
 
     map.current.setStyle(style);
     map.current.once("style.load", () => {
-      applyStyleCustomizations(isDark);
+      applyStyleCustomizations(isDarkRef.current, isCityViewRef.current);
     });
   }, [isDark]);
 
-  // Handle coordinate changes - fly to target and show marker
+  // Toggle interactivity and layer visibility based on view mode
   useEffect(() => {
     if (!map.current) return;
 
-    // Clear any pending flyTo
+    if (isCityView) {
+      map.current.scrollZoom.enable();
+      map.current.dragPan.enable();
+      map.current.touchZoomRotate.enable();
+      map.current.doubleClickZoom.enable();
+    } else {
+      map.current.scrollZoom.disable();
+      map.current.dragPan.disable();
+      map.current.touchZoomRotate.disable();
+      map.current.doubleClickZoom.disable();
+    }
+
+    // Re-apply style customizations to show/hide detail layers
+    applyStyleCustomizations(isDark, isCityView);
+  }, [isCityView, isDark, applyStyleCustomizations]);
+
+  // Helper to clean up venue markers
+  const clearVenueMarkers = useCallback(() => {
+    venueMarkers.current.forEach(({ marker: m, root }) => {
+      root.unmount();
+      m.remove();
+    });
+    venueMarkers.current = [];
+    if (popupRef.current) {
+      popupRef.current.remove();
+      popupRef.current = null;
+    }
+    setSelectedVenue(null);
+  }, []);
+
+  // City view: fly to city and add venue markers
+  useEffect(() => {
+    if (!map.current || !mapReady) return;
+
+    if (!isCityView) {
+      // Leaving city view — clean up markers and zoom out
+      if (currentCityKey.current) {
+        clearVenueMarkers();
+        currentCityKey.current = null;
+        // Fly back to globe overview
+        map.current.flyTo({
+          center: [0, 20],
+          zoom: 1.5,
+          duration: 1500,
+          essential: true,
+        });
+      }
+      return;
+    }
+
+    // Compute a key for this city to detect changes
+    const cityKey = `${cityCoordinates![0]},${cityCoordinates![1]}`;
+    if (currentCityKey.current === cityKey) return; // Same city, skip
+
+    // Clean up previous city's markers
+    clearVenueMarkers();
+    currentCityKey.current = cityKey;
+
+    // Remove the globe hover marker if present
+    if (marker.current) {
+      marker.current.remove();
+      marker.current = null;
+    }
+
+    // Add markers immediately but hidden — they'll animate in during the fly
+    venues!.forEach((venue) => {
+      if (!venue.coordinates || !map.current) return;
+
+      const isFavourite = !!venue.favourite;
+      const el = document.createElement("div");
+      el.className = "venue-marker";
+      el.style.opacity = "0";
+
+      const root = createRoot(el);
+      const displayTypes = venue.types || [];
+      root.render(
+        <div className="venue-marker-inner" title={venue.title}>
+          {displayTypes.length > 0 ? displayTypes.map(t => {
+            const Icon = typeIcons[t] || Landmark;
+            return <Icon key={t} size={14} />;
+          }) : <Landmark size={14} />}
+          {isFavourite && (
+            <span className="venue-marker-fav">
+              <Star size={10} fill="currentColor" />
+            </span>
+          )}
+        </div>
+      );
+
+      el.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (popupRef.current) {
+          popupRef.current.off("close", handlePopupClose);
+          popupRef.current.remove();
+          popupRef.current = null;
+        }
+        setSelectedVenue(prev => prev?.title === venue.title ? null : venue);
+      });
+
+      const m = new mapboxgl.Marker({ element: el, anchor: "center" })
+        .setLngLat(venue.coordinates!)
+        .addTo(map.current!);
+
+      venueMarkers.current.push({ marker: m, root });
+    });
+
+    // Fit bounds to all venue coordinates
+    const venuesWithCoords = venues!.filter(v => v.coordinates);
+    if (venuesWithCoords.length > 0) {
+      const bounds = new mapboxgl.LngLatBounds();
+      venuesWithCoords.forEach(v => bounds.extend(v.coordinates!));
+      const vh = window.innerHeight;
+      const vw = window.innerWidth;
+      const isSmall = vw < 640;
+      map.current.fitBounds(bounds, {
+        padding: {
+          top: isSmall ? vh * 0.12 : vh * 0.2,
+          bottom: isSmall ? vh * 0.12 : vh * 0.15,
+          left: vw * 0.05,
+          right: vw * 0.05,
+        },
+        maxZoom: 15,
+        duration: 2000,
+        essential: true,
+      });
+    } else {
+      map.current.flyTo({
+        center: cityCoordinates!,
+        zoom: 13,
+        duration: 2000,
+        curve: 1.5,
+        essential: true,
+      });
+    }
+
+    // Stagger-reveal markers partway through the fly animation
+    const revealDelay = 1200; // start revealing at ~60% of 2s fly
+    const stagger = 60; // ms between each marker
+    venueMarkers.current.forEach(({ marker: m }, i) => {
+      setTimeout(() => {
+        const el = m.getElement();
+        el.style.opacity = "1";
+        el.classList.add("venue-marker-revealed");
+      }, revealDelay + i * stagger);
+    });
+
+    map.current.once("moveend", () => {
+      onCityReady?.();
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mapReady, isCityView, cityCoordinates]);
+
+  // Show/hide popup for selected venue
+  useEffect(() => {
+    if (!map.current) return;
+
+    if (popupRef.current) {
+      popupRef.current.remove();
+      popupRef.current = null;
+    }
+
+    if (!selectedVenue?.coordinates) return;
+
+    const mapsUrl = selectedVenue.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedVenue.location)}`;
+
+    const html = `
+      <div class="venue-popup">
+        <div class="venue-popup-header">
+          <div class="venue-popup-title">${selectedVenue.title.replace(/</g, '&lt;')}</div>
+          <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="venue-popup-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </a>
+        </div>
+        ${selectedVenue.description ? `<div class="venue-popup-desc">${selectedVenue.description.replace(/</g, '&lt;')}</div>` : ''}
+      </div>
+    `;
+
+    const popup = new mapboxgl.Popup({
+      closeButton: true,
+      closeOnClick: true,
+      maxWidth: "280px",
+      offset: 20,
+      className: "venue-mapbox-popup",
+    })
+      .setLngLat(selectedVenue.coordinates)
+      .setHTML(html)
+      .addTo(map.current);
+
+    popup.on("close", handlePopupClose);
+    popupRef.current = popup;
+  }, [selectedVenue, handlePopupClose]);
+
+  // Globe view: handle hover coordinate changes
+  useEffect(() => {
+    if (!map.current || isCityView) return;
+
     if (flyToTimeout.current) {
       clearTimeout(flyToTimeout.current);
       flyToTimeout.current = null;
     }
 
     if (targetCoordinates) {
-      // Small delay before flying to prevent jitter when moving quickly between items
       flyToTimeout.current = setTimeout(() => {
         if (!map.current) return;
 
-        // Add or update marker
         if (!marker.current) {
           const el = document.createElement("div");
           el.className = "globe-marker";
@@ -171,13 +426,12 @@ const Globe: React.FC<GlobeProps> = ({ targetCoordinates }) => {
         });
       }, 150);
     } else {
-      // Just remove the marker, but keep the current view
       if (marker.current) {
         marker.current.remove();
         marker.current = null;
       }
     }
-  }, [targetCoordinates]);
+  }, [targetCoordinates, isCityView]);
 
   return (
     <div
@@ -189,7 +443,7 @@ const Globe: React.FC<GlobeProps> = ({ targetCoordinates }) => {
         width: '100vw',
         height: '100vh',
         zIndex: 10,
-        pointerEvents: 'none',
+        pointerEvents: isCityView ? 'auto' : 'none',
       }}
     />
   );

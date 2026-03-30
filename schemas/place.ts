@@ -65,7 +65,6 @@ export default defineType({
                   { title: 'Beer', value: 'beer' },
                   { title: 'Cocktails', value: 'cocktails' },
                   { title: 'Coffee', value: 'coffee' },
-                  { title: 'Favourite', value: 'favourite' },
                   { title: 'Food', value: 'food' },
                   { title: 'Party', value: 'party' },
                   { title: 'Shop', value: 'shop' },
@@ -81,7 +80,6 @@ export default defineType({
                     'beer',
                     'cocktails',
                     'coffee',
-                    'favourite',
                     'food',
                     'party',
                     'shop',
@@ -99,6 +97,12 @@ export default defineType({
                   }
                   return true
                 }),
+            },
+            {
+              name: 'favourite',
+              title: 'Favourite',
+              type: 'boolean',
+              initialValue: false,
             },
             {
               name: 'description',
