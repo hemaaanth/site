@@ -20,6 +20,8 @@ export default function Place({ title, year, places }) {
   const [hoveredPlace, setHoveredPlace] = useState(null);
   const [placesWithCoordinates, setPlacesWithCoordinates] = useState([]);
   const [allPlacesWithCoordinates, setAllPlacesWithCoordinates] = useState([]);
+
+
   // Get unique types from all places
   const allTypes = Array.from(
     new Set(places.flatMap((place) => place.types)),
@@ -34,13 +36,16 @@ export default function Place({ title, year, places }) {
 
   // Update URL when filters change
   useEffect(() => {
-    const query: Record<string, string> = { slug: slug as string };
+    // Only update URL if we're on this page (slug exists)
+    if (!router.query.slug) return;
+
+    const query = { ...router.query };
     if (selectedTypes.length > 0) {
       query.types = selectedTypes.join(",");
     }
     router.push({ query }, undefined, { shallow: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTypes]);
+  }, [selectedTypes]); // Don't include router - it causes navigation issues
 
   // Initialize filters from URL on load
   useEffect(() => {

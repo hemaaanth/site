@@ -28,15 +28,6 @@ module.exports = {
           "Segoe UI Symbol",
           "Noto Color Emoji",
         ],
-        serif: [
-          "LiterataVar",
-          "ui-serif",
-          "Georgia",
-          "Cambria",
-          "Times New Roman",
-          "Times",
-          "serif",
-        ],
       },
       colors: {
         silver: "#DFDFDE",

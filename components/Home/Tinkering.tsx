@@ -25,7 +25,7 @@ const PROJECTS = [
 
 export default function Tinkering() {
   return (
-    <section className="list-container" aria-label="Tinkering">
+    <section className="list-container border-0" aria-label="Tinkering">
       <div className="list-title">
         <h2 className="text-neutral-500 dark:text-silver-dark text-base [font-variation-settings:'wght'_400]">Tinkering</h2>
       </div>

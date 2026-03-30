@@ -6,7 +6,7 @@ import Badge from "../../components/Badge";
 
 export default function Writing({ posts }) {
   return (
-    <section className="list-container" aria-label="Writing">
+    <section className="list-container border-0" aria-label="Writing">
       <div className="list-title">
         <h2 className="text-neutral-500 dark:text-silver-dark text-base [font-variation-settings:'wght'_400]">Writing</h2>
       </div>

@@ -2,6 +2,7 @@ import "../styles/globals.css";
 import "../styles/hover-preview.css";
 import '@liveblocks/react-ui/styles.css';
 import '@liveblocks/react-ui/styles/dark/attributes.css';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import type { AppProps as NextAppProps } from "next/app";
 import localFont from "next/font/local";
 import { useEffect } from 'react'

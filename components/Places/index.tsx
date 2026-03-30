@@ -2,19 +2,18 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
-  FaUtensils,
-  FaGlassMartini,
-  FaLandmark,
-  FaStore,
-  FaBed,
-  FaCoffee,
-  FaBriefcase,
-  FaBeer,
-  FaWineGlassAlt,
-  FaGlassMartiniAlt,
-  FaStar,
-  FaPersonBooth,
-} from "react-icons/fa";
+  UtensilsCrossed,
+  Beer,
+  Martini,
+  Wine,
+  Landmark,
+  Store,
+  BedDouble,
+  Coffee,
+  Briefcase,
+  PartyPopper,
+  Star,
+} from "lucide-react";
 
 export type PlaceType =
   | "food"
@@ -43,18 +42,18 @@ interface PlaceItemProps {
 }
 
 const typeIcons = {
-  food: FaUtensils,
-  beer: FaBeer,
-  cocktails: FaGlassMartiniAlt,
-  wine: FaWineGlassAlt,
-  activity: FaLandmark,
-  sight: FaLandmark,
-  shop: FaStore,
-  hotel: FaBed,
-  coffee: FaCoffee,
-  work: FaBriefcase,
-  party: FaPersonBooth,
-  favourite: FaStar,
+  food: UtensilsCrossed,
+  beer: Beer,
+  cocktails: Martini,
+  wine: Wine,
+  activity: Landmark,
+  sight: Landmark,
+  shop: Store,
+  hotel: BedDouble,
+  coffee: Coffee,
+  work: Briefcase,
+  party: PartyPopper,
+  favourite: Star,
 };
 
 const PlaceItem: React.FC<PlaceItemProps> = ({
@@ -75,14 +74,13 @@ const PlaceItem: React.FC<PlaceItemProps> = ({
     >
       <div className="mb-8">
         <div className="flex items-center mb-2">
-          <div className="flex gap-2 mr-2">
+          <h3 className="font-semibold">{title}</h3>
+          <div className="flex gap-2 ml-2">
             {types?.map((type) => {
-              // Add optional chaining
-              const Icon = typeIcons[type] || FaLandmark;
-              return <Icon key={type} className="text-neutral-500" />;
+              const Icon = typeIcons[type] || Landmark;
+              return <Icon key={type} size={16} className="text-neutral-500" />;
             })}
           </div>
-          <h3 className="font-semibold">{title}</h3>
         </div>
         <div className="flex items-center text-sm text-neutral-500 mb-2">
           <a

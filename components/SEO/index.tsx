@@ -84,13 +84,6 @@ export function SEO({ seo }: { seo?: SEOProps }) {
           crossOrigin="anonymous"
         />
 
-        {/* <link
-          rel="preload"
-          href="/literata.roman.var.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        /> */}
 
         <script
           type="application/ld+json"

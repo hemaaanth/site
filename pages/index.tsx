@@ -107,7 +107,7 @@ export default function Home({
         </section>
         <Writing posts={recentPosts} />
 <Tinkering />
-        <section className="list-container" aria-label="Reading">
+        <section className="list-container border-0" aria-label="Reading">
           <div className="list-title">
             <h2 className="text-neutral-500 dark:text-silver-dark text-base [font-variation-settings:'wght'_400]">Reading</h2>
           </div>
@@ -117,19 +117,23 @@ export default function Home({
                 {currentlyReading.map((book, index) => (
                   <div
                     key={book.url}
-                    className={`${index !== 0 ? "pt-2" : ""} truncate`}
+                    className={`${index !== 0 ? "pt-2" : ""} flex items-baseline gap-1`}
                   >
-                    <LinkExternal href={book.url} imageUrl={book.imageUrl}>{getDisplayTitle(book.title)}</LinkExternal>
-                    <span className="truncate"> by {book.author}</span>
+                    <span className="truncate">
+                      <LinkExternal href={book.url} imageUrl={book.imageUrl}>{getDisplayTitle(book.title)}</LinkExternal>
+                      <span className="hidden sm:inline"> by {book.author}</span>
+                    </span>
                     <Badge>READING</Badge>
                   </div>
                 ))}
                 {lastCompleted && (
-                  <div className="pt-2 opacity-30 dark:opacity-30 truncate">
-                    <LinkExternal href={lastCompleted.url} imageUrl={lastCompleted.imageUrl}>
-                      {getDisplayTitle(lastCompleted.title)}
-                    </LinkExternal>
-                    <span className="truncate"> by {lastCompleted.author}</span>{" "}
+                  <div className="pt-2 opacity-30 dark:opacity-30 flex items-baseline gap-1">
+                    <span className="truncate">
+                      <LinkExternal href={lastCompleted.url} imageUrl={lastCompleted.imageUrl}>
+                        {getDisplayTitle(lastCompleted.title)}
+                      </LinkExternal>
+                      <span className="hidden sm:inline"> by {lastCompleted.author}</span>
+                    </span>
                     <Badge>DONE</Badge>
                   </div>
                 )}
@@ -139,7 +143,7 @@ export default function Home({
             )}
           </div>
         </section>
-        <section className="list-container" aria-label="Listening">
+        <section className="list-container border-0" aria-label="Listening">
           <div className="list-title">
             <h2 className="text-neutral-500 dark:text-silver-dark text-base [font-variation-settings:'wght'_400]">
               Listening

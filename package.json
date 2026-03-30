@@ -35,12 +35,12 @@
     "posthog-js": "^1.311.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "react-icons": "^5.5.0",
+    "lucide-react": "^1.0.0",
     "react-transition-group": "^4.4.5",
     "resend": "^6.6.0",
     "sanity": "^5.1.0",
     "sharp": "^0.34.5",
-    "styled-components": "^6.1.19"
+"styled-components": "^6.1.19"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^16.1.1",
