@@ -18,7 +18,7 @@ const getSystemDarkMode = () => {
   return window.matchMedia("(prefers-color-scheme: dark)").matches;
 };
 
-const getMapStyle = (isDark: boolean) => ({
+const getMapStyle = (isDark: boolean): mapboxgl.StyleSpecification => ({
   version: 8 as const,
   sources: {
     "mapbox-streets": {
