@@ -311,14 +311,15 @@ const Globe: React.FC<GlobeProps> = ({ targetCoordinates, venues, cityCoordinate
       const vh = window.innerHeight;
       const vw = window.innerWidth;
       const isSmall = vw < 640;
+      const isPortrait = vh > vw;
       map.current.fitBounds(bounds, {
         padding: {
-          top: isSmall ? vh * 0.12 : vh * 0.2,
-          bottom: isSmall ? vh * 0.12 : vh * 0.15,
-          left: vw * 0.05,
-          right: vw * 0.05,
+          top: isSmall ? 60 : vh * 0.2,
+          bottom: isSmall ? 50 : vh * 0.15,
+          left: isSmall ? (isPortrait ? 20 : 30) : vw * 0.05,
+          right: isSmall ? (isPortrait ? 20 : 30) : vw * 0.05,
         },
-        maxZoom: 15,
+        maxZoom: isSmall ? 16 : 15,
         duration: 2000,
         essential: true,
       });

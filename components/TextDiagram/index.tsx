@@ -58,7 +58,7 @@ export function TextDiagram({ content, caption, captionPosition = 'bottom', minW
     const parts = text.split(/(\*\*[^*]+\*\*)/g)
     return parts.map((part, i) => {
       if (part.startsWith('**') && part.endsWith('**')) {
-        return <span key={i} className="text-white font-bold" style={{ fontWeight: 700 }}>{part.slice(2, -2)}</span>
+        return <span key={i} className="text-neutral-900 dark:text-white font-bold" style={{ fontWeight: 700 }}>{part.slice(2, -2)}</span>
       }
       return part
     })
@@ -76,7 +76,7 @@ export function TextDiagram({ content, caption, captionPosition = 'bottom', minW
       
       <div 
         ref={containerRef}
-        className={`text-diagram-container relative overflow-x-auto rounded-lg border border-neutral-700 bg-neutral-950 ${
+        className={`text-diagram-container relative overflow-x-auto rounded-lg border border-neutral-300 bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-950 ${
           isOverflowing ? (isDragging ? 'cursor-grabbing' : 'cursor-grab') : ''
         }`}
         onMouseDown={handleMouseDown}
@@ -86,14 +86,14 @@ export function TextDiagram({ content, caption, captionPosition = 'bottom', minW
       >
         {/* Scroll hint */}
         {isOverflowing && !isDragging && (
-          <div className="absolute right-2 top-2 px-2 py-1 rounded bg-neutral-800/80 text-neutral-500 text-xs pointer-events-none z-10">
+          <div className="absolute right-2 top-2 px-2 py-1 rounded bg-neutral-300/80 text-neutral-500 dark:bg-neutral-800/80 dark:text-neutral-500 text-xs pointer-events-none z-10">
             drag to pan →
           </div>
         )}
         
         <pre
           ref={preRef}
-          className="text-diagram-content font-mono text-sm leading-relaxed whitespace-pre p-4 sm:p-5 text-neutral-300 select-none"
+          className="text-diagram-content font-mono text-sm leading-relaxed whitespace-pre p-4 sm:p-5 text-neutral-700 dark:text-neutral-300 select-none"
           style={{
             minWidth: minWidth ? `${minWidth}ch` : undefined,
           }}
