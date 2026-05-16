@@ -85,7 +85,7 @@ function buildPopupNode(opts: {
     const img = document.createElement("img");
     img.className = "venue-popup-image";
     img.src = opts.image;
-    img.alt = opts.title; // screen-reader fallback; never visually rendered
+    img.alt = opts.title || ""; // empty alt = decorative; correct for title-less photo venues
     img.loading = "lazy";
     root.appendChild(img);
     return root;

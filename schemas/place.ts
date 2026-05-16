@@ -132,7 +132,15 @@ export default defineType({
               name: 'title',
               title: 'Title',
               type: 'string',
-              validation: (Rule) => Rule.required(),
+              hidden: ({ parent }) =>
+                Boolean((parent as { types?: string[] })?.types?.includes('photo')),
+              validation: (Rule) =>
+                Rule.custom((value, ctx) => {
+                  const types = (ctx.parent as { types?: string[] })?.types ?? []
+                  if (types.includes('photo')) return true
+                  if (!value) return 'Required'
+                  return true
+                }),
             },
             {
               name: 'location',
@@ -194,6 +202,8 @@ export default defineType({
               title: 'Favourite',
               type: 'boolean',
               initialValue: false,
+              hidden: ({ parent }) =>
+                Boolean((parent as { types?: string[] })?.types?.includes('photo')),
             },
             {
               name: 'image',
@@ -201,6 +211,8 @@ export default defineType({
               type: 'image',
               description: 'Required for Photo venues. Otherwise ignored.',
               options: { hotspot: true },
+              hidden: ({ parent }) =>
+                !((parent as { types?: string[] })?.types?.includes('photo')),
               validation: (Rule) =>
                 Rule.custom((image, ctx) => {
                   const types = (ctx.parent as { types?: string[] })?.types ?? []
@@ -214,6 +226,8 @@ export default defineType({
               name: 'description',
               title: 'Description',
               type: 'text',
+              hidden: ({ parent }) =>
+                Boolean((parent as { types?: string[] })?.types?.includes('photo')),
               validation: (Rule) =>
                 Rule.custom((value, ctx) => {
                   const types = (ctx.parent as { types?: string[] })?.types ?? []
@@ -224,6 +238,17 @@ export default defineType({
                 }),
             },
           ],
+          preview: {
+            select: { title: 'title', types: 'types', media: 'image' },
+            prepare({ title, types, media }) {
+              const isPhoto = (types as string[] | undefined)?.includes('photo')
+              return {
+                title: title || (isPhoto ? 'Photo' : '—'),
+                subtitle: (types as string[] | undefined)?.join(', '),
+                media,
+              }
+            },
+          },
         },
       ],
       validation: (Rule) => Rule.required(),
