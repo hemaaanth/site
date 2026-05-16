@@ -914,72 +914,7 @@ a[href^="mailto:"] {
   }
 }
 
-/* Area popup styles — cousin of venue popup, with a colored accent bar and lighter chrome */
-.area-mapbox-popup .mapboxgl-popup-content {
-  background: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(10px) saturate(140%);
-  border-radius: 10px !important;
-  padding: 0 !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08) !important;
-  border: 1px solid rgba(0, 0, 0, 0.05) !important;
-  color: #171717 !important;
-}
-
-.area-mapbox-popup .mapboxgl-popup-tip {
-  border-top-color: rgba(255, 255, 255, 0.95) !important;
-  border-bottom-color: rgba(255, 255, 255, 0.95) !important;
-}
-
-.area-mapbox-popup--hover .mapboxgl-popup-content {
+/* Hover popups (area mouseover) shouldn't intercept events — keep mouseleave reliable. */
+.popup-passthrough .mapboxgl-popup-content {
   pointer-events: none;
-}
-
-.area-mapbox-popup .mapboxgl-popup-close-button {
-  font-size: 16px;
-  padding: 4px 8px;
-  color: #737373 !important;
-}
-
-.area-popup {
-  padding: 10px 14px 12px;
-  border-left: 2px solid;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
-.area-popup-title {
-  font-size: 13px;
-  font-variation-settings: 'opsz' 15, 'wght' 600;
-  letter-spacing: -0.005em;
-  color: #171717;
-  margin-bottom: 2px;
-}
-
-.area-popup-desc {
-  font-size: 12.5px;
-  line-height: 1.45;
-  color: #525252;
-  white-space: pre-wrap;
-}
-
-@media (prefers-color-scheme: dark) {
-  .area-mapbox-popup .mapboxgl-popup-content {
-    background: rgba(23, 23, 23, 0.9) !important;
-    border-color: rgba(255, 255, 255, 0.06) !important;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4) !important;
-    color: #f5f5f5 !important;
-  }
-  .area-mapbox-popup .mapboxgl-popup-tip {
-    border-top-color: rgba(23, 23, 23, 0.9) !important;
-    border-bottom-color: rgba(23, 23, 23, 0.9) !important;
-  }
-  .area-popup-title {
-    color: #f5f5f5;
-  }
-  .area-popup-desc {
-    color: #a3a3a3;
-  }
-  .area-mapbox-popup .mapboxgl-popup-close-button {
-    color: #a3a3a3 !important;
-  }
 }

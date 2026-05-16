@@ -69,7 +69,11 @@ function polygonCentroid(coordinates: number[][][]): [number, number] {
   return [sumLng / n, sumLat / n];
 }
 
-function buildVenuePopupNode(venue: Venue): HTMLElement {
+function buildPopupNode(opts: {
+  title: string;
+  description?: string;
+  link?: string;
+}): HTMLElement {
   const root = document.createElement("div");
   root.className = "venue-popup";
 
@@ -78,47 +82,29 @@ function buildVenuePopupNode(venue: Venue): HTMLElement {
 
   const title = document.createElement("div");
   title.className = "venue-popup-title";
-  title.textContent = venue.title;
+  title.textContent = opts.title;
   header.appendChild(title);
 
-  const link = document.createElement("a");
-  link.className = "venue-popup-link";
-  link.href =
-    venue.googleMapsUrl ||
-    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(venue.location)}`;
-  link.target = "_blank";
-  link.rel = "noopener noreferrer";
-  // Static SVG icon — not author-controlled, safe to inject as HTML.
-  link.innerHTML =
-    '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>';
-  header.appendChild(link);
+  if (opts.link) {
+    const link = document.createElement("a");
+    link.className = "venue-popup-link";
+    link.href = opts.link;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    // Static SVG icon — not author-controlled, safe to inject as HTML.
+    link.innerHTML =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>';
+    header.appendChild(link);
+  }
 
   root.appendChild(header);
 
-  if (venue.description) {
+  if (opts.description) {
     const desc = document.createElement("div");
     desc.className = "venue-popup-desc";
-    desc.textContent = venue.description;
+    desc.textContent = opts.description;
     root.appendChild(desc);
   }
-
-  return root;
-}
-
-function buildAreaPopupNode(feature: AreaFeature): HTMLElement {
-  const root = document.createElement("div");
-  root.className = "area-popup";
-  root.style.borderLeftColor = KIND_HEX[feature.properties.kind];
-
-  const title = document.createElement("div");
-  title.className = "area-popup-title";
-  title.textContent = feature.properties.title;
-  root.appendChild(title);
-
-  const desc = document.createElement("div");
-  desc.className = "area-popup-desc";
-  desc.textContent = feature.properties.description;
-  root.appendChild(desc);
 
   return root;
 }
@@ -399,13 +385,19 @@ const Globe: React.FC<GlobeProps> = ({
           areaPopupRef.current = new mapboxgl.Popup({
             closeButton: false,
             closeOnClick: false,
-            className: "area-mapbox-popup area-mapbox-popup--hover",
-            offset: 12,
-            maxWidth: "260px",
+            className: "venue-mapbox-popup popup-passthrough",
+            offset: 20,
+            maxWidth: "280px",
           });
         }
+        const af = f as unknown as AreaFeature;
         areaPopupRef.current
-          .setDOMContent(buildAreaPopupNode(f as unknown as AreaFeature))
+          .setDOMContent(
+            buildPopupNode({
+              title: af.properties.title,
+              description: af.properties.description,
+            }),
+          )
           .setLngLat(reduceMotionRef.current ? target : areaPopupRef.current.getLngLat() ?? target)
           .addTo(map.current);
 
@@ -774,6 +766,9 @@ const Globe: React.FC<GlobeProps> = ({
 
     if (!selectedVenue?.coordinates) return;
 
+    const mapsUrl =
+      selectedVenue.googleMapsUrl ||
+      `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedVenue.location)}`;
     const popup = new mapboxgl.Popup({
       closeButton: true,
       closeOnClick: true,
@@ -782,7 +777,13 @@ const Globe: React.FC<GlobeProps> = ({
       className: "venue-mapbox-popup",
     })
       .setLngLat(selectedVenue.coordinates)
-      .setDOMContent(buildVenuePopupNode(selectedVenue))
+      .setDOMContent(
+        buildPopupNode({
+          title: selectedVenue.title,
+          description: selectedVenue.description,
+          link: mapsUrl,
+        }),
+      )
       .addTo(map.current);
 
     popup.on("close", handlePopupClose);
@@ -818,16 +819,21 @@ const Globe: React.FC<GlobeProps> = ({
       areaPopupRef.current = new mapboxgl.Popup({
         closeButton: true,
         closeOnClick: false,
-        className: "area-mapbox-popup area-mapbox-popup--pinned",
-        offset: 12,
-        maxWidth: "260px",
+        className: "venue-mapbox-popup",
+        offset: 20,
+        maxWidth: "280px",
       });
       areaPopupRef.current.on("close", () => {
         if (pinnedAreaKeyRef.current) onAreaFocus?.(null);
       });
     }
     areaPopupRef.current
-      .setDOMContent(buildAreaPopupNode(feature))
+      .setDOMContent(
+        buildPopupNode({
+          title: feature.properties.title,
+          description: feature.properties.description,
+        }),
+      )
       .setLngLat(center)
       .addTo(map.current);
   }, [pinnedAreaKey, areas, onAreaFocus]);
