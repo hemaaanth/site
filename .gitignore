@@ -46,3 +46,7 @@ sitemap-*.xml
 
 # draft blog posts
 /pages/posts/drafts/tsconfig.tsbuildinfo
+
+# local planning + review artifacts (not for the public repo)
+/plans/
+/todos/
