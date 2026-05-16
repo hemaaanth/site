@@ -67,7 +67,7 @@ export default defineType({
       name: 'areas',
       title: 'Areas',
       description:
-        'Polygon overlays on the city map. First row is the top recommendation. Stringified GeoJSON Polygon geometry, validated.',
+        'Polygon overlays on the city map. First row is the top recommendation.',
       type: 'array',
       of: [
         {
@@ -108,8 +108,6 @@ export default defineType({
               name: 'geojson',
               title: 'Polygon',
               type: 'text',
-              description:
-                'Stringified GeoJSON Polygon geometry (no Feature wrapper). One polygon per row. Managed by the map editor below.',
               options: { aiAssist: { exclude: true } },
               components: { input: AreaPolygonInput },
               validation: (Rule) =>
