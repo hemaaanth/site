@@ -1,4 +1,26 @@
 import { defineField, defineType } from 'sanity'
+import { AreaPolygonInput } from '../components/sanity/AreaPolygonInput'
+
+// Validates that a string field contains a well-formed GeoJSON Polygon geometry.
+// Mirrors the parseAreaGeometry helper in lib/areas.ts — kept inline here to avoid
+// pulling the broader codebase into Studio bundles via schema imports.
+function validatePolygonGeojson(value: string | undefined): true | string {
+  if (!value) return 'Required'
+  if (value.length > 200_000) return 'Polygon too large (>200KB)'
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(value, (k, v) =>
+      k === '__proto__' || k === 'constructor' || k === 'prototype' ? undefined : v,
+    )
+  } catch {
+    return 'Invalid JSON'
+  }
+  if (!parsed || typeof parsed !== 'object') return 'Not a geometry object'
+  const g = parsed as { type?: unknown; coordinates?: unknown }
+  if (g.type !== 'Polygon') return 'Must be GeoJSON Polygon'
+  if (!Array.isArray(g.coordinates) || g.coordinates.length === 0) return 'Missing coordinates'
+  return true
+}
 
 export default defineType({
   name: 'place',
@@ -33,6 +55,89 @@ export default defineType({
       title: 'Rank',
       type: 'number',
       description: 'Optional rank for sorting within the same year',
+    }),
+    defineField({
+      name: 'geocodeHint',
+      title: 'Geocode hint',
+      type: 'string',
+      description:
+        'Optional. Overrides the title for Mapbox geocoding when the city name is ambiguous (e.g., "Cambridge, UK").',
+    }),
+    defineField({
+      name: 'areas',
+      title: 'Areas',
+      description:
+        'Polygon overlays on the city map. First row is the top recommendation. Stringified GeoJSON Polygon geometry, validated.',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          name: 'area',
+          fields: [
+            {
+              name: 'title',
+              title: 'Title',
+              type: 'string',
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: 'description',
+              title: 'Description',
+              type: 'text',
+              description:
+                'Shown on hover/tap. Plain text, line breaks allowed. Best for: ___ . Tradeoff: ___',
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: 'kind',
+              title: 'Kind',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'General', value: 'general' },
+                  { title: 'Where to stay', value: 'stay' },
+                  { title: 'Day trip', value: 'daytrip' },
+                  { title: 'Avoid', value: 'avoid' },
+                ],
+                layout: 'radio',
+              },
+              initialValue: 'general',
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: 'color',
+              title: 'Color',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Indigo', value: 'indigo' },
+                  { title: 'Rose', value: 'rose' },
+                  { title: 'Emerald', value: 'emerald' },
+                  { title: 'Amber', value: 'amber' },
+                  { title: 'Fuchsia', value: 'fuchsia' },
+                ],
+                layout: 'radio',
+              },
+              initialValue: 'indigo',
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: 'geojson',
+              title: 'Polygon',
+              type: 'text',
+              description:
+                'Stringified GeoJSON Polygon geometry (no Feature wrapper). One polygon per row. Managed by the map editor below.',
+              options: { aiAssist: { exclude: true } },
+              components: { input: AreaPolygonInput },
+              validation: (Rule) =>
+                Rule.required().custom(validatePolygonGeojson),
+            },
+          ],
+          preview: {
+            select: { title: 'title', subtitle: 'kind' },
+          },
+        },
+      ],
     }),
     defineField({
       name: 'places',

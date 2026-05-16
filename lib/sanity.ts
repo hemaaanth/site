@@ -94,7 +94,9 @@ export const placeBySlugQuery = `*[_type == "place" && slug.current == $slug && 
   slug,
   date,
   rank,
-  places
+  geocodeHint,
+  places,
+  "areas": areas[]{ _key, title, description, kind, color, geojson }
 }`
 
 // Query that includes drafts (for preview mode)
@@ -104,7 +106,9 @@ export const placeBySlugQueryWithDrafts = `*[_type == "place" && slug.current ==
   slug,
   date,
   rank,
-  places
+  geocodeHint,
+  places,
+  "areas": areas[]{ _key, title, description, kind, color, geojson }
 }`
 
 // Only published places for getStaticPaths (drafts don't have pages)

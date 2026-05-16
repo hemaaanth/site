@@ -99,13 +99,24 @@ export default function MyApp({
 }
 
 function PersistentGlobe() {
-  const { targetCoordinates, venues, cityCoordinates, onCityReady } = useGlobe();
+  const {
+    targetCoordinates,
+    venues,
+    areas,
+    cityCoordinates,
+    onCityReady,
+    pinnedAreaKey,
+    focusArea,
+  } = useGlobe();
   return (
     <Globe
       targetCoordinates={targetCoordinates}
       venues={venues}
+      areas={areas}
       cityCoordinates={cityCoordinates}
       onCityReady={onCityReady}
+      pinnedAreaKey={pinnedAreaKey}
+      onAreaFocus={focusArea}
     />
   );
 }
