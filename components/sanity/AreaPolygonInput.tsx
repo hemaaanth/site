@@ -129,10 +129,14 @@ export function AreaPolygonInput(props: StringInputProps) {
     });
     mapRef.current = map;
 
+    // Auto-enter draw mode when there's no polygon yet so the author can just click.
+    // If there's a saved polygon, start in simple_select; the load handler below switches
+    // to direct_select for immediate vertex editing.
+    const startMode = valueRef.current ? "simple_select" : "draw_polygon";
     const draw = new MapboxDraw({
       displayControlsDefault: false,
       controls: { polygon: true, trash: true },
-      defaultMode: "simple_select",
+      defaultMode: startMode,
     });
     map.addControl(draw as unknown as mapboxgl.IControl);
     drawRef.current = draw;
@@ -203,6 +207,12 @@ export function AreaPolygonInput(props: StringInputProps) {
     const handleDelete = () => {
       if (removedRef.current) return;
       onChange(unset());
+      // Re-enter draw mode so the next polygon is one click away.
+      try {
+        draw.changeMode("draw_polygon");
+      } catch {
+        /* best-effort */
+      }
     };
 
     // mapbox-gl-draw events are fired on the map but not typed in mapbox-gl's types.
@@ -299,6 +309,12 @@ export function AreaPolygonInput(props: StringInputProps) {
       >
         <div ref={containerRef} style={{ width: "100%", height: "100%" }} />
       </Box>
+
+      <Text size={0} muted>
+        {value
+          ? "Drag a corner to reshape. Use the trash icon (top-right of map) to delete and start over."
+          : "Click on the map to add a corner; double-click to finish the polygon. Use the polygon icon (top-right of map) to restart."}
+      </Text>
     </Stack>
   );
 }

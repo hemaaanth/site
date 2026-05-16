@@ -15,7 +15,7 @@ import {
   Wine,
 } from "lucide-react";
 import type { AreaCollection, AreaFeature, Venue } from "./types";
-import { AREA_HEX } from "./types";
+import { KIND_HEX } from "./types";
 
 export type { Venue } from "./types";
 
@@ -108,7 +108,7 @@ function buildVenuePopupNode(venue: Venue): HTMLElement {
 function buildAreaPopupNode(feature: AreaFeature): HTMLElement {
   const root = document.createElement("div");
   root.className = "area-popup";
-  root.style.borderLeftColor = AREA_HEX[feature.properties.color];
+  root.style.borderLeftColor = KIND_HEX[feature.properties.kind];
 
   const title = document.createElement("div");
   title.className = "area-popup-title";
@@ -125,18 +125,16 @@ function buildAreaPopupNode(feature: AreaFeature): HTMLElement {
 
 const FILL_COLOR_EXPR = [
   "match",
-  ["get", "color"],
-  "indigo",
-  AREA_HEX.indigo,
-  "rose",
-  AREA_HEX.rose,
-  "emerald",
-  AREA_HEX.emerald,
-  "amber",
-  AREA_HEX.amber,
-  "fuchsia",
-  AREA_HEX.fuchsia,
-  /* default */ AREA_HEX.indigo,
+  ["get", "kind"],
+  "general",
+  KIND_HEX.general,
+  "stay",
+  KIND_HEX.stay,
+  "daytrip",
+  KIND_HEX.daytrip,
+  "avoid",
+  KIND_HEX.avoid,
+  /* default */ KIND_HEX.general,
 ] as unknown as mapboxgl.ExpressionSpecification;
 
 const Globe: React.FC<GlobeProps> = ({

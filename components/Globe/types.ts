@@ -11,15 +11,14 @@ export interface Venue {
   googleMapsUrl?: string;
 }
 
-export type AreaColor = "indigo" | "rose" | "emerald" | "amber" | "fuchsia";
 export type AreaKind = "general" | "stay" | "avoid" | "daytrip";
 
-export const AREA_HEX: Record<AreaColor, string> = {
-  indigo: "#6366f1",
-  rose: "#f43f5e",
-  emerald: "#10b981",
-  amber: "#f59e0b",
-  fuchsia: "#d946ef",
+// Color is a function of kind — one decision per area, not two.
+export const KIND_HEX: Record<AreaKind, string> = {
+  general: "#6366f1", // indigo — neutral
+  stay: "#10b981", // emerald — positive ("stay here")
+  daytrip: "#f59e0b", // amber — warm ("worth a trip")
+  avoid: "#f43f5e", // rose — warning ("avoid")
 };
 
 export interface AreaProperties {
@@ -27,7 +26,6 @@ export interface AreaProperties {
   title: string;
   description: string;
   kind: AreaKind;
-  color: AreaColor;
 }
 
 export type AreaFeature = Feature<Polygon, AreaProperties>;

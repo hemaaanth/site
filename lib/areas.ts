@@ -1,7 +1,6 @@
 import type { Polygon } from "geojson";
 import type {
   AreaCollection,
-  AreaColor,
   AreaFeature,
   AreaKind,
 } from "../components/Globe/types";
@@ -10,14 +9,6 @@ const MAX_GEOJSON_BYTES = 200_000;
 const MAX_VERTICES_PER_RING = 1000;
 const MAX_RINGS = 10;
 const MIN_VERTICES_PER_RING = 4;
-
-const VALID_COLORS: ReadonlySet<AreaColor> = new Set([
-  "indigo",
-  "rose",
-  "emerald",
-  "amber",
-  "fuchsia",
-]);
 
 const VALID_KINDS: ReadonlySet<AreaKind> = new Set([
   "general",
@@ -144,7 +135,6 @@ interface RawArea {
   title?: string;
   description?: string;
   kind?: string;
-  color?: string;
   geojson?: string;
 }
 
@@ -177,9 +167,6 @@ export function buildAreaCollection(
     const kind = VALID_KINDS.has(a.kind as AreaKind)
       ? (a.kind as AreaKind)
       : "general";
-    const color = VALID_COLORS.has(a.color as AreaColor)
-      ? (a.color as AreaColor)
-      : "indigo";
     features.push({
       type: "Feature",
       id: a._key,
@@ -188,7 +175,6 @@ export function buildAreaCollection(
         title: a.title,
         description: a.description,
         kind,
-        color,
       },
       geometry: result.geometry,
     });

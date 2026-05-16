@@ -105,23 +105,6 @@ export default defineType({
               validation: (Rule) => Rule.required(),
             },
             {
-              name: 'color',
-              title: 'Color',
-              type: 'string',
-              options: {
-                list: [
-                  { title: 'Indigo', value: 'indigo' },
-                  { title: 'Rose', value: 'rose' },
-                  { title: 'Emerald', value: 'emerald' },
-                  { title: 'Amber', value: 'amber' },
-                  { title: 'Fuchsia', value: 'fuchsia' },
-                ],
-                layout: 'radio',
-              },
-              initialValue: 'indigo',
-              validation: (Rule) => Rule.required(),
-            },
-            {
               name: 'geojson',
               title: 'Polygon',
               type: 'text',

@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useMemo } from "react";
 import { getPlaceBySlug, getPublishedPlaceSlugs } from "../../lib/sanity";
 import type { Venue } from "../../components/Globe";
-import { AREA_HEX } from "../../components/Globe/types";
+import { KIND_HEX } from "../../components/Globe/types";
 import type { AreaCollection } from "../../components/Globe/types";
 import { useGlobe } from "../../components/Globe/context";
 import { buildAreaCollection } from "../../lib/areas";
@@ -124,7 +124,7 @@ export default function Place({ title, cityCoordinates, venues, areas, droppedAr
                           <span
                             aria-hidden
                             className="inline-flex h-3.5 w-3.5 items-center justify-center rounded-full text-[9px] font-semibold text-white"
-                            style={{ background: AREA_HEX[f.properties.color] }}
+                            style={{ background: KIND_HEX[f.properties.kind] }}
                           >
                             {i + 1}
                           </span>
