@@ -896,6 +896,17 @@ a[href^="mailto:"] {
   color: #a3a3a3;
 }
 
+.venue-popup--image-only {
+  padding: 4px;
+}
+
+.venue-popup-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
 @media (prefers-color-scheme: dark) {
   .venue-popup-title {
     color: #f5f5f5;

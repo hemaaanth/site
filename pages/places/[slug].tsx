@@ -3,7 +3,7 @@ import { baseUrl, SEO } from "../../components/SEO";
 import { Main } from "../../components/Layouts";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
-import { getPlaceBySlug, getPublishedPlaceSlugs } from "../../lib/sanity";
+import { getPlaceBySlug, getPublishedPlaceSlugs, urlFor } from "../../lib/sanity";
 import type { Venue } from "../../components/Globe";
 import type { AreaCollection } from "../../components/Globe/types";
 import { useGlobe } from "../../components/Globe/context";
@@ -112,12 +112,16 @@ export const getStaticProps: GetStaticProps<PlaceProps> = async (context) => {
   const venues: Venue[] = await Promise.all(
     (place.places || []).map(async (p: any) => {
       const coordinates = await geocodeLocation(p.location);
+      const image = p.image
+        ? urlFor(p.image).width(640).fit("max").auto("format").url()
+        : null;
       return {
         title: p.title,
         location: p.location,
         description: p.description || "",
         types: (p.types || []).filter((t: string) => t !== "favourite"),
         favourite: p.favourite || p.types?.includes("favourite") || false,
+        image,
         coordinates,
         googleMapsUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.location)}`,
       };

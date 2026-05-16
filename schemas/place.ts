@@ -153,6 +153,7 @@ export default defineType({
                   { title: 'Coffee', value: 'coffee' },
                   { title: 'Food', value: 'food' },
                   { title: 'Party', value: 'party' },
+                  { title: 'Photo', value: 'photo' },
                   { title: 'Shop', value: 'shop' },
                   { title: 'Wine', value: 'wine' },
                   { title: 'Work', value: 'work' },
@@ -168,6 +169,7 @@ export default defineType({
                     'coffee',
                     'food',
                     'party',
+                    'photo',
                     'shop',
                     'wine',
                     'work',
@@ -181,6 +183,9 @@ export default defineType({
                   if (invalidTypes.length > 0) {
                     return `Invalid types: ${invalidTypes.join(', ')}. Allowed types: ${allowedTypes.join(', ')}`
                   }
+                  if (types.includes('photo') && types.length > 1) {
+                    return 'Photo cannot be combined with other types'
+                  }
                   return true
                 }),
             },
@@ -191,10 +196,32 @@ export default defineType({
               initialValue: false,
             },
             {
+              name: 'image',
+              title: 'Image',
+              type: 'image',
+              description: 'Required for Photo venues. Otherwise ignored.',
+              options: { hotspot: true },
+              validation: (Rule) =>
+                Rule.custom((image, ctx) => {
+                  const types = (ctx.parent as { types?: string[] })?.types ?? []
+                  if (types.includes('photo') && !image) {
+                    return 'Photo venues need an image'
+                  }
+                  return true
+                }),
+            },
+            {
               name: 'description',
               title: 'Description',
               type: 'text',
-              validation: (Rule) => Rule.required(),
+              validation: (Rule) =>
+                Rule.custom((value, ctx) => {
+                  const types = (ctx.parent as { types?: string[] })?.types ?? []
+                  // Photo venues don't need a description — the image speaks.
+                  if (types.includes('photo')) return true
+                  if (!value) return 'Required'
+                  return true
+                }),
             },
           ],
         },

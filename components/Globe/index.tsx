@@ -5,6 +5,7 @@ import {
   Beer,
   BedDouble,
   Briefcase,
+  Camera,
   Coffee,
   Landmark,
   Martini,
@@ -41,6 +42,7 @@ const typeIcons: Record<string, React.FC<{ size?: number; className?: string; fi
   coffee: Coffee,
   work: Briefcase,
   party: PartyPopper,
+  photo: Camera,
   favourite: Star,
 };
 
@@ -73,9 +75,21 @@ function buildPopupNode(opts: {
   title: string;
   description?: string;
   link?: string;
+  image?: string;
+  imageOnly?: boolean;
 }): HTMLElement {
   const root = document.createElement("div");
-  root.className = "venue-popup";
+  root.className = opts.imageOnly ? "venue-popup venue-popup--image-only" : "venue-popup";
+
+  if (opts.imageOnly && opts.image) {
+    const img = document.createElement("img");
+    img.className = "venue-popup-image";
+    img.src = opts.image;
+    img.alt = opts.title; // screen-reader fallback; never visually rendered
+    img.loading = "lazy";
+    root.appendChild(img);
+    return root;
+  }
 
   const header = document.createElement("div");
   header.className = "venue-popup-header";
@@ -766,23 +780,31 @@ const Globe: React.FC<GlobeProps> = ({
 
     if (!selectedVenue?.coordinates) return;
 
+    const isPhoto =
+      selectedVenue.types?.includes("photo") && !!selectedVenue.image;
     const mapsUrl =
       selectedVenue.googleMapsUrl ||
       `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedVenue.location)}`;
     const popup = new mapboxgl.Popup({
       closeButton: true,
       closeOnClick: true,
-      maxWidth: "280px",
+      maxWidth: isPhoto ? "220px" : "280px",
       offset: 20,
       className: "venue-mapbox-popup",
     })
       .setLngLat(selectedVenue.coordinates)
       .setDOMContent(
-        buildPopupNode({
-          title: selectedVenue.title,
-          description: selectedVenue.description,
-          link: mapsUrl,
-        }),
+        isPhoto
+          ? buildPopupNode({
+              title: selectedVenue.title,
+              image: selectedVenue.image!,
+              imageOnly: true,
+            })
+          : buildPopupNode({
+              title: selectedVenue.title,
+              description: selectedVenue.description,
+              link: mapsUrl,
+            }),
       )
       .addTo(map.current);
 

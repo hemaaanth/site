@@ -7,6 +7,7 @@ export interface Venue {
   description: string;
   types: PlaceType[];
   favourite?: boolean;
+  image?: string | null;
   coordinates?: [number, number] | null;
   googleMapsUrl?: string;
 }

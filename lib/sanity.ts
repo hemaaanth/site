@@ -95,7 +95,7 @@ export const placeBySlugQuery = `*[_type == "place" && slug.current == $slug && 
   date,
   rank,
   geocodeHint,
-  places,
+  places[]{ title, location, types, favourite, description, image },
   "areas": areas[]{ _key, title, description, kind, geojson }
 }`
 
@@ -107,7 +107,7 @@ export const placeBySlugQueryWithDrafts = `*[_type == "place" && slug.current ==
   date,
   rank,
   geocodeHint,
-  places,
+  places[]{ title, location, types, favourite, description, image },
   "areas": areas[]{ _key, title, description, kind, geojson }
 }`
 

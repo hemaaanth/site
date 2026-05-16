@@ -11,6 +11,7 @@ import {
   BedDouble,
   Coffee,
   Briefcase,
+  Camera,
   PartyPopper,
   Star,
 } from "lucide-react";
@@ -27,6 +28,7 @@ export type PlaceType =
   | "coffee"
   | "work"
   | "party"
+  | "photo"
   | "landmark";
 
 interface PlaceItemProps {
@@ -52,6 +54,7 @@ const typeIcons = {
   coffee: Coffee,
   work: Briefcase,
   party: PartyPopper,
+  photo: Camera,
   favourite: Star,
 };
 
