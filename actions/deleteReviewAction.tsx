@@ -3,7 +3,7 @@ import { TrashIcon } from '@sanity/icons'
 import { useToast } from '@sanity/ui'
 import { useState, useCallback } from 'react'
 
-export const deleteReviewAction: DocumentActionComponent = (props) => {
+export const DeleteReviewAction: DocumentActionComponent = (props) => {
   const { id, type, published, draft } = props
   const { delete: deleteOp } = useDocumentOperation(id, type)
   const toast = useToast()
@@ -89,4 +89,3 @@ export const deleteReviewAction: DocumentActionComponent = (props) => {
     onHandle: handleDelete,
   }
 }
-

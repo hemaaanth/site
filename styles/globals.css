@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@config "../tailwind.config.js";
+@import "tailwindcss";
 
 html,
 body {
@@ -207,7 +206,7 @@ a[href^="mailto:"] {
 }
 
 .mapboxgl-popup-content {
-  @apply rounded border border-transparent bg-neutral-800 px-3 py-3 font-sans text-base font-medium text-silver [font-variation-settings:'opsz'_15,_'wght'_500] dark:border-white/[.08] dark:bg-black/[.96] dark:text-silver !important;
+  @apply !rounded !border !border-transparent !bg-neutral-800 !px-3 !py-3 !font-sans !text-base !font-medium !text-silver ![font-variation-settings:'opsz'_15,_'wght'_500] dark:!border-white/[.08] dark:!bg-black/[.96] dark:!text-silver;
 }
 
 @layer components {
@@ -414,8 +413,6 @@ a[href^="mailto:"] {
 
   .prose-custom {
     max-width: 100ch !important;
-    @apply prose-a:link;
-    @apply prose-a:[font-variation-settings:'opsz'_15,_'wght'_450];
     @apply prose-p:first:mt-0;
     @apply prose-p:leading-relaxed sm:prose-p:leading-golden;
     @apply prose prose-neutral dark:prose-invert;
@@ -431,6 +428,14 @@ a[href^="mailto:"] {
     @apply prose-th:text-left prose-th:[font-variation-settings:'wght'_500];
     @apply prose-td:text-left;
     @apply prose-td:first:font-medium prose-td:first:[font-variation-settings:'wght'_500];
+  }
+
+  .prose-custom a {
+    @apply !underline !decoration-1.5 !underline-offset-2.5 !decoration-neutral-300 dark:!decoration-neutral-700;
+    @apply hover:!decoration-neutral-400 dark:hover:!decoration-neutral-600;
+    @apply motion-safe:transition duration-150 ease-out-expo;
+    font-variation-settings: "opsz" 15, "wght" 450;
+    text-decoration-skip-ink: all;
   }
 }
 

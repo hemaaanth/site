@@ -4,8 +4,8 @@ import { presentationTool } from 'sanity/presentation'
 import { schemaTypes } from './schemas'
 import { assist } from '@sanity/assist'
 import { locations, mainDocuments } from './lib/presentation/resolve'
-import { generatePreviewAction } from './actions/generatePreviewAction'
-import { deleteReviewAction } from './actions/deleteReviewAction'
+import { GeneratePreviewAction } from './actions/generatePreviewAction'
+import { DeleteReviewAction } from './actions/deleteReviewAction'
 import { OpenReviewsBadge } from './components/sanity/OpenReviewsBadge'
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'ubrdxobo'
@@ -45,12 +45,12 @@ export default defineConfig({
     actions: (prev, context) => {
       // Add generate preview action for posts and places
       if (context.schemaType === 'post' || context.schemaType === 'place') {
-        return [...prev, generatePreviewAction]
+        return [...prev, GeneratePreviewAction]
       }
       // Replace default delete action with cleanup version for reviews
       if (context.schemaType === 'review') {
         return prev.map(action => 
-          action.action === 'delete' ? deleteReviewAction : action
+          action.action === 'delete' ? DeleteReviewAction : action
         )
       }
       return prev
