@@ -152,7 +152,7 @@ function GeneratePreviewDialog({
                         onChange={() => setMode('shared')}
                       />
                       <Label htmlFor="mode-shared">
-                        <Text size={2}>Shared (team) - All recipients see each other's comments</Text>
+                        <Text size={2}>Shared (team) - All recipients see comments from every other recipient</Text>
                       </Label>
                     </Flex>
                   </Stack>
@@ -245,7 +245,7 @@ function GeneratePreviewDialog({
                   </Text>
                 ) : (
                   <Text size={1} muted>
-                    <strong>Shared mode:</strong> All recipients can see each other's comments. Each recipient has a unique link for proper identification.
+                    <strong>Shared mode:</strong> All recipients can see comments from every other recipient. Each recipient has a unique link for proper identification.
                   </Text>
                 )}
 
@@ -293,7 +293,7 @@ function GeneratePreviewDialog({
 }
 
 // Document action definition
-export const generatePreviewAction: DocumentActionComponent = (props) => {
+export const GeneratePreviewAction: DocumentActionComponent = (props) => {
   const { id, type, draft, published } = props
   
   // Hooks must be called before any conditional returns
@@ -338,4 +338,3 @@ export const generatePreviewAction: DocumentActionComponent = (props) => {
       : undefined,
   }
 }
-
