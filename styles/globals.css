@@ -2,8 +2,19 @@
 @import "tailwindcss";
 
 html,
-body {
+body,
+#__next {
+  min-height: 100%;
   @apply bg-gray-50 dark:bg-zinc-950;
+}
+
+#__next {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+html,
+body {
   @apply text-neutral-800 dark:text-silver;
   @apply antialiased;
   @apply text-base;
