@@ -448,6 +448,29 @@ a[href^="mailto:"] {
     font-variation-settings: "opsz" 15, "wght" 450;
     text-decoration-skip-ink: all;
   }
+
+  /* Chart HTML chrome — rendered by <Chart>, not Highcharts, so it matches the
+     site's typography exactly and stays in normal document flow. */
+  .chart-title {
+    @apply text-neutral-800 dark:text-silver;
+    @apply text-base;
+    @apply leading-snug;
+    @apply [font-variation-settings:'opsz'_15,_'wght'_500];
+  }
+
+  .chart-subtitle {
+    @apply mt-0.5;
+    @apply text-sm;
+    @apply text-neutral-500 dark:text-silver-dark;
+    @apply [font-variation-settings:'opsz'_14];
+  }
+
+  .chart-caption {
+    @apply mt-3;
+    @apply text-sm;
+    @apply text-neutral-500 dark:text-silver-dark;
+    @apply [font-variation-settings:'opsz'_14];
+  }
 }
 
 @layer utilities {
