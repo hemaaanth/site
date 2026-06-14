@@ -1,0 +1,374 @@
+/* Highcharts styled-mode brand theme.
+ *
+ * The base stylesheet (highcharts/css/highcharts.css) is imported in _app.tsx
+ * BEFORE this file, so these declarations win. Every in-SVG color/font comes
+ * from the variables below, so charts adapt to light/dark automatically and the
+ * CMS blob cannot override the brand. */
+
+:root {
+  /* Card surface — mirrors the TextDiagram block (bg-neutral-100 /
+     border-neutral-300 in light, bg-neutral-950 / border-neutral-700 in dark).
+     Separators/halos use --highcharts-background-color, so it tracks the card. */
+  --hc-card-bg: var(--color-neutral-100); /* #f5f5f5 */
+  --hc-card-border: var(--color-neutral-300); /* #d4d4d4 */
+  --highcharts-background-color: var(--hc-card-bg);
+  --hc-surface: #ffffff; /* tooltip blob, elevated above the card */
+
+  /* Neutral ramp -> app neutrals */
+  --highcharts-neutral-color-100: #101010;
+  --highcharts-neutral-color-80: #262626; /* axis line, strong text */
+  --highcharts-neutral-color-60: #525252; /* axis labels */
+  --highcharts-neutral-color-40: #737373;
+  --highcharts-neutral-color-20: #d4d4d4;
+  --highcharts-neutral-color-10: rgba(115, 115, 115, 0.12); /* grid lines */
+  --highcharts-neutral-color-5: #f1f1f1;
+  --highcharts-neutral-color-3: #f7f7f7;
+
+  /* Highlight (accent) ramp -> indigo */
+  --highcharts-highlight-color-100: #6366f1;
+  --highcharts-highlight-color-80: color-mix(in srgb, #6366f1 80%, transparent);
+  --highcharts-highlight-color-60: color-mix(in srgb, #6366f1 60%, transparent);
+  --highcharts-highlight-color-20: color-mix(in srgb, #6366f1 20%, transparent);
+  --highcharts-highlight-color-10: color-mix(in srgb, #6366f1 10%, transparent);
+
+  /* Restrained, indigo-led categorical palette — softened/desaturated to match
+     the gentler feel of the dark (pastel) set. */
+  --highcharts-color-0: #7c84e0; /* indigo (primary) */
+  --highcharts-color-1: #79848f; /* slate            */
+  --highcharts-color-2: #4ea291; /* teal             */
+  --highcharts-color-3: #cc9a55; /* ochre            */
+  --highcharts-color-4: #b87e94; /* dusty rose       */
+  --highcharts-color-5: #9893da; /* periwinkle       */
+  --highcharts-color-6: #739bc2; /* dusty blue       */
+  --highcharts-color-7: #9aa1a9; /* warm gray        */
+  --highcharts-color-8: #62829f; /* steel            */
+  --highcharts-color-9: #b6b0a4; /* taupe            */
+
+  --highcharts-positive-color: #4ea291;
+  --highcharts-negative-color: #cd7b73;
+}
+
+/* Dark — wired to BOTH the OS media query AND the app's body.dark class.
+   Only the surface + neutral/series ramps change; --highcharts-background-color
+   tracks --hc-card-bg automatically via the var() reference above. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --hc-card-bg: #101010; /* neutral-950 (app token; no --color var emitted) */
+    --hc-card-border: var(--color-neutral-700); /* #404040 */
+    --hc-surface: #262626; /* neutral-800, elevated above the card */
+    --highcharts-neutral-color-100: #ffffff;
+    --highcharts-neutral-color-80: #dfdfde; /* silver */
+    --highcharts-neutral-color-60: #9b9b9b; /* silver-dark */
+    --highcharts-neutral-color-40: #6b6b6b;
+    --highcharts-neutral-color-20: #2a2a2a;
+    --highcharts-neutral-color-10: rgba(255, 255, 255, 0.1);
+    --highcharts-neutral-color-5: #1c1c1c;
+    --highcharts-neutral-color-3: #141414;
+    --highcharts-highlight-color-100: #818cf8;
+    --highcharts-highlight-color-80: color-mix(in srgb, #818cf8 80%, transparent);
+    --highcharts-highlight-color-60: color-mix(in srgb, #818cf8 60%, transparent);
+    --highcharts-highlight-color-20: color-mix(in srgb, #818cf8 20%, transparent);
+    --highcharts-highlight-color-10: color-mix(in srgb, #818cf8 10%, transparent);
+    --highcharts-color-0: #818cf8;
+    --highcharts-color-1: #94a3b8;
+    --highcharts-color-2: #54bdae;
+    --highcharts-color-3: #e0b15e;
+    --highcharts-color-4: #cf8aa4;
+    --highcharts-color-5: #a9a4e8;
+    --highcharts-color-6: #84acd6;
+    --highcharts-color-7: #b6bcc4;
+    --highcharts-color-8: #7e9cba;
+    --highcharts-color-9: #cdc7ba;
+    --highcharts-positive-color: #54bdae;
+    --highcharts-negative-color: #e08079;
+  }
+}
+
+body.dark {
+  --hc-card-bg: #101010; /* neutral-950 (app token; no --color var emitted) */
+  --hc-card-border: var(--color-neutral-700); /* #404040 */
+  --hc-surface: #262626; /* neutral-800, elevated above the card */
+  --highcharts-neutral-color-100: #ffffff;
+  --highcharts-neutral-color-80: #dfdfde;
+  --highcharts-neutral-color-60: #9b9b9b;
+  --highcharts-neutral-color-40: #6b6b6b;
+  --highcharts-neutral-color-20: #2a2a2a;
+  --highcharts-neutral-color-10: rgba(255, 255, 255, 0.1);
+  --highcharts-neutral-color-5: #1c1c1c;
+  --highcharts-neutral-color-3: #141414;
+  --highcharts-highlight-color-100: #818cf8;
+  --highcharts-highlight-color-80: color-mix(in srgb, #818cf8 80%, transparent);
+  --highcharts-highlight-color-60: color-mix(in srgb, #818cf8 60%, transparent);
+  --highcharts-highlight-color-20: color-mix(in srgb, #818cf8 20%, transparent);
+  --highcharts-highlight-color-10: color-mix(in srgb, #818cf8 10%, transparent);
+  --highcharts-color-0: #818cf8;
+  --highcharts-color-1: #94a3b8;
+  --highcharts-color-2: #54bdae;
+  --highcharts-color-3: #e0b15e;
+  --highcharts-color-4: #cf8aa4;
+  --highcharts-color-5: #a9a4e8;
+  --highcharts-color-6: #84acd6;
+  --highcharts-color-7: #b6bcc4;
+  --highcharts-color-8: #7e9cba;
+  --highcharts-color-9: #cdc7ba;
+  --highcharts-positive-color: #54bdae;
+  --highcharts-negative-color: #e08079;
+}
+
+/* Font — no Highcharts font variable exists; set it on the root container. */
+.highcharts-container,
+.highcharts-root {
+  font-family:
+    var(--sans-font), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Plot area transparent so the card shows through. Separators/halos use
+   --highcharts-background-color, which equals the card surface. */
+.highcharts-background {
+  fill: transparent;
+}
+
+/* Simple / illustrative mode: hide gridlines (labels + ticks are removed via
+   options). gridLineWidth:0 is ignored in styled mode, so we hide via CSS. */
+.hc-simple .highcharts-grid-line,
+.hc-simple .highcharts-minor-grid-line {
+  display: none;
+}
+
+
+/* Typographic polish (styled mode hands these to CSS). */
+.highcharts-axis-labels text,
+.highcharts-legend-item text {
+  font-variation-settings: "opsz" 12;
+  font-weight: 500;
+}
+.highcharts-data-label text,
+.highcharts-data-labels text {
+  font-weight: 500;
+}
+.highcharts-axis-title {
+  font-variation-settings: "opsz" 13;
+  fill: var(--highcharts-neutral-color-60);
+}
+
+/* Soften axis lines & ticks toward the app's subtle border tones (they default
+   to the strong text neutral, which reads as near pure black/white). The
+   explicit y-axis selector also ensures the (opt-in) left line is styled. */
+.highcharts-axis-line,
+.highcharts-xaxis .highcharts-axis-line,
+.highcharts-yaxis .highcharts-axis-line,
+.highcharts-tick {
+  stroke: var(--highcharts-neutral-color-20);
+}
+/* Draw the left (y) axis line to match the x baseline. The element always
+   renders in styled mode but at 0 width, so give it a stroke here (the x line
+   already gets one from the base stylesheet; the yAxis lineWidth option is a
+   no-op in styled mode). */
+.highcharts-yaxis .highcharts-axis-line {
+  stroke-width: 1px;
+}
+/* Polar/radial gridlines (concentric rings + spokes) render at 0 width in
+   styled mode, so the radar grid disappears. Give them a stroke (polar-only
+   selector, so cartesian gridlines are untouched). */
+.highcharts-radial-axis-grid .highcharts-grid-line {
+  stroke-width: 1px;
+}
+/* Filled radar (type:area + className hc-radar): keep the fill translucent so
+   overlapping series stay readable. */
+.hc-radar .highcharts-area {
+  fill-opacity: 0.3;
+}
+
+/* Color-axis legend (heatmap/treemap/etc.): drop the tick marks and grid lines.
+   The vertical ticks crossing the rounded gradient bar look bad; the labels
+   alone carry the scale. */
+.highcharts-coloraxis-grid .highcharts-grid-line,
+.highcharts-coloraxis .highcharts-tick {
+  display: none;
+}
+
+/* Tooltip — a plain rounded box (no pointer; shape:'rect' is set in the theme).
+   The SVG box supplies the opaque background so content never shows through; a
+   small square swatch matches the series color and the legend's square symbol. */
+.highcharts-tooltip-box {
+  fill: var(--hc-surface);
+  stroke: var(--highcharts-neutral-color-10);
+}
+.highcharts-tooltip text {
+  font-size: 0.8rem;
+  fill: var(--highcharts-neutral-color-80);
+}
+.highcharts-tooltip text .highcharts-strong,
+.highcharts-tooltip text tspan b {
+  fill: var(--highcharts-neutral-color-100);
+}
+.highcharts-tooltip-container,
+.highcharts-tooltip {
+  font-family:
+    var(--sans-font), ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+/* ---------------------------------------------------------------------------
+   Chart card. Title/subtitle/caption live INSIDE the card so the whole figure
+   reads as one chart, not body text. Chrome typography is in globals.css.
+   --------------------------------------------------------------------------- */
+.chart-card {
+  width: 100%;
+  padding: 1.25rem 1.25rem 1.125rem;
+  background: var(--hc-card-bg);
+  border: 1px solid var(--hc-card-border);
+  border-radius: 0.5rem; /* rounded-lg, matching the TextDiagram block */
+}
+.chart-bare {
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+.chart-head {
+  margin-bottom: 0.75rem;
+}
+.chart-canvas {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--chart-ar, 16 / 9);
+  min-height: 200px;
+}
+
+/* Storytelling control buttons (brand-styled pills). */
+.chart-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.875rem;
+}
+/* Standalone controls sit in the post flow, independent of any chart. */
+.chart-controls-standalone {
+  margin-block: 1.25rem;
+}
+.chart-control-btn {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+  font-variation-settings: "opsz" 13;
+  border-radius: 9999px;
+  border: 1px solid var(--highcharts-neutral-color-20);
+  background: transparent;
+  color: var(--highcharts-neutral-color-80);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+.chart-control-btn:hover {
+  border-color: var(--highcharts-neutral-color-40);
+  background: var(--highcharts-neutral-color-5);
+}
+.chart-control-btn.is-active {
+  background: var(--highcharts-highlight-color-100);
+  border-color: var(--highcharts-highlight-color-100);
+  color: #ffffff;
+}
+.chart-control-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.chart-control-btn:disabled:hover {
+  background: transparent;
+  border-color: var(--highcharts-neutral-color-20);
+}
+.chart-canvas-inner {
+  position: absolute;
+  inset: 0;
+}
+.chart-loading {
+  border-radius: 0.5rem;
+  background: var(--highcharts-neutral-color-5);
+  animation: chart-pulse 1.5s ease-in-out infinite;
+}
+@keyframes chart-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+.chart-error {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: #b91c1c;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 0.5rem;
+  padding: 0.75rem 0.875rem;
+}
+@media (prefers-color-scheme: dark) {
+  .chart-error {
+    color: #fca5a5;
+  }
+}
+body.dark .chart-error {
+  color: #fca5a5;
+}
+
+/* Data-table fallback (collapsible, crawlable, screen-reader friendly). */
+.chart-data {
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+}
+.chart-data > summary {
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  color: var(--highcharts-neutral-color-60);
+}
+.chart-data > summary::-webkit-details-marker {
+  display: none;
+}
+.chart-data table {
+  width: 100%;
+  margin-top: 0.5rem;
+  border-collapse: collapse;
+}
+.chart-data th,
+.chart-data td {
+  border: 1px solid var(--highcharts-neutral-color-10);
+  padding: 0.3rem 0.5rem;
+  text-align: left;
+}
+.chart-data thead th,
+.chart-data th[scope="row"] {
+  font-weight: 500;
+  color: var(--highcharts-neutral-color-80);
+}
+/* Wide tables (many series/categories) scroll instead of breaking the layout. */
+.chart-data-scroll {
+  overflow-x: auto;
+}
+
+/* ---------------------------------------------------------------------------
+   Mobile. In styled mode all in-SVG text sizing is CSS, so shrink axis/legend/
+   data-label text on small viewports; give charts a little more min-height so
+   very wide aspect ratios don't squash to an unreadable sliver on phones.
+   --------------------------------------------------------------------------- */
+@media (max-width: 640px) {
+  .highcharts-axis-labels text,
+  .highcharts-legend-item text {
+    font-size: 11px;
+  }
+  .highcharts-data-labels text,
+  .highcharts-data-label text {
+    font-size: 10px;
+  }
+  .highcharts-axis-title {
+    font-size: 11px;
+  }
+  .chart-card {
+    padding: 1rem 1rem 0.875rem;
+  }
+  .chart-canvas {
+    min-height: 240px;
+  }
+}

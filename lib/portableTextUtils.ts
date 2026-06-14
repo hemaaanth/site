@@ -110,6 +110,17 @@ export function calculateReadingTime(content: PortableTextBlock[]): number {
           wordCount += captionWords.length
         }
       }
+
+      // Handle chart - count only the chrome words (title/subtitle/caption),
+      // never the underlying data.
+      if (block._type === 'chart') {
+        for (const field of ['title', 'subtitle', 'caption']) {
+          const val = (block as any)[field]
+          if (typeof val === 'string') {
+            wordCount += val.trim().split(/\s+/).filter(word => word.trim().length > 0).length
+          }
+        }
+      }
     }
   }
 

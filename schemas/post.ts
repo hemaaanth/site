@@ -186,6 +186,12 @@ export default defineType({
         {
           type: 'textDiagram',
         },
+        {
+          type: 'chart',
+        },
+        {
+          type: 'chartControls',
+        },
       ],
       validation: (Rule) => Rule.required(),
     }),

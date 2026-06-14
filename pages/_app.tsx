@@ -1,4 +1,6 @@
 import "../styles/globals.css";
+import "highcharts/css/highcharts.css";
+import "../styles/highcharts.css";
 import "../styles/hover-preview.css";
 import '@liveblocks/react-ui/styles.css';
 import '@liveblocks/react-ui/styles/dark/attributes.css';

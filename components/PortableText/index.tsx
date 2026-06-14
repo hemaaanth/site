@@ -3,6 +3,10 @@ import type { PortableTextBlock, PortableTextMarkDefinition } from '@portabletex
 import { LinkExternal } from '../Links'
 import { HoverNote } from '../HoverNote'
 import { TextDiagram } from '../TextDiagram'
+import { Chart } from '../Chart'
+import { ChartControls } from '../ChartControls'
+import { parseJsonArray } from '../Chart/controls'
+import type { ChartButtonDef } from '../Chart/types'
 
 interface PortableTextProps {
   content: PortableTextBlock[]
@@ -86,6 +90,52 @@ const TableBlock = ({ value }: { value: any }) => {
   )
 }
 
+// Chart block: server-rendered (incl. the SSR data table); the interactive SVG
+// is client-only inside it.
+const ChartBlock = ({ value }: { value: any }) => {
+  if (!value?.config) return null
+  return (
+    <Chart
+      config={value.config}
+      title={value.title}
+      subtitle={value.subtitle}
+      caption={value.caption}
+      altText={value.altText}
+      variant={value.variant}
+      width={value.width}
+      aspectRatio={value.aspectRatio}
+      frame={value.frame}
+      id={value.id}
+    />
+  )
+}
+
+// Map the CMS button shape (label, mode, targetIds[], actions JSON) onto the
+// ChartButtonDef the controls expect: one target → chartId, many → targets[].
+function toButtonDefs(buttons: any): ChartButtonDef[] {
+  if (!Array.isArray(buttons)) return []
+  return buttons
+    .filter((b) => b && b.label)
+    .map((b) => {
+      const actions = parseJsonArray<any>(b.actions)
+      const ids: string[] = Array.isArray(b.targetIds)
+        ? b.targetIds.filter(Boolean)
+        : []
+      const base = { label: b.label as string, mode: b.mode }
+      return ids.length === 1
+        ? { ...base, chartId: ids[0], actions }
+        : { ...base, targets: ids.map((id) => ({ chartId: id, actions })) }
+    })
+}
+
+// Standalone controls block. ChartControls is client-only (renders null on the
+// server), so this is enhancement on top of the SSR chart + data table.
+const ChartControlsBlock = ({ value }: { value: any }) => {
+  const buttons = toButtonDefs(value?.buttons)
+  if (!buttons.length) return null
+  return <ChartControls buttons={buttons} />
+}
+
 // Custom components for Portable Text
 const defaultComponents = {
   types: {
@@ -93,6 +143,8 @@ const defaultComponents = {
     note: NoteBlock,
     table: TableBlock,
     textDiagram: TextDiagramBlock,
+    chart: ChartBlock,
+    chartControls: ChartControlsBlock,
   },
   marks: {
     link: ({ value, children }: any) => {
