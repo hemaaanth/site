@@ -436,6 +436,7 @@ a[href^="mailto:"] {
 
   .prose-custom {
     max-width: 100ch !important;
+    @apply prose-p:first:mt-0;
     @apply prose-p:leading-relaxed sm:prose-p:leading-golden;
     @apply prose prose-neutral dark:prose-invert;
     @apply prose-p:text-neutral-800 dark:prose-p:text-silver;
