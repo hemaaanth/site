@@ -35,14 +35,8 @@ p {
   @apply leading-relaxed;
 }
 
-/* The first content block in a post sits a comfortable distance below the
-   "N minute(s)" line. The reading-time line's own bottom margin is zeroed (see
-   p:last-of-type above), so that gap comes entirely from the first block's top
-   margin. Headings already carry one (an <h2> is 1.5rem with a 2em top margin =
-   3rem); match it for posts that open with a paragraph/list/etc. so they aren't
-   flush against the meta line. Scoped to the post page (where the meta line is a
-   sibling above .prose-custom, not its first child like in the preview view),
-   and unlayered so it beats the typography plugin's layered margins. */
+/* Give a non-heading first block the same top gap headings already have, so
+   posts opening with a paragraph aren't tight against the "N minute(s)" line. */
 .post-content > .prose-custom > :first-child:not(:is(h1, h2, h3, h4, h5, h6)) {
   margin-top: 3rem;
 }
