@@ -35,6 +35,18 @@ p {
   @apply leading-relaxed;
 }
 
+/* The first content block in a post sits a comfortable distance below the
+   "N minute(s)" line. The reading-time line's own bottom margin is zeroed (see
+   p:last-of-type above), so that gap comes entirely from the first block's top
+   margin. Headings already carry one (an <h2> is 1.5rem with a 2em top margin =
+   3rem); match it for posts that open with a paragraph/list/etc. so they aren't
+   flush against the meta line. Scoped to the post page (where the meta line is a
+   sibling above .prose-custom, not its first child like in the preview view),
+   and unlayered so it beats the typography plugin's layered margins. */
+.post-content > .prose-custom > :first-child:not(:is(h1, h2, h3, h4, h5, h6)) {
+  margin-top: 3rem;
+}
+
 a[href^="mailto:"] {
   @apply cursor-alias;
 }
@@ -424,7 +436,6 @@ a[href^="mailto:"] {
 
   .prose-custom {
     max-width: 100ch !important;
-    @apply prose-p:first:mt-0;
     @apply prose-p:leading-relaxed sm:prose-p:leading-golden;
     @apply prose prose-neutral dark:prose-invert;
     @apply prose-p:text-neutral-800 dark:prose-p:text-silver;
