@@ -7,6 +7,7 @@ import { Chart } from '../Chart'
 import { ChartControls } from '../ChartControls'
 import { parseJsonArray } from '../Chart/controls'
 import type { ChartButtonDef } from '../Chart/types'
+import { urlFor } from '../../lib/sanity'
 
 interface PortableTextProps {
   content: PortableTextBlock[]
@@ -136,9 +137,26 @@ const ChartControlsBlock = ({ value }: { value: any }) => {
   return <ChartControls buttons={buttons} />
 }
 
+// Custom block renderer for images uploaded via the CMS
+const ImageBlock = ({ value }: { value: any }) => {
+  if (!value?.asset) return null
+  const src = urlFor(value).width(1600).fit('max').auto('format').url()
+  return (
+    <figure className="my-8">
+      <img src={src} alt={value.alt || ''} loading="lazy" className="w-full h-auto" />
+      {value.caption && (
+        <figcaption className="text-sm text-neutral-500 dark:text-silver-dark text-left py-2">
+          {value.caption}
+        </figcaption>
+      )}
+    </figure>
+  )
+}
+
 // Custom components for Portable Text
 const defaultComponents = {
   types: {
+    image: ImageBlock,
     aside: AsideBlock,
     note: NoteBlock,
     table: TableBlock,
