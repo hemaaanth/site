@@ -125,6 +125,33 @@ export default defineType({
           },
         },
         {
+          type: 'image',
+          name: 'image',
+          title: 'Image',
+          options: { hotspot: true },
+          fields: [
+            {
+              name: 'alt',
+              type: 'string',
+              title: 'Alt text',
+              description: 'Describe the image for screen readers and SEO',
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: 'caption',
+              type: 'string',
+              title: 'Caption',
+              description: 'Optional caption shown below the image',
+            },
+          ],
+          preview: {
+            select: { media: 'asset', caption: 'caption', alt: 'alt' },
+            prepare({ media, caption, alt }) {
+              return { media, title: caption || alt || 'Image', subtitle: 'Image' }
+            },
+          },
+        },
+        {
           type: 'object',
           name: 'aside',
           title: 'Aside',
