@@ -365,6 +365,10 @@ a[href^="mailto:"] {
     @apply w-full;
   }
 
+  .post-metadata {
+    @apply mb-6 flex flex-wrap justify-between gap-x-4 gap-y-1;
+  }
+
   .post-sidebar-left,
   .post-sidebar-right {
     @apply hidden;
@@ -382,6 +386,10 @@ a[href^="mailto:"] {
 
   /* Show sidebars on xl screens (1280px+) */
   @media (min-width: 1280px) {
+    .post-metadata {
+      @apply hidden;
+    }
+
     .post-sidebar-left {
       @apply block fixed;
       top: 12rem;
