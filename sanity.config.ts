@@ -41,6 +41,20 @@ export default defineConfig({
   schema: {
     types: schemaTypes,
   },
+  form: {
+    components: {
+      portableText: {
+        plugins: (props) =>
+          props.renderDefault({
+            ...props,
+            plugins: {
+              ...props.plugins,
+              table: { enabled: true },
+            },
+          }),
+      },
+    },
+  },
   document: {
     actions: (prev, context) => {
       // Add generate preview action for posts and places

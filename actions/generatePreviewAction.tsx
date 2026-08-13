@@ -140,9 +140,9 @@ function GeneratePreviewDialog({
                         checked={mode === 'private'}
                         onChange={() => setMode('private')}
                       />
-                      <Label htmlFor="mode-private">
+                      <label htmlFor="mode-private">
                         <Text size={2}>Private (1-on-1) - Each recipient gets isolated comments</Text>
-                      </Label>
+                      </label>
                     </Flex>
                     <Flex align="center" gap={2}>
                       <Radio
@@ -151,9 +151,9 @@ function GeneratePreviewDialog({
                         checked={mode === 'shared'}
                         onChange={() => setMode('shared')}
                       />
-                      <Label htmlFor="mode-shared">
+                      <label htmlFor="mode-shared">
                         <Text size={2}>Shared (team) - All recipients see comments from every other recipient</Text>
-                      </Label>
+                      </label>
                     </Flex>
                   </Stack>
                 </Stack>

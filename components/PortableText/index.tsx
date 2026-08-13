@@ -58,24 +58,24 @@ const TableBlock = ({ value }: { value: any }) => {
       <table className="min-w-full border-collapse border border-neutral-300 dark:border-neutral-700">
         <tbody>
           {value.rows.map((row: any, rowIndex: number) => {
-            const cells = row.cells || row // Support both new format (row.cells) and old format (row is array)
-            const cellArray = Array.isArray(cells) ? cells : []
+            const cells = Array.isArray(row.cells) ? row.cells : []
+            const isHeader = rowIndex < value.headerRows
             
             return (
-              <tr key={rowIndex} className={rowIndex === 0 ? 'bg-neutral-100 dark:bg-neutral-800' : ''}>
-                {cellArray.map((cell: any, cellIndex: number) => {
-                  const Tag = cell.isHeader || rowIndex === 0 ? 'th' : 'td'
+              <tr key={row._key || rowIndex} className={isHeader ? 'bg-neutral-100 dark:bg-neutral-800' : ''}>
+                {cells.map((cell: any, cellIndex: number) => {
+                  const Tag = isHeader ? 'th' : 'td'
                   return (
                     <Tag
-                      key={cellIndex}
+                      key={cell._key || cellIndex}
                       className={`border border-neutral-300 dark:border-neutral-700 px-4 py-2 text-left ${
-                        cell.isHeader || rowIndex === 0
+                        isHeader
                           ? 'font-medium bg-neutral-100 dark:bg-neutral-800'
                           : ''
                       }`}
                     >
-                      {cell.content ? (
-                        <SanityPortableText value={cell.content} components={defaultComponents} />
+                      {cell.value ? (
+                        <SanityPortableText value={cell.value} components={defaultComponents} />
                       ) : (
                         ''
                       )}
@@ -237,4 +237,3 @@ function childrenToString(children: any): string {
 export default function PortableText({ content }: PortableTextProps) {
   return <SanityPortableText value={content} components={defaultComponents} />
 }
-

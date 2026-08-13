@@ -348,6 +348,13 @@
             "value": "table"
           }
         },
+        "headerRows": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "number"
+          },
+          "optional": true
+        },
         "rows": {
           "type": "objectAttribute",
           "value": {
@@ -362,7 +369,7 @@
                     "of": {
                       "type": "object",
                       "attributes": {
-                        "content": {
+                        "value": {
                           "type": "objectAttribute",
                           "value": {
                             "type": "array",
@@ -538,13 +545,6 @@
                                 }
                               }
                             }
-                          },
-                          "optional": true
-                        },
-                        "isHeader": {
-                          "type": "objectAttribute",
-                          "value": {
-                            "type": "boolean"
                           },
                           "optional": true
                         },
