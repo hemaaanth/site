@@ -1,6 +1,4 @@
 import Link from "next/link";
-import { LinkExternal } from "../Links";
-import { GithubIcon } from "../Icons";
 
 export default function Footer() {
   return (
@@ -32,11 +30,6 @@ export default function Footer() {
               <li>
               <Link href="/places" className="link-fade">
                 Places
-              </Link>
-              </li>
-              <li>
-              <Link href="/links" className="link-fade">
-                Links
               </Link>
               </li>
               <li>

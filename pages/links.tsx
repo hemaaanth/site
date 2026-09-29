@@ -1,11 +1,6 @@
-import React from "react";
 import { Main } from "../components/Layouts";
 import { SEO } from "../components/SEO";
-import Writing from "../components/Home/Writing";
-import formatDate from "../lib/formatDate";
 import { LinkExternal } from "../components/Links";
-import Link from "next/link";
-import { FeedIcon, NoteIcon } from "../components/Icons";
 
 export default function Links() {
     return (
@@ -14,6 +9,7 @@ export default function Links() {
                 seo={{
                     title: "Hemanth Soni - Links",
                     path: "/links",
+                    noindex: true,
                 }}
             />
             <Main>
@@ -52,14 +48,6 @@ export default function Links() {
                             <div>
                                 <LinkExternal href="https://t.me/hemaaanth">
                                     Telegram
-                                </LinkExternal>
-                                <time className="time">
-                                    @hemaaanth
-                                </time><br />
-                            </div>
-                            <div>
-                                <LinkExternal href="https://warpcast.com/hemaaanth">
-                                    Farcaster
                                 </LinkExternal>
                                 <time className="time">
                                     @hemaaanth
@@ -131,16 +119,16 @@ export default function Links() {
                                 </time><br />
                             </div>
                             <div>
-                                <LinkExternal href="https://indexed.xyz?ref=hemanth">
-                                    Open EVM + Arweave data
+                                <LinkExternal href="https://goldsky.com/boost">
+                                    Global CDN for RPC endpoints
                                 </LinkExternal>
                                 <time className="time">
-                                    indexed.xyz
+                                    Boost
                                 </time><br />
                             </div>
                             <div>
                                 <LinkExternal href="https://erpc.cloud?ref=hemanth">
-                                    RPC load-balancer and cache
+                                    Open source RPC proxy
                                 </LinkExternal>
                                 <time className="time">
                                     eRPC
