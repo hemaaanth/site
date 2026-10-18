@@ -37,7 +37,7 @@ export default function MyApp({
   useEffect(() => {
     if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_POSTHOG_KEY) {
       posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
-        api_host: '/aly',
+        api_host: 'https://p.hem.so',
         ui_host: 'https://us.posthog.com',
         person_profiles: 'always',
         loaded: (posthog) => {
