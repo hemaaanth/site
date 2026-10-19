@@ -18,6 +18,57 @@ export default function Studio() {
           <React.Fragment>
             <dt className="studio-list-title">
               <Image
+                src="/images/studio/slant_header.png"
+                alt="Slant header screenshot"
+                className="studio-screenshot-placeholder object-cover rounded-md border border-neutral-200 dark:border-zinc-800"
+                width={794}
+                height={548}
+              />
+            </dt>
+            <dd className="studio-list-content">
+              <LinkExternal href="https://slant.page">Slant</LinkExternal>
+              <div className="pt-1 text-sm text-neutral-500 [font-variation-settings:'opsz'_14] dark:text-silver-dark">
+                A writing app that interviews you, researches, and drafts in your voice.
+              </div>
+            </dd>
+          </React.Fragment>
+          <React.Fragment>
+            <dt className="studio-list-title mt-8">
+              <Image
+                src="/images/studio/sher_header.png"
+                alt="Sher header screenshot"
+                className="studio-screenshot-placeholder object-cover rounded-md border border-neutral-200 dark:border-zinc-800"
+                width={794}
+                height={548}
+              />
+            </dt>
+            <dd className="studio-list-content mt-8">
+              <LinkExternal href="https://sher.ing">Sher</LinkExternal>
+              <div className="pt-1 text-sm text-neutral-500 [font-variation-settings:'opsz'_14] dark:text-silver-dark">
+                Share live coding agent sessions with your team or across machines.
+              </div>
+            </dd>
+          </React.Fragment>
+          <React.Fragment>
+            <dt className="studio-list-title mt-8">
+              <Image
+                src="/images/studio/statcan_header.png"
+                alt="statcan2 header screenshot"
+                className="studio-screenshot-placeholder object-cover rounded-md border border-neutral-200 dark:border-zinc-800"
+                width={794}
+                height={548}
+              />
+            </dt>
+            <dd className="studio-list-content mt-8">
+              <LinkExternal href="https://statcan2.ca">statcan2</LinkExternal>
+              <div className="pt-1 text-sm text-neutral-500 [font-variation-settings:'opsz'_14] dark:text-silver-dark">
+                Statistics Canada data, easier to find, chart, and query.
+              </div>
+            </dd>
+          </React.Fragment>
+          <React.Fragment>
+            <dt className="studio-list-title mt-8">
+              <Image
                 src="/images/studio/hypee_header.png"
                 alt="Hyp.ee header screenshot"
                 className="studio-screenshot-placeholder object-cover rounded-md border border-neutral-200 dark:border-zinc-800"
@@ -25,7 +76,7 @@ export default function Studio() {
                 height={548}
               />
             </dt>
-            <dd className="studio-list-content">
+            <dd className="studio-list-content mt-8">
               <LinkExternal href="https://hyp.ee">Hyp.ee</LinkExternal>
               <div className="pt-1 text-sm text-neutral-500 [font-variation-settings:'opsz'_14] dark:text-silver-dark">
                 Hand-picked apps, software, readings, and more.
