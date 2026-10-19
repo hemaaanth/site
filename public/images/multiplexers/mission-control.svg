@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Hand-drawn from the app icon: a hub with six satellites on a hexagon, joined by spokes and a rim. -->
+  <g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round">
+    <path d="M50 50 L50 14 M50 50 L81.2 32 M50 50 L81.2 68 M50 50 L50 86 M50 50 L18.8 68 M50 50 L18.8 32"/>
+    <path d="M50 14 L81.2 32 L81.2 68 L50 86 L18.8 68 L18.8 32 Z"/>
+  </g>
+  <g fill="currentColor">
+    <circle cx="50" cy="50" r="11"/>
+    <circle cx="50" cy="14" r="6"/><circle cx="81.2" cy="32" r="6"/><circle cx="81.2" cy="68" r="6"/>
+    <circle cx="50" cy="86" r="6"/><circle cx="18.8" cy="68" r="6"/><circle cx="18.8" cy="32" r="6"/>
+  </g>
+</svg>

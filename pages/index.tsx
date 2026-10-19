@@ -4,11 +4,13 @@ import { Main } from "../components/Layouts";
 import { SEO } from "../components/SEO";
 import Writing from "../components/Home/Writing";
 import Tinkering from "../components/Home/Tinkering";
+import Curating from "../components/Home/Curating";
 import Link from "next/link";
 import { LinkExternal } from "../components/Links";
 import { getCurrentlyReading } from "../lib/hardcover";
 import { getRecentlyPlayed } from "../lib/spotify";
 import { getAllPosts } from "../lib/sanity";
+import { loadTools } from "../lib/multiplexersData";
 import Badge from "../components/Badge";
 import NamePronunciation from "../components/NamePronunciation";
 
@@ -26,6 +28,7 @@ export default function Home({
   lastCompleted,
   currentlyReading,
   recentlyPlayed,
+  mapCounts,
 }) {
   // Collect all image URLs for preloading
   const imageUrls = React.useMemo(() => {
@@ -106,7 +109,8 @@ export default function Home({
           </div>
         </section>
         <Writing posts={recentPosts} />
-<Tinkering />
+        <Curating counts={mapCounts} />
+        <Tinkering />
         <section className="list-container border-0" aria-label="Reading">
           <div className="list-title">
             <h2 className="text-neutral-500 dark:text-silver-dark text-base [font-variation-settings:'wght'_400]">Reading</h2>
@@ -195,9 +199,13 @@ export async function getStaticProps() {
   // Add recently played tracks
   const recentlyPlayed = await getRecentlyPlayed();
 
+  // Every scored tool, the same number the page shows above its map.
+  const mapCounts = { "/multiplexers": loadTools().length };
+
   return {
     props: {
       recentPosts,
+      mapCounts,
       currentlyReading: readingData.currentlyReading,
       lastCompleted: readingData.lastCompleted,
       recentlyPlayed,

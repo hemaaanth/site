@@ -1,0 +1,25 @@
+{
+  "updatedAt": "2026-09-26",
+  "tools": [
+    {
+      "slug": "superlogical",
+      "name": "Superlogical",
+      "maker": "Superlogical (Mitchell Hashimoto)",
+      "url": "https://www.superlogical.com/",
+      "status": "Beta waitlist",
+      "announced": "2026-07-29",
+      "summary": "A server-side terminal multiplexer with durable sessions: the terminals, agents, dev servers and tests behind one piece of work stay alive as a unit and can be re-entered from a Mac, a browser or an iPhone. The stated plan is multiplexer first, composable sessions second, safe against production third.",
+      "why": "The creator of Ghostty, Terraform and Vagrant, funded by Amplify Partners and Notable Capital, building the layer the terminal-first multiplexers all sit on. Whatever it ships, the tools above will have to answer it.",
+      "signals": [
+        "Announcement topped Hacker News with 703 points and 411 comments on launch day",
+        "Web, macOS and iOS clients promised; an open-source release is promised along the way",
+        "No download yet, only a waitlist"
+      ],
+      "sources": [
+        { "title": "An announcement from Superlogical", "url": "https://www.superlogical.com/" },
+        { "title": "Amplify Partners: Announcing our investment in Superlogical", "url": "https://www.amplifypartners.com/blog-posts/announcing-our-investment-in-superlogical" },
+        { "title": "InfoWorld: Hashimoto's Superlogical bets that agentic software development needs more than a better terminal", "url": "https://www.infoworld.com/article/4204427/hashimotos-superlogical-bets-that-agentic-software-development-needs-more-than-a-better-terminal.html" }
+      ]
+    }
+  ]
+}

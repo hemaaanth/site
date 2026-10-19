@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" aria-hidden="true">
+  <defs>
+    <mask id="tuios-holes" maskUnits="userSpaceOnUse">
+      <rect x="-10" y="0" width="140" height="130" fill="#fff"/>
+      <rect x="30" y="48" width="28.5" height="25" rx="4" fill="#000"/>
+      <rect x="61.5" y="48" width="28.5" height="25" rx="4" fill="#000"/>
+      <rect x="30" y="76" width="60" height="16" rx="4" fill="#000"/>
+    </mask>
+  </defs>
+  <g transform="translate(46 32) scale(3.5)">
+    <g mask="url(#tuios-holes)">
+      <rect x="17" y="34" width="86" height="73" rx="22"/>
+      <ellipse cx="12" cy="76" rx="8" ry="10"/>
+      <ellipse cx="108" cy="76" rx="8" ry="10"/>
+      <rect x="33" y="102" width="20" height="15" rx="6.5"/>
+      <rect x="67" y="102" width="20" height="15" rx="6.5"/>
+    </g>
+    <ellipse cx="60" cy="36" rx="14" ry="6"/>
+    <g stroke="currentColor" stroke-width="7" stroke-linecap="round" fill="none">
+      <line x1="54" y1="36" x2="43" y2="14"/>
+      <line x1="66" y1="36" x2="77" y2="14"/>
+    </g>
+    <circle cx="43" cy="12.5" r="6"/>
+    <circle cx="77" cy="12.5" r="6"/>
+  </g>
+</svg>

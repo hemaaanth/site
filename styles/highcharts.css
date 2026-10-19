@@ -24,27 +24,30 @@
   --highcharts-neutral-color-5: #f1f1f1;
   --highcharts-neutral-color-3: #f7f7f7;
 
-  /* Highlight (accent) ramp -> indigo */
-  --highcharts-highlight-color-100: #6366f1;
-  --highcharts-highlight-color-80: color-mix(in srgb, #6366f1 80%, transparent);
-  --highcharts-highlight-color-60: color-mix(in srgb, #6366f1 60%, transparent);
-  --highcharts-highlight-color-20: color-mix(in srgb, #6366f1 20%, transparent);
-  --highcharts-highlight-color-10: color-mix(in srgb, #6366f1 10%, transparent);
+  /* Highlight (accent) ramp -> forest green. --hc-accent-ink is text set on a
+     solid accent fill (white here, near-black green in dark mode). */
+  --highcharts-highlight-color-100: #2f6b45;
+  --highcharts-highlight-color-80: color-mix(in srgb, #2f6b45 80%, transparent);
+  --highcharts-highlight-color-60: color-mix(in srgb, #2f6b45 60%, transparent);
+  --highcharts-highlight-color-20: color-mix(in srgb, #2f6b45 20%, transparent);
+  --highcharts-highlight-color-10: color-mix(in srgb, #2f6b45 10%, transparent);
+  --hc-accent-ink: #ffffff;
 
-  /* Restrained, indigo-led categorical palette — softened/desaturated to match
-     the gentler feel of the dark (pastel) set. */
-  --highcharts-color-0: #7c84e0; /* indigo (primary) */
+  /* Restrained, green-led categorical palette — softened/desaturated to match
+     the gentler feel of the dark (pastel) set. Blue sits at 2 so the first
+     three series never read as two greens. */
+  --highcharts-color-0: #4a8a5e; /* forest (primary) */
   --highcharts-color-1: #79848f; /* slate            */
-  --highcharts-color-2: #4ea291; /* teal             */
+  --highcharts-color-2: #739bc2; /* dusty blue       */
   --highcharts-color-3: #cc9a55; /* ochre            */
   --highcharts-color-4: #b87e94; /* dusty rose       */
   --highcharts-color-5: #9893da; /* periwinkle       */
-  --highcharts-color-6: #739bc2; /* dusty blue       */
+  --highcharts-color-6: #c0876a; /* clay             */
   --highcharts-color-7: #9aa1a9; /* warm gray        */
   --highcharts-color-8: #62829f; /* steel            */
   --highcharts-color-9: #b6b0a4; /* taupe            */
 
-  --highcharts-positive-color: #4ea291;
+  --highcharts-positive-color: #4a8a5e;
   --highcharts-negative-color: #cd7b73;
 }
 
@@ -64,22 +67,23 @@
     --highcharts-neutral-color-10: rgba(255, 255, 255, 0.1);
     --highcharts-neutral-color-5: #1c1c1c;
     --highcharts-neutral-color-3: #141414;
-    --highcharts-highlight-color-100: #818cf8;
-    --highcharts-highlight-color-80: color-mix(in srgb, #818cf8 80%, transparent);
-    --highcharts-highlight-color-60: color-mix(in srgb, #818cf8 60%, transparent);
-    --highcharts-highlight-color-20: color-mix(in srgb, #818cf8 20%, transparent);
-    --highcharts-highlight-color-10: color-mix(in srgb, #818cf8 10%, transparent);
-    --highcharts-color-0: #818cf8;
+    --highcharts-highlight-color-100: #74b98a;
+    --highcharts-highlight-color-80: color-mix(in srgb, #74b98a 80%, transparent);
+    --highcharts-highlight-color-60: color-mix(in srgb, #74b98a 60%, transparent);
+    --highcharts-highlight-color-20: color-mix(in srgb, #74b98a 20%, transparent);
+    --highcharts-highlight-color-10: color-mix(in srgb, #74b98a 10%, transparent);
+    --hc-accent-ink: #0c1f13;
+    --highcharts-color-0: #74b98a;
     --highcharts-color-1: #94a3b8;
-    --highcharts-color-2: #54bdae;
+    --highcharts-color-2: #84acd6;
     --highcharts-color-3: #e0b15e;
     --highcharts-color-4: #cf8aa4;
     --highcharts-color-5: #a9a4e8;
-    --highcharts-color-6: #84acd6;
+    --highcharts-color-6: #d49a7c;
     --highcharts-color-7: #b6bcc4;
     --highcharts-color-8: #7e9cba;
     --highcharts-color-9: #cdc7ba;
-    --highcharts-positive-color: #54bdae;
+    --highcharts-positive-color: #74b98a;
     --highcharts-negative-color: #e08079;
   }
 }
@@ -96,22 +100,23 @@ body.dark {
   --highcharts-neutral-color-10: rgba(255, 255, 255, 0.1);
   --highcharts-neutral-color-5: #1c1c1c;
   --highcharts-neutral-color-3: #141414;
-  --highcharts-highlight-color-100: #818cf8;
-  --highcharts-highlight-color-80: color-mix(in srgb, #818cf8 80%, transparent);
-  --highcharts-highlight-color-60: color-mix(in srgb, #818cf8 60%, transparent);
-  --highcharts-highlight-color-20: color-mix(in srgb, #818cf8 20%, transparent);
-  --highcharts-highlight-color-10: color-mix(in srgb, #818cf8 10%, transparent);
-  --highcharts-color-0: #818cf8;
+  --highcharts-highlight-color-100: #74b98a;
+  --highcharts-highlight-color-80: color-mix(in srgb, #74b98a 80%, transparent);
+  --highcharts-highlight-color-60: color-mix(in srgb, #74b98a 60%, transparent);
+  --highcharts-highlight-color-20: color-mix(in srgb, #74b98a 20%, transparent);
+  --highcharts-highlight-color-10: color-mix(in srgb, #74b98a 10%, transparent);
+  --hc-accent-ink: #0c1f13;
+  --highcharts-color-0: #74b98a;
   --highcharts-color-1: #94a3b8;
-  --highcharts-color-2: #54bdae;
+  --highcharts-color-2: #84acd6;
   --highcharts-color-3: #e0b15e;
   --highcharts-color-4: #cf8aa4;
   --highcharts-color-5: #a9a4e8;
-  --highcharts-color-6: #84acd6;
+  --highcharts-color-6: #d49a7c;
   --highcharts-color-7: #b6bcc4;
   --highcharts-color-8: #7e9cba;
   --highcharts-color-9: #cdc7ba;
-  --highcharts-positive-color: #54bdae;
+  --highcharts-positive-color: #74b98a;
   --highcharts-negative-color: #e08079;
 }
 
@@ -267,7 +272,7 @@ body.dark {
 .chart-control-btn.is-active {
   background: var(--highcharts-highlight-color-100);
   border-color: var(--highcharts-highlight-color-100);
-  color: #ffffff;
+  color: var(--hc-accent-ink);
 }
 .chart-control-btn:disabled {
   opacity: 0.4;

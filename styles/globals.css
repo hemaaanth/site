@@ -24,7 +24,7 @@ body {
   @apply antialiased;
   @apply text-base;
 
-  @apply selection:bg-indigo-500 selection:text-white dark:selection:bg-indigo-900;
+  @apply selection:bg-[#2f6b45] selection:text-white dark:selection:bg-[#1f4a2f];
   text-rendering: optimizeLegibility;
   font-feature-settings:
     "kern" on,
@@ -393,6 +393,11 @@ a[href^="mailto:"] {
   @media (min-width: 1280px) {
     .post-metadata {
       @apply hidden;
+    }
+
+    /* No right rail: the date stays with the content at every width. */
+    .post-layout--solo .post-metadata {
+      display: flex;
     }
 
     .post-sidebar-left {

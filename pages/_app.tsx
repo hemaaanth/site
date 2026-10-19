@@ -2,6 +2,7 @@ import "../styles/globals.css";
 import "highcharts/css/highcharts.css";
 import "../styles/highcharts.css";
 import "../styles/hover-preview.css";
+import "../styles/multiplexers.css";
 import '@liveblocks/react-ui/styles.css';
 import '@liveblocks/react-ui/styles/dark/attributes.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -58,11 +59,14 @@ export default function MyApp({
     }
   }, [])
 
-  // Enable visual editing overlays (only active when in preview mode)
+  // Enable visual editing overlays, only inside Sanity's Presentation tool
   useEffect(() => {
     // Skip on preview pages to avoid overlay blocking text selection/highlighting
     if (typeof window === 'undefined') return
     if (window.location.pathname.startsWith('/preview/')) return
+    // Presentation loads the site in an iframe or a popup. Elsewhere the
+    // overlay only watches and rescans every DOM change, which is costly.
+    if (window.self === window.top && !window.opener) return
 
     const disableVisualEditing = enableVisualEditing()
     return () => disableVisualEditing()

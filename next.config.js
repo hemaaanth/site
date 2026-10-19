@@ -35,6 +35,17 @@ const nextConfig = {
       },
     ],
   },
+  async headers() {
+    return [
+      {
+        // Logos are CSS masks. With the default max-age=0 the browser
+        // revalidates each one every time a mark re-renders, so changing the
+        // top-N cut on /multiplexers made logos pop in one round trip late.
+        source: "/images/multiplexers/:file*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" }],
+      },
+    ];
+  },
   async rewrites() {
     return [
       {
