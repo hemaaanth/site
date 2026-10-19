@@ -18,6 +18,23 @@ export default function Studio() {
           <React.Fragment>
             <dt className="studio-list-title">
               <Image
+                src="/images/studio/caniworknow_header.png"
+                alt="Can I Work Now? header screenshot"
+                className="studio-screenshot-placeholder object-cover rounded-md border border-neutral-200 dark:border-zinc-800"
+                width={794}
+                height={548}
+              />
+            </dt>
+            <dd className="studio-list-content">
+              <LinkExternal href="https://caniworknow.com">Can I Work Now?</LinkExternal>
+              <div className="pt-1 text-sm text-neutral-500 [font-variation-settings:'opsz'_14] dark:text-silver-dark">
+                A live yes or no on whether GitHub, Cloudflare, Claude, and Codex are up.
+              </div>
+            </dd>
+          </React.Fragment>
+          <React.Fragment>
+            <dt className="studio-list-title mt-8">
+              <Image
                 src="/images/studio/slant_header.png"
                 alt="Slant header screenshot"
                 className="studio-screenshot-placeholder object-cover rounded-md border border-neutral-200 dark:border-zinc-800"
@@ -25,7 +42,7 @@ export default function Studio() {
                 height={548}
               />
             </dt>
-            <dd className="studio-list-content">
+            <dd className="studio-list-content mt-8">
               <LinkExternal href="https://slant.page">Slant</LinkExternal>
               <div className="pt-1 text-sm text-neutral-500 [font-variation-settings:'opsz'_14] dark:text-silver-dark">
                 A writing app that interviews you, researches, and drafts in your voice.
