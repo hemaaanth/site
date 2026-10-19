@@ -16,6 +16,32 @@ Hemanth builds products and companies in financial services, data infrastructure
 - [Colophon](https://hem.so/colophon): How this site was built.
 - [Links](https://hem.so/links): Social and contact links.
 
+## Projects
+
+- [Can I Work Now?](https://caniworknow.com): A live yes or no on whether GitHub, Cloudflare, Claude, and Codex are up.
+- [Slant](https://slant.page): A writing app that interviews you, researches, and drafts in your voice.
+- [Sher](https://sher.ing): Share live coding agent sessions with your team or across machines.
+- [statcan2](https://statcan2.ca): Statistics Canada data, easier to find, chart, and query.
+- [Hyp.ee](https://hyp.ee): Hand-picked apps, software, readings, and more.
+- [Bridgebot](https://bridgebot.cloud): Real-time relay between Telegram group chats and Slack channels.
+- [Tagtun.es](https://tagtun.es): A tags-based music manager for Spotify.
+
+## Writing
+
+- [On the end of free blockchain analytics](https://hem.so/posts/free-blockchain-analytics)
+- [On the best parallel AI coding tool](https://hem.so/posts/parallel-ai-coding-tools)
+- [On tags over folders](https://hem.so/posts/tags-over-folders)
+- [On data indexing](https://hem.so/posts/what-is-data-indexing)
+- [On free banking and stablecoins](https://hem.so/posts/free-banking-and-stablecoins)
+- [On pricing a SaaS product from scratch](https://hem.so/posts/saas-pricing-strategy)
+- [On building a blockchain](https://hem.so/posts/building-a-blockchain)
+- [On crypto startup ideas for 2024](https://hem.so/posts/2024-crypto-startup-ideas)
+- [On crypto startup ideas for 2023](https://hem.so/posts/2023-crypto-startup-ideas)
+- [On the future of pensions in Canada](https://hem.so/posts/future-of-pensions-in-canada)
+- [On Uber's surge pricing](https://hem.so/posts/opinion-on-uber-surge-pricing)
+- [On learnings from REACH Diagnostics](https://hem.so/posts/lessons-from-reach)
+- [Stellar Meridian 2025: Building Your Data Stack](https://hem.so/meridian)
+
 ## Contact
 
 - Twitter: https://twitter.com/hemaaanth

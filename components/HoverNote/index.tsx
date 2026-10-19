@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { useWebHaptics } from 'web-haptics/react';
 
 interface HoverNoteProps {
   children: React.ReactNode;
@@ -9,6 +10,7 @@ export const HoverNote: React.FC<HoverNoteProps> = ({ children }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0, placement: 'top' as 'top' | 'bottom' });
   const [isMobile, setIsMobile] = useState(false);
+  const { trigger } = useWebHaptics();
   const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
   const triggerRef = useRef<HTMLSpanElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
@@ -97,6 +99,7 @@ export const HoverNote: React.FC<HoverNoteProps> = ({ children }) => {
   const handleClick = useCallback((e: React.MouseEvent) => {
     if (isMobile) {
       e.preventDefault();
+      trigger('selection');
       setIsVisible((prev) => {
         if (!prev) {
           calculatePosition();
@@ -104,7 +107,7 @@ export const HoverNote: React.FC<HoverNoteProps> = ({ children }) => {
         return !prev;
       });
     }
-  }, [isMobile, calculatePosition]);
+  }, [isMobile, calculatePosition, trigger]);
 
   // Keyboard support
   const handleFocus = useCallback(() => {

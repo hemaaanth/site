@@ -1,11 +1,14 @@
 import React, { useRef, useState, useCallback } from "react";
 import { SpeakerIcon } from "../Icons";
+import { useWebHaptics } from "web-haptics/react";
 
 export default function NamePronunciation({ children }: { children: React.ReactNode }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const { trigger } = useWebHaptics();
 
   const playPronunciation = useCallback(() => {
+    trigger();
     // Stop any currently playing audio
     if (audioRef.current) {
       audioRef.current.pause();
@@ -22,7 +25,7 @@ export default function NamePronunciation({ children }: { children: React.ReactN
     audio.onerror = () => setIsPlaying(false);
     
     audio.play().catch(() => setIsPlaying(false));
-  }, []);
+  }, [trigger]);
 
   return (
     <span className="inline-flex items-center gap-2">

@@ -4,6 +4,7 @@ import { ExternalIcon, ShareIcon } from "../Icons";
 import { Tooltip } from "../Tooltip";
 import useCopy from "@react-hook/copy";
 import { HoverPreview } from "../HoverPreview";
+import { useWebHaptics } from "web-haptics/react";
 
 interface LinkExternalProps {
   href: string;
@@ -31,9 +32,11 @@ export function LinkExternal({ href, children, imageUrl }: LinkExternalProps) {
 export function LinkShare({ title, url, children }) {
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const { copy } = useCopy(url);
+  const { trigger } = useWebHaptics();
 
   const onClick = async () => {
     if (navigator.share) {
+      trigger();
       navigator
         .share({
           title,
@@ -42,6 +45,7 @@ export function LinkShare({ title, url, children }) {
         .catch(console.error);
     } else {
       await copy();
+      trigger("success");
       setTooltipOpen(true);
 
       setTimeout(() => {
