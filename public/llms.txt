@@ -14,7 +14,6 @@ Hemanth builds products and companies in financial services, data infrastructure
 - [Studio](https://hem.so/studio): Side projects and tools.
 - [Places](https://hem.so/places): City guides with curated locations.
 - [Colophon](https://hem.so/colophon): How this site was built.
-- [Links](https://hem.so/links): Social and contact links.
 
 ## Projects
 
@@ -40,7 +39,6 @@ Hemanth builds products and companies in financial services, data infrastructure
 - [On the future of pensions in Canada](https://hem.so/posts/future-of-pensions-in-canada)
 - [On Uber's surge pricing](https://hem.so/posts/opinion-on-uber-surge-pricing)
 - [On learnings from REACH Diagnostics](https://hem.so/posts/lessons-from-reach)
-- [Stellar Meridian 2025: Building Your Data Stack](https://hem.so/meridian)
 
 ## Contact
 

@@ -35,7 +35,10 @@ export default function MyApp({
   const router = useRouter()
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_POSTHOG_KEY) {
+    // Skip the CMS and draft previews: only the owner uses them, and session recording would capture typed text.
+    // Nothing links to them, so they always start with a full page load and this startup check covers them.
+    const isPrivate = /^\/(cms|preview)(\/|$)/.test(window.location.pathname)
+    if (process.env.NEXT_PUBLIC_POSTHOG_KEY && !isPrivate) {
       posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
         api_host: 'https://p.hem.so',
         ui_host: 'https://us.posthog.com',
