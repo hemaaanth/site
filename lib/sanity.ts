@@ -34,13 +34,16 @@ export function urlFor(source: SanityImageSource) {
 // Exclude drafts by checking if _id is not in drafts path
 export const postsQuery = `*[_type == "post" && !(_id in path("drafts.**"))] | order(date desc) {
   _id,
+  _updatedAt,
   title,
   slug,
-  date
+  date,
+  tldr
 }`
 
 export const postBySlugQuery = `*[_type == "post" && slug.current == $slug && !(_id in path("drafts.**"))][0] {
   _id,
+  _updatedAt,
   title,
   slug,
   date,
@@ -55,6 +58,7 @@ export const postBySlugQuery = `*[_type == "post" && slug.current == $slug && !(
 // Query that includes drafts (for preview mode)
 export const postBySlugQueryWithDrafts = `*[_type == "post" && slug.current == $slug][0] {
   _id,
+  _updatedAt,
   title,
   slug,
   date,
@@ -178,4 +182,3 @@ export async function getPlaceBySlug(slug: string, includeDrafts = false) {
 export async function getPublishedPlaceSlugs() {
   return await client.fetch(publishedPlacesQuery)
 }
-

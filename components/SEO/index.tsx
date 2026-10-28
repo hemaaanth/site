@@ -32,6 +32,7 @@ export interface SEOProps {
   noindex?: boolean;
   article?: {
     datePublished?: string;
+    dateModified?: string;
     author?: string;
   };
 }
@@ -69,6 +70,12 @@ export function SEO({ seo }: { seo?: SEOProps }) {
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link
+          rel="alternate"
+          type="text/markdown"
+          title="Agent-readable site guide"
+          href={`${baseUrl}/llms.txt`}
+        />
         {seo.path ? (
           <link
             rel="canonical"
@@ -91,11 +98,13 @@ export function SEO({ seo }: { seo?: SEOProps }) {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
+              "@id": `${baseUrl}/#website`,
               name: defaultSEO.title,
               url: baseUrl,
               image: defaultSEO.openGraph.images[0].url,
               author: {
                 "@type": "Person",
+                "@id": `${baseUrl}/#person`,
                 name: defaultSEO.title,
                 url: baseUrl,
                 jobTitle: "Head of Growth at Goldsky",
@@ -132,9 +141,16 @@ export function SEO({ seo }: { seo?: SEOProps }) {
                 description: description,
                 image: image,
                 datePublished: seo.article.datePublished,
+                dateModified:
+                  seo.article.dateModified || seo.article.datePublished,
                 url: seo.path ? `${baseUrl}${seo.path}` : baseUrl,
+                mainEntityOfPage: {
+                  "@type": "WebPage",
+                  "@id": seo.path ? `${baseUrl}${seo.path}` : baseUrl,
+                },
                 author: {
                   "@type": "Person",
+                  "@id": `${baseUrl}/#person`,
                   name: seo.article.author || defaultSEO.title,
                   url: baseUrl,
                 },

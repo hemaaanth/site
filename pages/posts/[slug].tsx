@@ -10,7 +10,7 @@ import type { PortableTextBlock } from '@portabletext/types';
 
 export default function Post(props) {
   const router = useRouter();
-  const { title, date, meta, tldr, content, headers, readingTime, author } = props;
+  const { title, date, dateModified, meta, tldr, content, headers, readingTime, author } = props;
   const slug = router.query.slug;
   const relativeUrl = `/posts/${slug}`;
 
@@ -24,6 +24,7 @@ export default function Post(props) {
           image: `${baseUrl}/api/og?title=${encodeURIComponent(title)}`,
           article: {
             datePublished: date,
+            dateModified,
             author: author,
           },
           }}
@@ -73,6 +74,7 @@ export const getStaticProps = async (context) => {
     props: {
       title: post.title,
       date: post.date,
+      dateModified: post._updatedAt,
       author: post.author,
       tldr: post.tldr,
       meta: post.meta,
