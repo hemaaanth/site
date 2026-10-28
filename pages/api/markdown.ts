@@ -33,23 +33,38 @@ export default async function handler(
   const path = Array.isArray(request.query.path)
     ? request.query.path[0]
     : request.query.path;
-  if (!path?.startsWith("/") || path.startsWith("//")) {
+  if (
+    !path?.startsWith("/") ||
+    path.startsWith("//") ||
+    /[\\\t\r\n]/.test(path)
+  ) {
     return response.status(400).send("Invalid path");
   }
 
   const forwardedProtocol = request.headers["x-forwarded-proto"];
-  const protocol = Array.isArray(forwardedProtocol)
+  const protocolHeader = Array.isArray(forwardedProtocol)
     ? forwardedProtocol[0]
     : forwardedProtocol || "https";
+  const protocol = protocolHeader.split(",", 1)[0].trim();
   const host = request.headers.host;
-  if (!host) {
-    return response.status(400).send("Missing host");
+  if (!host || !["http", "https"].includes(protocol)) {
+    return response.status(400).send("Invalid origin");
   }
 
   try {
-    const htmlResponse = await fetch(new URL(path, `${protocol}://${host}`), {
+    const origin = new URL(`${protocol}://${host}`);
+    const target = new URL(path, origin);
+    if (target.origin !== origin.origin) {
+      return response.status(400).send("Invalid path");
+    }
+
+    const htmlResponse = await fetch(target, {
       headers: { Accept: "text/html" },
+      redirect: "manual",
     });
+    if (htmlResponse.status >= 300 && htmlResponse.status < 400) {
+      return response.status(502).send("Unable to render redirect as Markdown");
+    }
     const html = await htmlResponse.text();
     if (!htmlResponse.ok) {
       response.setHeader("Content-Type", "text/plain; charset=utf-8");
