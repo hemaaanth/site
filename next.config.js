@@ -38,6 +38,15 @@ const nextConfig = {
   async headers() {
     return [
       {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Content-Signal",
+            value: "search=yes, ai-input=yes, ai-train=no, use=reference",
+          },
+        ],
+      },
+      {
         // Logos are CSS masks. With the default max-age=0 the browser
         // revalidates each one every time a mark re-renders, so changing the
         // top-N cut on /multiplexers made logos pop in one round trip late.
