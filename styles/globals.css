@@ -650,84 +650,6 @@ a[href^="mailto:"] {
   display: none !important;
 }
 
-/* Liveblocks Comments Styles - Using @liveblocks/react-ui */
-/* Note: Base styles imported in _app.tsx to avoid duplication */
-
-/* Hide Liveblocks branding */
-[data-liveblocks-portal] a[href*="liveblocks.io"] {
-  display: none !important;
-}
-
-/* Liveblocks theme customization */
-.lb-root {
-  --lb-accent: rgb(37 99 235);
-  --lb-accent-foreground: rgb(255 255 255);
-  --lb-radius: 0.5rem;
-}
-
-/* Dark mode (via .dark class from component) */
-.dark .lb-root {
-  --lb-accent: rgb(96 165 250);
-  --lb-accent-foreground: rgb(15 23 42);
-  --lb-background: rgb(9 9 11);
-  --lb-foreground: rgb(229 231 235);
-  --lb-dynamic-background: rgb(23 23 23);
-  --lb-dynamic-foreground: rgb(212 212 212);
-}
-
-/* Hide attachment, emoji, and mention buttons in composer */
-.lb-composer-editor-action[aria-label="Add emoji"],
-.lb-composer-editor-action[aria-label="Attach files"],
-.lb-composer-editor-action[aria-label="Mention someone"],
-.lb-composer-mention-button,
-.lb-lexical-mention-button {
-  display: none !important;
-}
-
-/* Hide three-dot menu button and emoji picker on comments */
-.lb-comment-action[aria-label="More"],
-.lb-comment-action[aria-label="Add reaction"] {
-  display: none !important;
-}
-
-/* Hide "Powered by Liveblocks" badge */
-#liveblocks-badge {
-  display: none !important;
-}
-
-/* Always show send button and keep composer footer stable */
-.lb-composer-submit,
-.lb-composer-action,
-.lb-composer-action[disabled] {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-/* Keep button disabled functionally but always visible */
-.lb-composer-action[disabled] {
-  pointer-events: none !important;
-  cursor: not-allowed !important;
-}
-
-/* Prevent composer footer from resizing when blurred */
-.lb-composer-footer {
-  min-height: auto !important;
-  height: auto !important;
-}
-
-/* Keep composer editor actions visible */
-.lb-composer-editor-actions {
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-/* Remove padding from inline thread highlights to prevent text shifting */
-[data-lb-inline-thread] {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-}
-
 /* Globe marker styles */
 .globe-marker {
   position: relative;
@@ -805,7 +727,16 @@ a[href^="mailto:"] {
 
 /* Venue marker styles */
 .venue-marker {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
   cursor: pointer;
+}
+
+.venue-marker:focus-visible .venue-marker-inner {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
 }
 
 .venue-marker-revealed .venue-marker-inner {
@@ -846,6 +777,26 @@ a[href^="mailto:"] {
   background: #fde68a;
   color: #a16207;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 639px) {
+  .venue-marker-inner {
+    gap: 2px;
+    min-width: 28px;
+    height: 28px;
+    padding: 0 5px;
+    border-radius: 8px;
+  }
+
+  .venue-marker-inner > svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .venue-marker-fav {
+    width: 13px;
+    height: 13px;
+  }
 }
 
 @media (prefers-color-scheme: dark) {

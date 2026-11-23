@@ -28,4 +28,3 @@
 - TypeScript
 - TailwindCSS for styling
 - Sanity for content management
-- Liveblocks for collaboration features

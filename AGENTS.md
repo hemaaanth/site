@@ -29,5 +29,4 @@
 - TypeScript `^6.0.3`
 - Tailwind CSS `^4.3.0` with `@tailwindcss/postcss`, typography, and touch plugins
 - Sanity `^6.0.0` with `next-sanity` `^13.1.0`
-- Liveblocks `^3.19.5` for collaboration features
-- Mapbox GL, PostHog, Vercel KV/OG, Resend, styled-components, and next-sitemap
+- Mapbox GL, PostHog, Vercel OG, styled-components, and next-sitemap
