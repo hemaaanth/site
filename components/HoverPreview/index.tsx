@@ -1,20 +1,6 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react';
 import Image from 'next/image';
 import { createPortal } from 'react-dom';
-
-// Simple throttle function to limit the rate of mousemove updates
-function throttle<T extends (...args: any[]) => any>(func: T, limit: number): (...args: Parameters<T>) => void {
-  let inThrottle = false;
-  return function(...args: Parameters<T>) {
-    if (!inThrottle) {
-      func(...args);
-      inThrottle = true;
-      setTimeout(() => {
-        inThrottle = false;
-      }, limit);
-    }
-  };
-}
 
 interface HoverPreviewProps {
   imageUrl?: string;
@@ -22,81 +8,235 @@ interface HoverPreviewProps {
   className?: string;
 }
 
-interface PreviewPosition {
+interface Point {
   x: number;
   y: number;
 }
 
-export const HoverPreview: React.FC<HoverPreviewProps> = ({ 
-  imageUrl, 
+type Phase = 'hidden' | 'open' | 'closing';
+
+const MAX_WIDTH = 180;
+const MAX_HEIGHT = 200;
+const CURSOR_OFFSET = 16;
+const VIEWPORT_MARGIN = 12;
+// Share of the remaining distance covered per 60fps frame
+const FOLLOW_EASE = 0.3;
+// Matches the exit transition in hover-preview.css
+const EXIT_MS = 140;
+
+// One shared portal container for every HoverPreview instance
+let portalRoot: HTMLElement | null = null;
+let portalUsers = 0;
+
+function acquirePortalRoot(): HTMLElement {
+  if (!portalRoot) {
+    portalRoot = document.createElement('div');
+    portalRoot.setAttribute('data-hover-preview-root', '');
+    document.body.appendChild(portalRoot);
+  }
+  portalUsers += 1;
+  return portalRoot;
+}
+
+function releasePortalRoot() {
+  portalUsers -= 1;
+  if (portalUsers <= 0 && portalRoot) {
+    portalRoot.remove();
+    portalRoot = null;
+    portalUsers = 0;
+  }
+}
+
+function prefersReducedMotion(): boolean {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), Math.max(min, max));
+}
+
+// Place the card below-right of the cursor, flip to the other side near an edge,
+// then clamp so it stays fully inside the viewport
+function boundedPosition(pointer: Point, size: { width: number; height: number }): Point {
+  const viewportWidth = document.documentElement.clientWidth;
+  const viewportHeight = document.documentElement.clientHeight;
+
+  let x = pointer.x + CURSOR_OFFSET;
+  if (x + size.width > viewportWidth - VIEWPORT_MARGIN) {
+    x = pointer.x - CURSOR_OFFSET - size.width;
+  }
+
+  let y = pointer.y + CURSOR_OFFSET;
+  if (y + size.height > viewportHeight - VIEWPORT_MARGIN) {
+    y = pointer.y - CURSOR_OFFSET - size.height;
+  }
+
+  return {
+    x: clamp(x, VIEWPORT_MARGIN, viewportWidth - size.width - VIEWPORT_MARGIN),
+    y: clamp(y, VIEWPORT_MARGIN, viewportHeight - size.height - VIEWPORT_MARGIN),
+  };
+}
+
+export const HoverPreview: React.FC<HoverPreviewProps> = ({
+  imageUrl,
   children,
   className = '',
 }) => {
-  const [showPreview, setShowPreview] = useState(false);
-  const [position, setPosition] = useState<PreviewPosition>({ x: 0, y: 0 });
+  const [phase, setPhase] = useState<Phase>('hidden');
+  const [loaded, setLoaded] = useState(false);
   const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
-  const requestRef = useRef<number | null>(null);
-  const linkRef = useRef<HTMLSpanElement>(null);
 
-  // Create portal container on mount
+  const cardRef = useRef<HTMLDivElement>(null);
+  const pointerRef = useRef<Point>({ x: 0, y: 0 });
+  const targetRef = useRef<Point>({ x: 0, y: 0 });
+  const currentRef = useRef<Point>({ x: 0, y: 0 });
+  // Last measured card size; falls back to the maximum until the image loads
+  const sizeRef = useRef({ width: MAX_WIDTH, height: MAX_HEIGHT });
+  const frameRef = useRef<number | null>(null);
+  const lastFrameTimeRef = useRef(0);
+  const exitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
-    if (typeof document !== 'undefined') {
-      const container = document.createElement('div');
-      container.setAttribute('id', 'hover-preview-portal');
-      document.body.appendChild(container);
-      setPortalContainer(container);
+    setPortalContainer(acquirePortalRoot());
+    return releasePortalRoot;
+  }, []);
 
-      return () => {
-        document.body.removeChild(container);
-      };
+  const applyTransform = useCallback(() => {
+    const card = cardRef.current;
+    if (card) {
+      const { x, y } = currentRef.current;
+      card.style.transform = `translate3d(${x}px, ${y}px, 0)`;
     }
   }, []);
 
-  // Handle mouse events
-  const handleMouseEnter = useCallback(() => {
-    if (imageUrl) {
-      setShowPreview(true);
+  const stopFollowing = useCallback(() => {
+    if (frameRef.current !== null) {
+      cancelAnimationFrame(frameRef.current);
+      frameRef.current = null;
     }
-  }, [imageUrl]);
-
-  const handleMouseLeave = useCallback(() => {
-    setShowPreview(false);
-    if (requestRef.current !== null) {
-      cancelAnimationFrame(requestRef.current);
-      requestRef.current = null;
-    }
+    lastFrameTimeRef.current = 0;
   }, []);
 
-  const updatePosition = useCallback((e: React.MouseEvent) => {
-    if (requestRef.current !== null) {
-      cancelAnimationFrame(requestRef.current);
+  const followPointer = useCallback(() => {
+    targetRef.current = boundedPosition(pointerRef.current, sizeRef.current);
+
+    if (prefersReducedMotion()) {
+      currentRef.current = { ...targetRef.current };
+      applyTransform();
+      return;
+    }
+    if (frameRef.current !== null) return;
+
+    // Ease the card toward the latest target, frame-rate independent
+    const step = (time: number) => {
+      const elapsed = lastFrameTimeRef.current ? Math.min(time - lastFrameTimeRef.current, 64) : 16.7;
+      lastFrameTimeRef.current = time;
+
+      const target = targetRef.current;
+      const current = currentRef.current;
+      const ease = 1 - Math.pow(1 - FOLLOW_EASE, elapsed / 16.7);
+      current.x += (target.x - current.x) * ease;
+      current.y += (target.y - current.y) * ease;
+
+      if (Math.abs(target.x - current.x) < 0.1 && Math.abs(target.y - current.y) < 0.1) {
+        currentRef.current = { ...target };
+        applyTransform();
+        frameRef.current = null;
+        lastFrameTimeRef.current = 0;
+        return;
+      }
+
+      applyTransform();
+      frameRef.current = requestAnimationFrame(step);
+    };
+    frameRef.current = requestAnimationFrame(step);
+  }, [applyTransform]);
+
+  const close = useCallback(() => {
+    setPhase((previous) => (previous === 'open' ? 'closing' : previous));
+  }, []);
+
+  const handlePointerEnter = useCallback((e: React.PointerEvent) => {
+    // Touch taps have no hover; a card opened by one would stay stuck
+    if (!imageUrl || e.pointerType === 'touch') return;
+
+    if (exitTimerRef.current !== null) {
+      clearTimeout(exitTimerRef.current);
+      exitTimerRef.current = null;
     }
 
-    requestRef.current = requestAnimationFrame(() => {
-      // Position the preview with a slight offset from the cursor
-      const x = e.clientX + 15;
-      const y = e.clientY + 15;
-      
-      // Ensure the preview stays within viewport bounds
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
-      const previewWidth = 180; // Maximum width of our preview
-      const previewHeight = 200; // Maximum height of our preview
-      
-      const boundedX = Math.min(x, viewportWidth - previewWidth - 10);
-      const boundedY = Math.min(y, viewportHeight - previewHeight - 10);
-      
-      setPosition({
-        x: boundedX,
-        y: boundedY,
-      });
-    });
-  }, []);
-  
-  // Throttle the mousemove handler to improve performance
-  const throttledUpdatePosition = useCallback((e: React.MouseEvent) => {
-    throttle((event: React.MouseEvent) => updatePosition(event), 16)(e);
-  }, [updatePosition]);
+    // Start at the bounded cursor position so the card never flashes at (0, 0)
+    pointerRef.current = { x: e.clientX, y: e.clientY };
+    targetRef.current = boundedPosition(pointerRef.current, sizeRef.current);
+    currentRef.current = { ...targetRef.current };
+    stopFollowing();
+    applyTransform();
+    setPhase('open');
+  }, [imageUrl, stopFollowing, applyTransform]);
+
+  const handlePointerMove = useCallback((e: React.PointerEvent) => {
+    if (e.pointerType === 'touch' || phase !== 'open') return;
+    pointerRef.current = { x: e.clientX, y: e.clientY };
+    followPointer();
+  }, [phase, followPointer]);
+
+  const handlePointerLeave = useCallback((e: React.PointerEvent) => {
+    if (e.pointerType === 'touch') return;
+    close();
+  }, [close]);
+
+  // Place the card before the browser paints it
+  useLayoutEffect(() => {
+    if (phase !== 'hidden') applyTransform();
+  }, [phase, applyTransform]);
+
+  // Unmount after the exit transition finishes
+  useEffect(() => {
+    if (phase !== 'closing') return;
+    exitTimerRef.current = setTimeout(() => {
+      exitTimerRef.current = null;
+      stopFollowing();
+      setLoaded(false);
+      setPhase('hidden');
+    }, prefersReducedMotion() ? 0 : EXIT_MS);
+    return () => {
+      if (exitTimerRef.current !== null) {
+        clearTimeout(exitTimerRef.current);
+        exitTimerRef.current = null;
+      }
+    };
+  }, [phase, stopFollowing]);
+
+  // A fixed card would drift away from its link on scroll, so close it
+  useEffect(() => {
+    if (phase !== 'open') return;
+    window.addEventListener('scroll', close, { passive: true, capture: true });
+    window.addEventListener('blur', close);
+    return () => {
+      window.removeEventListener('scroll', close, { capture: true });
+      window.removeEventListener('blur', close);
+    };
+  }, [phase, close]);
+
+  useEffect(() => stopFollowing, [stopFollowing]);
+
+  const handleImageLoad = useCallback(() => {
+    const card = cardRef.current;
+    if (card) {
+      // Reading the size also commits the hidden style, so the entry transition runs
+      sizeRef.current = { width: card.offsetWidth, height: card.offsetHeight };
+      targetRef.current = boundedPosition(pointerRef.current, sizeRef.current);
+      currentRef.current = { ...targetRef.current };
+      applyTransform();
+    }
+    setLoaded(true);
+  }, [applyTransform]);
+
+  const handleImageError = useCallback(() => {
+    stopFollowing();
+    setLoaded(false);
+    setPhase('hidden');
+  }, [stopFollowing]);
 
   // If no image URL is provided, just render children as is
   if (!imageUrl) {
@@ -105,48 +245,36 @@ export const HoverPreview: React.FC<HoverPreviewProps> = ({
 
   return (
     <span
-      ref={linkRef}
       className={`hover-preview-trigger ${className}`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onMouseMove={throttledUpdatePosition}
+      onPointerEnter={handlePointerEnter}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
     >
       {children}
-      {showPreview && portalContainer && createPortal(
-        <div 
-          className="hover-preview-image"
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            '--x': `${position.x}px`,
-            '--y': `${position.y}px`,
-            transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
-            zIndex: 9999,
-            pointerEvents: 'none',
-            borderRadius: '0',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-            overflow: 'hidden',
-            backgroundColor: 'white',
-            padding: '0',
-          } as React.CSSProperties}
+      {phase !== 'hidden' && portalContainer && createPortal(
+        <div
+          ref={cardRef}
+          className="hover-preview-card"
+          data-state={phase === 'open' && loaded ? 'open' : 'closed'}
+          aria-hidden="true"
         >
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Image 
-              src={imageUrl} 
-              alt="Preview"
+          <div className="hover-preview-frame">
+            <Image
+              src={imageUrl}
+              alt=""
               width={0}
               height={0}
-              sizes="100vw"
+              sizes={`${MAX_WIDTH}px`}
               loading="eager"
               style={{
                 width: 'auto',
                 height: 'auto',
-                maxWidth: '180px',
-                maxHeight: '200px',
+                maxWidth: `${MAX_WIDTH}px`,
+                maxHeight: `${MAX_HEIGHT}px`,
                 display: 'block',
               }}
-              onError={() => setShowPreview(false)}
+              onLoad={handleImageLoad}
+              onError={handleImageError}
             />
           </div>
         </div>,
