@@ -54,7 +54,7 @@ export default async function handler(
   try {
     const origin = new URL(`${protocol}://${host}`);
     const target = new URL(path, origin);
-    if (target.origin !== origin.origin) {
+    if (target.origin !== origin.origin || !/^\/(?:about|colophon|links|meridian|multiplexers|studio|(?:places|posts)(?:\/[a-z0-9_-]+)?)?\/?$/i.test(target.pathname)) {
       return response.status(400).send("Invalid path");
     }
 

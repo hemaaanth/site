@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export function proxy(request: NextRequest) {
-  if (!request.headers.get("accept")?.includes("text/markdown")) {
+  if (request.cookies.has("__prerender_bypass") || !request.headers.get("accept")?.includes("text/markdown")) {
     return NextResponse.next();
   }
 
@@ -17,5 +17,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next|favicon.ico|llms.txt|posts/rss|.*\\..*).*)"],
+  matcher: ["/((?!api|_next|favicon.ico|llms.txt|posts/rss|cms(?:/|$)|preview(?:/|$)|.*\\..*).*)"],
 };

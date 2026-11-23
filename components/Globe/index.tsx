@@ -657,14 +657,17 @@ const Globe: React.FC<GlobeProps> = ({
       if (!venue.coordinates || !map.current) return;
 
       const isFavourite = !!venue.favourite;
-      const el = document.createElement("div");
+      const el = document.createElement("button");
+      el.type = "button";
       el.className = "venue-marker";
       el.style.opacity = "0";
+      el.setAttribute("role", "button");
+      el.setAttribute("aria-label", venue.title || `Photo near ${venue.location}`);
 
       const root = createRoot(el);
       const displayTypes = venue.types || [];
       root.render(
-        <div className="venue-marker-inner" title={venue.title}>
+        <span className="venue-marker-inner" aria-hidden="true" title={venue.title}>
           {displayTypes.length > 0 ? (
             displayTypes.map((t) => {
               const Icon = typeIcons[t] || Landmark;
@@ -678,7 +681,7 @@ const Globe: React.FC<GlobeProps> = ({
               <Star size={10} fill="currentColor" />
             </span>
           )}
-        </div>,
+        </span>,
       );
 
       el.addEventListener("click", (e) => {
@@ -690,7 +693,7 @@ const Globe: React.FC<GlobeProps> = ({
           popupRef.current.remove();
           popupRef.current = null;
         }
-        setSelectedVenue((prev) => (prev?.title === venue.title ? null : venue));
+        setSelectedVenue((prev) => (prev === venue ? null : venue));
       });
 
       const m = new mapboxgl.Marker({ element: el, anchor: "center" })

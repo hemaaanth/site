@@ -1614,6 +1614,22 @@
 .mx-lt-vote.is-voted,
 .mx-lt-vote:disabled { color: var(--highcharts-highlight-color-100); border-color: var(--highcharts-highlight-color-100); cursor: default; }
 .mx-lt-suggest { margin-left: 0.25rem; }
+@media (max-width: 639px) {
+  .mx-longtail .mx-index-bar {
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+  }
+  .mx-longtail .mx-search {
+    flex: 0 0 100%;
+    min-width: 0;
+  }
+  .mx-longtail .mx-lt-suggest { margin-left: 0; }
+  .mx-longtail .mx-controls-count {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    text-align: right;
+  }
+}
 .mx-lt-row.is-dead { opacity: 0.45; }
 .mx-lt-empty { padding: 1rem; font-size: 0.8125rem; color: var(--highcharts-neutral-color-60); }
 
