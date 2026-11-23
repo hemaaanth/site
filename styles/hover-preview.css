@@ -1,6 +1,8 @@
+/* Inside a flex column, hug the link instead of stretching across the row */
 .hover-preview-trigger {
   display: inline-flex;
   position: relative;
+  align-self: flex-start;
 }
 
 /* Positioned by HoverPreview with translate3d; never intercepts the pointer */

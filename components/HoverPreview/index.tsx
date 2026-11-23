@@ -1,11 +1,16 @@
 import React, { useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react';
-import Image from 'next/image';
+import Image, { getImageProps } from 'next/image';
 import { createPortal } from 'react-dom';
+
+export type PreviewVariant = 'cover' | 'screenshot';
 
 interface HoverPreviewProps {
   imageUrl?: string;
   children: React.ReactNode;
   className?: string;
+  variant?: PreviewVariant;
+  // Fetch the image once the page is idle so the first hover opens instantly
+  preload?: boolean;
 }
 
 interface Point {
@@ -13,10 +18,18 @@ interface Point {
   y: number;
 }
 
+interface Size {
+  width: number;
+  height: number;
+}
+
 type Phase = 'hidden' | 'open' | 'closing';
 
-const MAX_WIDTH = 180;
-const MAX_HEIGHT = 200;
+// Covers are portrait or square; landscape screenshots need more width to stay readable
+const MAX_SIZES: Record<PreviewVariant, Size> = {
+  cover: { width: 180, height: 200 },
+  screenshot: { width: 260, height: 200 },
+};
 const CURSOR_OFFSET = 16;
 const VIEWPORT_MARGIN = 12;
 // Share of the remaining distance covered per 60fps frame
@@ -57,7 +70,7 @@ function clamp(value: number, min: number, max: number): number {
 
 // Place the card below-right of the cursor, flip to the other side near an edge,
 // then clamp so it stays fully inside the viewport
-function boundedPosition(pointer: Point, size: { width: number; height: number }): Point {
+function boundedPosition(pointer: Point, size: Size): Point {
   const viewportWidth = document.documentElement.clientWidth;
   const viewportHeight = document.documentElement.clientHeight;
 
@@ -81,17 +94,22 @@ export const HoverPreview: React.FC<HoverPreviewProps> = ({
   imageUrl,
   children,
   className = '',
+  variant = 'cover',
+  preload = false,
 }) => {
   const [phase, setPhase] = useState<Phase>('hidden');
   const [loaded, setLoaded] = useState(false);
   const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
+
+  const maxSize = MAX_SIZES[variant];
+  const sizes = `${maxSize.width}px`;
 
   const cardRef = useRef<HTMLDivElement>(null);
   const pointerRef = useRef<Point>({ x: 0, y: 0 });
   const targetRef = useRef<Point>({ x: 0, y: 0 });
   const currentRef = useRef<Point>({ x: 0, y: 0 });
   // Last measured card size; falls back to the maximum until the image loads
-  const sizeRef = useRef({ width: MAX_WIDTH, height: MAX_HEIGHT });
+  const sizeRef = useRef<Size>(maxSize);
   const frameRef = useRef<number | null>(null);
   const lastFrameTimeRef = useRef(0);
   const exitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -100,6 +118,29 @@ export const HoverPreview: React.FC<HoverPreviewProps> = ({
     setPortalContainer(acquirePortalRoot());
     return releasePortalRoot;
   }, []);
+
+  // Request the same optimized file the card's <Image> will pick, so hover hits the cache.
+  // Devices without any hover-capable pointer never open the card, so they skip the download.
+  useEffect(() => {
+    if (!preload || !imageUrl || !window.matchMedia('(any-hover: hover)').matches) return;
+
+    const warm = () => {
+      const { props } = getImageProps({ src: imageUrl, alt: '', width: 0, height: 0, sizes });
+      const img = document.createElement('img');
+      // sizes and srcset must be set before src so the browser picks the same candidate
+      img.sizes = props.sizes ?? '';
+      img.srcset = props.srcSet ?? '';
+      img.src = props.src;
+      img.decode().catch(() => {});
+    };
+
+    if ('requestIdleCallback' in window) {
+      const id = window.requestIdleCallback(warm);
+      return () => window.cancelIdleCallback(id);
+    }
+    const id = setTimeout(warm, 200);
+    return () => clearTimeout(id);
+  }, [preload, imageUrl, sizes]);
 
   const applyTransform = useCallback(() => {
     const card = cardRef.current;
@@ -264,13 +305,13 @@ export const HoverPreview: React.FC<HoverPreviewProps> = ({
               alt=""
               width={0}
               height={0}
-              sizes={`${MAX_WIDTH}px`}
+              sizes={sizes}
               loading="eager"
               style={{
                 width: 'auto',
                 height: 'auto',
-                maxWidth: `${MAX_WIDTH}px`,
-                maxHeight: `${MAX_HEIGHT}px`,
+                maxWidth: `${maxSize.width}px`,
+                maxHeight: `${maxSize.height}px`,
                 display: 'block',
               }}
               onLoad={handleImageLoad}

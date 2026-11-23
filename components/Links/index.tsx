@@ -3,18 +3,20 @@ import { useState } from "react";
 import { ExternalIcon, ShareIcon } from "../Icons";
 import { Tooltip } from "../Tooltip";
 import useCopy from "@react-hook/copy";
-import { HoverPreview } from "../HoverPreview";
+import { HoverPreview, PreviewVariant } from "../HoverPreview";
 import { useWebHaptics } from "web-haptics/react";
 
 interface LinkExternalProps {
   href: string;
   children: React.ReactNode;
   imageUrl?: string;
+  imageVariant?: PreviewVariant;
+  preloadImage?: boolean;
 }
 
-export function LinkExternal({ href, children, imageUrl }: LinkExternalProps) {
+export function LinkExternal({ href, children, imageUrl, imageVariant, preloadImage }: LinkExternalProps) {
   return (
-    <HoverPreview imageUrl={imageUrl}>
+    <HoverPreview imageUrl={imageUrl} variant={imageVariant} preload={preloadImage}>
       <a
         className="link link-external"
         href={href}
