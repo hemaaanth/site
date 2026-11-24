@@ -113,16 +113,25 @@ export const HoverPreview: React.FC<HoverPreviewProps> = ({
   const frameRef = useRef<number | null>(null);
   const lastFrameTimeRef = useRef(0);
   const exitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Set when the image fails, so pointer moves do not request it again
+  const failedRef = useRef(false);
 
   useEffect(() => {
     setPortalContainer(acquirePortalRoot());
     return releasePortalRoot;
   }, []);
 
+  useEffect(() => {
+    failedRef.current = false;
+  }, [imageUrl]);
+
   // Request the same optimized file the card's <Image> will pick, so hover hits the cache.
   // Devices without any hover-capable pointer never open the card, so they skip the download.
   useEffect(() => {
     if (!preload || !imageUrl || !window.matchMedia('(any-hover: hover)').matches) return;
+
+    let idleId: number | null = null;
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
     const warm = () => {
       const { props } = getImageProps({ src: imageUrl, alt: '', width: 0, height: 0, sizes });
@@ -134,12 +143,26 @@ export const HoverPreview: React.FC<HoverPreviewProps> = ({
       img.decode().catch(() => {});
     };
 
-    if ('requestIdleCallback' in window) {
-      const id = window.requestIdleCallback(warm);
-      return () => window.cancelIdleCallback(id);
+    const schedule = () => {
+      if ('requestIdleCallback' in window) {
+        idleId = window.requestIdleCallback(warm, { timeout: 2000 });
+      } else {
+        timeoutId = setTimeout(warm, 200);
+      }
+    };
+
+    // An image requested before the load event delays it, so wait for load first
+    if (document.readyState === 'complete') {
+      schedule();
+    } else {
+      window.addEventListener('load', schedule, { once: true });
     }
-    const id = setTimeout(warm, 200);
-    return () => clearTimeout(id);
+
+    return () => {
+      window.removeEventListener('load', schedule);
+      if (idleId !== null) window.cancelIdleCallback(idleId);
+      if (timeoutId !== null) clearTimeout(timeoutId);
+    };
   }, [preload, imageUrl, sizes]);
 
   const applyTransform = useCallback(() => {
@@ -197,9 +220,9 @@ export const HoverPreview: React.FC<HoverPreviewProps> = ({
     setPhase((previous) => (previous === 'open' ? 'closing' : previous));
   }, []);
 
-  const handlePointerEnter = useCallback((e: React.PointerEvent) => {
+  const open = useCallback((e: React.PointerEvent) => {
     // Touch taps have no hover; a card opened by one would stay stuck
-    if (!imageUrl || e.pointerType === 'touch') return;
+    if (!imageUrl || failedRef.current || e.pointerType === 'touch') return;
 
     if (exitTimerRef.current !== null) {
       clearTimeout(exitTimerRef.current);
@@ -216,10 +239,16 @@ export const HoverPreview: React.FC<HoverPreviewProps> = ({
   }, [imageUrl, stopFollowing, applyTransform]);
 
   const handlePointerMove = useCallback((e: React.PointerEvent) => {
-    if (e.pointerType === 'touch' || phase !== 'open') return;
+    if (e.pointerType === 'touch') return;
+    // Scroll and blur close the card while the pointer stays on the link, and no new
+    // pointerenter follows, so the next move inside the link has to reopen it
+    if (phase !== 'open') {
+      open(e);
+      return;
+    }
     pointerRef.current = { x: e.clientX, y: e.clientY };
     followPointer();
-  }, [phase, followPointer]);
+  }, [phase, open, followPointer]);
 
   const handlePointerLeave = useCallback((e: React.PointerEvent) => {
     if (e.pointerType === 'touch') return;
@@ -274,6 +303,7 @@ export const HoverPreview: React.FC<HoverPreviewProps> = ({
   }, [applyTransform]);
 
   const handleImageError = useCallback(() => {
+    failedRef.current = true;
     stopFollowing();
     setLoaded(false);
     setPhase('hidden');
@@ -287,7 +317,7 @@ export const HoverPreview: React.FC<HoverPreviewProps> = ({
   return (
     <span
       className={`hover-preview-trigger ${className}`}
-      onPointerEnter={handlePointerEnter}
+      onPointerEnter={open}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
     >

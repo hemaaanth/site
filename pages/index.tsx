@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import Head from "next/head";
+import React from "react";
 import { Main } from "../components/Layouts";
 import { SEO } from "../components/SEO";
 import Writing from "../components/Home/Writing";
@@ -30,53 +29,8 @@ export default function Home({
   recentlyPlayed,
   mapCounts,
 }) {
-  // Collect all image URLs for preloading
-  const imageUrls = React.useMemo(() => {
-    const urls: string[] = [];
-    
-    // Add book images
-    currentlyReading.forEach(book => {
-      if (book.imageUrl) urls.push(book.imageUrl);
-    });
-    if (lastCompleted?.imageUrl) {
-      urls.push(lastCompleted.imageUrl);
-    }
-    
-    // Add Spotify track images
-    recentlyPlayed.forEach(track => {
-      if (track.imageUrl) urls.push(track.imageUrl);
-    });
-    
-    return urls;
-  }, [currentlyReading, lastCompleted, recentlyPlayed]);
-
-  // Preload images when component mounts
-  useEffect(() => {
-    imageUrls.forEach(url => {
-      if (url) {
-        // Preload via Image object to ensure browser caches it
-        const img = new Image();
-        img.src = url;
-      }
-    });
-  }, [imageUrls]);
-
   return (
     <>
-      <Head>
-        {/* Preload all hover images */}
-        {imageUrls.map((url, index) => (
-          url && (
-            <link
-              key={`preload-${index}`}
-              rel="preload"
-              as="image"
-              href={url}
-              crossOrigin="anonymous"
-            />
-          )
-        ))}
-      </Head>
       <SEO
         seo={{
           title: "Hemanth Soni",
@@ -124,7 +78,7 @@ export default function Home({
                     className={`${index !== 0 ? "pt-2" : ""} flex items-baseline gap-1`}
                   >
                     <span className="truncate">
-                      <LinkExternal href={book.url} imageUrl={book.imageUrl}>{getDisplayTitle(book.title)}</LinkExternal>
+                      <LinkExternal href={book.url} imageUrl={book.imageUrl} preloadImage>{getDisplayTitle(book.title)}</LinkExternal>
                       <span className="hidden sm:inline"> by {book.author}</span>
                     </span>
                     <Badge>READING</Badge>
@@ -133,7 +87,7 @@ export default function Home({
                 {lastCompleted && (
                   <div className="pt-2 opacity-30 dark:opacity-30 flex items-baseline gap-1">
                     <span className="truncate">
-                      <LinkExternal href={lastCompleted.url} imageUrl={lastCompleted.imageUrl}>
+                      <LinkExternal href={lastCompleted.url} imageUrl={lastCompleted.imageUrl} preloadImage>
                         {getDisplayTitle(lastCompleted.title)}
                       </LinkExternal>
                       <span className="hidden sm:inline"> by {lastCompleted.author}</span>
@@ -160,7 +114,7 @@ export default function Home({
                   key={track.url}
                   className={`${index !== 0 ? "pt-2" : ""} truncate`}
                 >
-                  <LinkExternal href={track.url} imageUrl={track.imageUrl}>{track.title}</LinkExternal>
+                  <LinkExternal href={track.url} imageUrl={track.imageUrl} preloadImage>{track.title}</LinkExternal>
                   <span className="truncate"> by {track.artist}</span>
                 </div>
               ))
