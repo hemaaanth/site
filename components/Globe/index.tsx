@@ -150,6 +150,7 @@ const Globe: React.FC<GlobeProps> = ({
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
+  const marker = useRef<mapboxgl.Marker | null>(null);
   const venueMarkers = useRef<{ marker: mapboxgl.Marker; root: ReturnType<typeof createRoot> }[]>([]);
   const flyToTimeout = useRef<NodeJS.Timeout | null>(null);
   const revealTimers = useRef<NodeJS.Timeout[]>([]);
@@ -560,6 +561,8 @@ const Globe: React.FC<GlobeProps> = ({
     }
 
     return () => {
+      marker.current?.remove();
+      marker.current = null;
       map.current?.remove();
       map.current = null;
       styleReady.current = false;
@@ -633,6 +636,7 @@ const Globe: React.FC<GlobeProps> = ({
         currentCityKey.current = null;
         map.current.flyTo({
           center: [0, 20],
+          padding: { left: 0, right: 0, top: 0, bottom: 0 },
           zoom: 1.5,
           duration: reduceMotionRef.current ? 0 : 1500,
           essential: true,
@@ -744,6 +748,7 @@ const Globe: React.FC<GlobeProps> = ({
     } else {
       map.current.flyTo({
         center: cityCoordinates!,
+        padding: { left: 0, right: 0, top: 0, bottom: 0 },
         zoom: 13,
         duration: reduceMotionRef.current ? 0 : 2000,
         curve: 1.5,
@@ -874,26 +879,49 @@ const Globe: React.FC<GlobeProps> = ({
 
   // Globe view: handle hover coordinate changes
   useEffect(() => {
-    if (!map.current || isCityView) return;
+    if (!map.current) return;
 
     if (flyToTimeout.current) {
       clearTimeout(flyToTimeout.current);
       flyToTimeout.current = null;
     }
 
-    if (targetCoordinates && targetAnchor && mapReady) {
+    if (isCityView || !targetCoordinates || !targetAnchor) {
+      marker.current?.remove();
+      marker.current = null;
+      return;
+    }
+
+    if (mapReady) {
       flyToTimeout.current = setTimeout(() => {
         if (!map.current) return;
+        if (!marker.current) {
+          const el = document.createElement("div");
+          el.className = "globe-marker";
+          el.setAttribute("aria-hidden", "true");
+          el.innerHTML = '<div class="globe-marker-pulse"></div><div class="globe-marker-dot"></div>';
+          marker.current = new mapboxgl.Marker({ element: el, anchor: "center" })
+            .setLngLat(targetCoordinates)
+            .addTo(map.current);
+        } else {
+          marker.current.setLngLat(targetCoordinates);
+        }
         const rect = map.current.getContainer().getBoundingClientRect();
+        const x = Math.max(1, Math.min(rect.width - 1, targetAnchor.x - rect.left));
+        const y = Math.max(1, Math.min(rect.height - 1, targetAnchor.y - rect.top));
         map.current.flyTo({
           center: targetCoordinates,
           zoom: 4,
           duration: reduceMotionRef.current ? 0 : 1500,
           curve: 1.2,
           essential: true,
-          padding: { left: 0, right: 0, top: 0, bottom: 0 },
-          retainPadding: false,
-          offset: [targetAnchor.x - rect.left - rect.width / 2, targetAnchor.y - rect.top - rect.height / 2],
+          // Place the target at the padded globe center, without an off-center offset.
+          padding: {
+            left: Math.max(0, 2 * x - rect.width),
+            right: Math.max(0, rect.width - 2 * x),
+            top: Math.max(0, 2 * y - rect.height),
+            bottom: Math.max(0, rect.height - 2 * y),
+          },
         });
       }, 150);
     }

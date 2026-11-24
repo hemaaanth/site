@@ -1,6 +1,6 @@
 import type { GetStaticProps } from "next";
 import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Main } from "../../components/Layouts";
 import { SEO } from "../../components/SEO";
 import Badge from "../../components/Badge";
@@ -19,7 +19,6 @@ interface Place {
 export default function Places({ places }: { places: Place[] }) {
   const { setTargetCoordinates, exitCityView } = useGlobe();
 
-  const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
   const hoveredCity = useRef<{ element: HTMLElement; coordinates: [number, number] } | null>(null);
 
   const updateAnchor = React.useCallback(() => {
@@ -68,22 +67,14 @@ export default function Places({ places }: { places: Place[] }) {
                   onMouseEnter={(event) => {
                     if (!coordinates) return;
                     hoveredCity.current = { element: event.currentTarget.querySelector<HTMLElement>(".city-title")!, coordinates };
-                    setHoveredSlug(slug);
                     updateAnchor();
                   }}
                   onMouseLeave={() => {
                     hoveredCity.current = null;
-                    setHoveredSlug(null);
                     setTargetCoordinates(null);
                   }}
                 >
-                  <div className="relative inline-flex items-center gap-1">
-                    {hoveredSlug === slug && (
-                      <span className="globe-marker places-city-bullet" aria-hidden="true">
-                        <span className="globe-marker-pulse" />
-                        <span className="globe-marker-dot" />
-                      </span>
-                    )}
+                  <div className="inline-flex items-center gap-1">
                     {!isDraft ? (
                       <Link href={`/places/${slug}`} className="link city-title">
                         {title}

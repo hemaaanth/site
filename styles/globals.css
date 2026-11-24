@@ -944,15 +944,6 @@ a[href^="mailto:"] {
   pointer-events: none;
 }
 
-/* Keep the hover bullet attached to its city while the map camera moves. */
-.places-city-bullet {
-  position: absolute;
-  left: -30px;
-  top: 50%;
-  margin-top: -10px;
-  pointer-events: none;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .globe-marker,
   .globe-marker-dot,
