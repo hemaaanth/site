@@ -4,6 +4,7 @@ import type { AreaCollection, Venue } from "./types";
 interface GlobeState {
   /** Hover target for globe view (places index) */
   targetCoordinates: [number, number] | null;
+  targetAnchor: { x: number; y: number } | null;
   /** Venue markers for city view */
   venues: Venue[] | null;
   /** Area polygons for city view */
@@ -24,7 +25,7 @@ interface EnterCityViewOpts {
 }
 
 interface GlobeContextValue extends GlobeState {
-  setTargetCoordinates: (coords: [number, number] | null) => void;
+  setTargetCoordinates: (coords: [number, number] | null, anchor?: { x: number; y: number }) => void;
   enterCityView: (opts: EnterCityViewOpts) => void;
   exitCityView: () => void;
   /** Pin an area open (drives the popup); pass null to clear. */
@@ -35,6 +36,7 @@ const GlobeContext = createContext<GlobeContextValue | null>(null);
 
 const INITIAL_STATE: GlobeState = {
   targetCoordinates: null,
+  targetAnchor: null,
   venues: null,
   areas: null,
   cityCoordinates: null,
@@ -45,13 +47,14 @@ const INITIAL_STATE: GlobeState = {
 export function GlobeProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<GlobeState>(INITIAL_STATE);
 
-  const setTargetCoordinates = useCallback((coords: [number, number] | null) => {
-    setState((prev) => ({ ...prev, targetCoordinates: coords }));
+  const setTargetCoordinates = useCallback((coords: [number, number] | null, anchor?: { x: number; y: number }) => {
+    setState((prev) => ({ ...prev, targetCoordinates: coords, targetAnchor: anchor ?? null }));
   }, []);
 
   const enterCityView = useCallback((opts: EnterCityViewOpts) => {
     setState({
       targetCoordinates: null,
+      targetAnchor: null,
       venues: opts.venues,
       areas: opts.areas ?? null,
       cityCoordinates: opts.cityCoordinates,

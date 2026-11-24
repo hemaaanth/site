@@ -1,6 +1,6 @@
 import type { GetStaticProps } from "next";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Main } from "../../components/Layouts";
 import { SEO } from "../../components/SEO";
 import Badge from "../../components/Badge";
@@ -18,6 +18,25 @@ interface Place {
 
 export default function Places({ places }: { places: Place[] }) {
   const { setTargetCoordinates, exitCityView } = useGlobe();
+
+  const hoveredCity = useRef<{ element: HTMLElement; coordinates: [number, number] } | null>(null);
+
+  const updateAnchor = React.useCallback(() => {
+    const city = hoveredCity.current;
+    if (!city) return;
+    const rect = city.element.getBoundingClientRect();
+    setTargetCoordinates(city.coordinates, { x: rect.left - 20, y: rect.top + rect.height / 2 });
+  }, [setTargetCoordinates]);
+
+  useEffect(() => {
+    window.addEventListener("resize", updateAnchor);
+    window.addEventListener("scroll", updateAnchor, true);
+    return () => {
+      window.removeEventListener("resize", updateAnchor);
+      window.removeEventListener("scroll", updateAnchor, true);
+      setTargetCoordinates(null);
+    };
+  }, [setTargetCoordinates, updateAnchor]);
 
   // Reset to globe view when navigating back to this page
   useEffect(() => {
@@ -45,16 +64,23 @@ export default function Places({ places }: { places: Place[] }) {
                 </dt>
                 <dd
                   className={`list-content border-none pb-4 pt-0 sm:pb-0 ${isDraft ? 'opacity-30 dark:opacity-30' : ''}`}
-                  onMouseEnter={() => coordinates && setTargetCoordinates(coordinates)}
-                  onMouseLeave={() => setTargetCoordinates(null)}
+                  onMouseEnter={(event) => {
+                    if (!coordinates) return;
+                    hoveredCity.current = { element: event.currentTarget.querySelector<HTMLElement>(".city-title")!, coordinates };
+                    updateAnchor();
+                  }}
+                  onMouseLeave={() => {
+                    hoveredCity.current = null;
+                    setTargetCoordinates(null);
+                  }}
                 >
                   <div className="inline-flex items-center gap-1">
                     {!isDraft ? (
-                      <Link href={`/places/${slug}`} className="link">
+                      <Link href={`/places/${slug}`} className="link city-title">
                         {title}
                       </Link>
                     ) : (
-                      <span>
+                      <span className="city-title">
                         {title}
                         <Badge>WIP</Badge>
                       </span>

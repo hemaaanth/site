@@ -22,6 +22,7 @@ export type { Venue } from "./types";
 
 interface GlobeProps {
   targetCoordinates?: [number, number] | null;
+  targetAnchor?: { x: number; y: number } | null;
   venues?: Venue[] | null;
   areas?: AreaCollection | null;
   cityCoordinates?: [number, number] | null;
@@ -139,6 +140,7 @@ const FILL_COLOR_EXPR = [
 
 const Globe: React.FC<GlobeProps> = ({
   targetCoordinates,
+  targetAnchor,
   venues,
   areas,
   cityCoordinates,
@@ -153,6 +155,8 @@ const Globe: React.FC<GlobeProps> = ({
   const flyToTimeout = useRef<NodeJS.Timeout | null>(null);
   const revealTimers = useRef<NodeJS.Timeout[]>([]);
   const [isDark, setIsDark] = useState(getSystemDarkMode);
+  const styleTheme = useRef(isDark);
+  const styleReady = useRef(false);
   const [selectedVenue, setSelectedVenue] = useState<Venue | null>(null);
   const popupRef = useRef<mapboxgl.Popup | null>(null);
   const handlePopupClose = useCallback(() => setSelectedVenue(null), []);
@@ -242,12 +246,13 @@ const Globe: React.FC<GlobeProps> = ({
 
   const applyStyleCustomizations = useCallback(
     (isDarkMode: boolean, showDetails: boolean) => {
-      if (!map.current || !map.current.isStyleLoaded()) return;
+      if (!map.current || !styleReady.current) return;
 
       const layers = map.current.getStyle().layers;
       if (layers) {
         layers.forEach((layer) => {
           if (layer.type === "symbol") {
+            map.current?.setLayoutProperty(layer.id, "visibility", "none");
             map.current?.setLayoutProperty(layer.id, "text-field", "");
           }
           if (globeHideLayers.current.has(layer.id)) {
@@ -537,10 +542,13 @@ const Globe: React.FC<GlobeProps> = ({
       currentCityKey.current = null;
 
       if (map.current.isStyleLoaded()) {
+        styleReady.current = true;
         applyStyleCustomizations(isDarkRef.current, isCityViewRef.current);
         setMapReady(true);
       }
       map.current.on("style.load", () => {
+        // style.load means layers are writable even while source tiles are loading.
+        styleReady.current = true;
         applyStyleCustomizations(isDarkRef.current, isCityViewRef.current);
         // Re-attach areas after a style swap if we're still in the same city view.
         if (isCityViewRef.current && areasRef.current) {
@@ -553,8 +561,11 @@ const Globe: React.FC<GlobeProps> = ({
     }
 
     return () => {
+      marker.current?.remove();
+      marker.current = null;
       map.current?.remove();
       map.current = null;
+      styleReady.current = false;
       revealTimers.current.forEach(clearTimeout);
       revealTimers.current = [];
     };
@@ -563,20 +574,16 @@ const Globe: React.FC<GlobeProps> = ({
 
   // Update map style when color scheme changes
   useEffect(() => {
-    if (!map.current) return;
+    if (!map.current || styleTheme.current === isDark) return;
+    styleTheme.current = isDark;
+    styleReady.current = false;
 
     const style = isDark
       ? "mapbox://styles/mapbox/dark-v11"
       : "mapbox://styles/mapbox/light-v11";
 
     map.current.setStyle(style);
-    map.current.once("style.load", () => {
-      applyStyleCustomizations(isDarkRef.current, isCityViewRef.current);
-      if (isCityViewRef.current && areasRef.current) {
-        attachAreaLayers(areasRef.current, isDarkRef.current);
-      }
-    });
-  }, [isDark, applyStyleCustomizations, attachAreaLayers]);
+  }, [isDark]);
 
   // Toggle interactivity and layer visibility based on view mode
   useEffect(() => {
@@ -629,6 +636,7 @@ const Globe: React.FC<GlobeProps> = ({
         currentCityKey.current = null;
         map.current.flyTo({
           center: [0, 20],
+          padding: { left: 0, right: 0, top: 0, bottom: 0 },
           zoom: 1.5,
           duration: reduceMotionRef.current ? 0 : 1500,
           essential: true,
@@ -646,11 +654,6 @@ const Globe: React.FC<GlobeProps> = ({
 
     cityGen.current++;
     const myGen = cityGen.current;
-
-    if (marker.current) {
-      marker.current.remove();
-      marker.current = null;
-    }
 
     // Venue markers
     venues!.forEach((venue) => {
@@ -745,6 +748,7 @@ const Globe: React.FC<GlobeProps> = ({
     } else {
       map.current.flyTo({
         center: cityCoordinates!,
+        padding: { left: 0, right: 0, top: 0, bottom: 0 },
         zoom: 13,
         duration: reduceMotionRef.current ? 0 : 2000,
         curve: 1.5,
@@ -875,47 +879,56 @@ const Globe: React.FC<GlobeProps> = ({
 
   // Globe view: handle hover coordinate changes
   useEffect(() => {
-    if (!map.current || isCityView) return;
+    if (!map.current) return;
 
     if (flyToTimeout.current) {
       clearTimeout(flyToTimeout.current);
       flyToTimeout.current = null;
     }
 
-    if (targetCoordinates) {
+    if (isCityView || !targetCoordinates || !targetAnchor) {
+      marker.current?.remove();
+      marker.current = null;
+      return;
+    }
+
+    if (mapReady) {
       flyToTimeout.current = setTimeout(() => {
         if (!map.current) return;
-
         if (!marker.current) {
           const el = document.createElement("div");
           el.className = "globe-marker";
-          el.innerHTML = `
-            <div class="globe-marker-pulse"></div>
-            <div class="globe-marker-dot"></div>
-          `;
-          marker.current = new mapboxgl.Marker({ element: el })
+          el.setAttribute("aria-hidden", "true");
+          el.innerHTML = '<div class="globe-marker-pulse"></div><div class="globe-marker-dot"></div>';
+          marker.current = new mapboxgl.Marker({ element: el, anchor: "center" })
             .setLngLat(targetCoordinates)
             .addTo(map.current);
         } else {
           marker.current.setLngLat(targetCoordinates);
         }
-
+        const rect = map.current.getContainer().getBoundingClientRect();
+        const x = Math.max(1, Math.min(rect.width - 1, targetAnchor.x - rect.left));
+        const y = Math.max(1, Math.min(rect.height - 1, targetAnchor.y - rect.top));
         map.current.flyTo({
           center: targetCoordinates,
           zoom: 4,
           duration: reduceMotionRef.current ? 0 : 1500,
           curve: 1.2,
           essential: true,
-          padding: { left: 0, right: window.innerWidth * 0.55, top: 0, bottom: 0 },
+          // Place the target at the padded globe center, without an off-center offset.
+          padding: {
+            left: Math.max(0, 2 * x - rect.width),
+            right: Math.max(0, rect.width - 2 * x),
+            top: Math.max(0, 2 * y - rect.height),
+            bottom: Math.max(0, rect.height - 2 * y),
+          },
         });
       }, 150);
-    } else {
-      if (marker.current) {
-        marker.current.remove();
-        marker.current = null;
-      }
     }
-  }, [targetCoordinates, isCityView]);
+    return () => {
+      if (flyToTimeout.current) clearTimeout(flyToTimeout.current);
+    };
+  }, [targetCoordinates, targetAnchor, isCityView, mapReady]);
 
   return (
     <div

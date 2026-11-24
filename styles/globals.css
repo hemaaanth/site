@@ -943,3 +943,14 @@ a[href^="mailto:"] {
 .popup-passthrough .mapboxgl-popup-content {
   pointer-events: none;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .globe-marker,
+  .globe-marker-dot,
+  .globe-marker-pulse {
+    animation: none;
+  }
+  .globe-marker-pulse {
+    display: none;
+  }
+}
