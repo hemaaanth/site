@@ -105,6 +105,7 @@ export default function MyApp({
 function PersistentGlobe() {
   const {
     targetCoordinates,
+    targetAnchor,
     venues,
     areas,
     cityCoordinates,
@@ -115,6 +116,7 @@ function PersistentGlobe() {
   return (
     <Globe
       targetCoordinates={targetCoordinates}
+      targetAnchor={targetAnchor}
       venues={venues}
       areas={areas}
       cityCoordinates={cityCoordinates}

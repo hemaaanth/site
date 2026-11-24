@@ -22,6 +22,7 @@ export type { Venue } from "./types";
 
 interface GlobeProps {
   targetCoordinates?: [number, number] | null;
+  targetAnchor?: { x: number; y: number } | null;
   venues?: Venue[] | null;
   areas?: AreaCollection | null;
   cityCoordinates?: [number, number] | null;
@@ -139,6 +140,7 @@ const FILL_COLOR_EXPR = [
 
 const Globe: React.FC<GlobeProps> = ({
   targetCoordinates,
+  targetAnchor,
   venues,
   areas,
   cityCoordinates,
@@ -148,11 +150,12 @@ const Globe: React.FC<GlobeProps> = ({
 }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
-  const marker = useRef<mapboxgl.Marker | null>(null);
   const venueMarkers = useRef<{ marker: mapboxgl.Marker; root: ReturnType<typeof createRoot> }[]>([]);
   const flyToTimeout = useRef<NodeJS.Timeout | null>(null);
   const revealTimers = useRef<NodeJS.Timeout[]>([]);
   const [isDark, setIsDark] = useState(getSystemDarkMode);
+  const styleTheme = useRef(isDark);
+  const styleReady = useRef(false);
   const [selectedVenue, setSelectedVenue] = useState<Venue | null>(null);
   const popupRef = useRef<mapboxgl.Popup | null>(null);
   const handlePopupClose = useCallback(() => setSelectedVenue(null), []);
@@ -242,12 +245,13 @@ const Globe: React.FC<GlobeProps> = ({
 
   const applyStyleCustomizations = useCallback(
     (isDarkMode: boolean, showDetails: boolean) => {
-      if (!map.current || !map.current.isStyleLoaded()) return;
+      if (!map.current || !styleReady.current) return;
 
       const layers = map.current.getStyle().layers;
       if (layers) {
         layers.forEach((layer) => {
           if (layer.type === "symbol") {
+            map.current?.setLayoutProperty(layer.id, "visibility", "none");
             map.current?.setLayoutProperty(layer.id, "text-field", "");
           }
           if (globeHideLayers.current.has(layer.id)) {
@@ -537,10 +541,13 @@ const Globe: React.FC<GlobeProps> = ({
       currentCityKey.current = null;
 
       if (map.current.isStyleLoaded()) {
+        styleReady.current = true;
         applyStyleCustomizations(isDarkRef.current, isCityViewRef.current);
         setMapReady(true);
       }
       map.current.on("style.load", () => {
+        // style.load means layers are writable even while source tiles are loading.
+        styleReady.current = true;
         applyStyleCustomizations(isDarkRef.current, isCityViewRef.current);
         // Re-attach areas after a style swap if we're still in the same city view.
         if (isCityViewRef.current && areasRef.current) {
@@ -555,6 +562,7 @@ const Globe: React.FC<GlobeProps> = ({
     return () => {
       map.current?.remove();
       map.current = null;
+      styleReady.current = false;
       revealTimers.current.forEach(clearTimeout);
       revealTimers.current = [];
     };
@@ -563,20 +571,16 @@ const Globe: React.FC<GlobeProps> = ({
 
   // Update map style when color scheme changes
   useEffect(() => {
-    if (!map.current) return;
+    if (!map.current || styleTheme.current === isDark) return;
+    styleTheme.current = isDark;
+    styleReady.current = false;
 
     const style = isDark
       ? "mapbox://styles/mapbox/dark-v11"
       : "mapbox://styles/mapbox/light-v11";
 
     map.current.setStyle(style);
-    map.current.once("style.load", () => {
-      applyStyleCustomizations(isDarkRef.current, isCityViewRef.current);
-      if (isCityViewRef.current && areasRef.current) {
-        attachAreaLayers(areasRef.current, isDarkRef.current);
-      }
-    });
-  }, [isDark, applyStyleCustomizations, attachAreaLayers]);
+  }, [isDark]);
 
   // Toggle interactivity and layer visibility based on view mode
   useEffect(() => {
@@ -646,11 +650,6 @@ const Globe: React.FC<GlobeProps> = ({
 
     cityGen.current++;
     const myGen = cityGen.current;
-
-    if (marker.current) {
-      marker.current.remove();
-      marker.current = null;
-    }
 
     // Venue markers
     venues!.forEach((venue) => {
@@ -882,40 +881,26 @@ const Globe: React.FC<GlobeProps> = ({
       flyToTimeout.current = null;
     }
 
-    if (targetCoordinates) {
+    if (targetCoordinates && targetAnchor && mapReady) {
       flyToTimeout.current = setTimeout(() => {
         if (!map.current) return;
-
-        if (!marker.current) {
-          const el = document.createElement("div");
-          el.className = "globe-marker";
-          el.innerHTML = `
-            <div class="globe-marker-pulse"></div>
-            <div class="globe-marker-dot"></div>
-          `;
-          marker.current = new mapboxgl.Marker({ element: el })
-            .setLngLat(targetCoordinates)
-            .addTo(map.current);
-        } else {
-          marker.current.setLngLat(targetCoordinates);
-        }
-
+        const rect = map.current.getContainer().getBoundingClientRect();
         map.current.flyTo({
           center: targetCoordinates,
           zoom: 4,
           duration: reduceMotionRef.current ? 0 : 1500,
           curve: 1.2,
           essential: true,
-          padding: { left: 0, right: window.innerWidth * 0.55, top: 0, bottom: 0 },
+          padding: { left: 0, right: 0, top: 0, bottom: 0 },
+          retainPadding: false,
+          offset: [targetAnchor.x - rect.left - rect.width / 2, targetAnchor.y - rect.top - rect.height / 2],
         });
       }, 150);
-    } else {
-      if (marker.current) {
-        marker.current.remove();
-        marker.current = null;
-      }
     }
-  }, [targetCoordinates, isCityView]);
+    return () => {
+      if (flyToTimeout.current) clearTimeout(flyToTimeout.current);
+    };
+  }, [targetCoordinates, targetAnchor, isCityView, mapReady]);
 
   return (
     <div
