@@ -10,6 +10,7 @@ import { getCurrentlyReading } from "../lib/hardcover";
 import { getRecentlyPlayed } from "../lib/spotify";
 import { getAllPosts } from "../lib/sanity";
 import { loadTools } from "../lib/multiplexersData";
+import { getProjectShots } from "../lib/screenshots";
 import Badge from "../components/Badge";
 import NamePronunciation from "../components/NamePronunciation";
 
@@ -28,6 +29,7 @@ export default function Home({
   currentlyReading,
   recentlyPlayed,
   mapCounts,
+  shots,
 }) {
   return (
     <>
@@ -64,7 +66,7 @@ export default function Home({
         </section>
         <Writing posts={recentPosts} />
         <Curating counts={mapCounts} />
-        <Tinkering />
+        <Tinkering shots={shots} />
         <section className="list-container border-0" aria-label="Reading">
           <div className="list-title">
             <h2 className="text-neutral-500 dark:text-silver-dark text-base [font-variation-settings:'wght'_400]">Reading</h2>
@@ -156,10 +158,13 @@ export async function getStaticProps() {
   // Every scored tool, the same number the page shows above its map.
   const mapCounts = { "/multiplexers": loadTools().length };
 
+  const shots = await getProjectShots();
+
   return {
     props: {
       recentPosts,
       mapCounts,
+      shots,
       currentlyReading: readingData.currentlyReading,
       lastCompleted: readingData.lastCompleted,
       recentlyPlayed,

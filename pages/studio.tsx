@@ -2,9 +2,10 @@ import React from "react";
 import { Main } from "../components/Layouts";
 import { SEO } from "../components/SEO";
 import { LinkExternal } from "../components/Links";
-import Image from "next/image";
+import { ProjectScreenshot } from "../components/ProjectScreenshot";
+import { getProjectShots, ProjectShot } from "../lib/screenshots";
 
-export default function Studio() {
+export default function Studio({ shots }: { shots: Record<string, ProjectShot> }) {
   return (
     <>
       <SEO seo={{ title: "Studio", path: "/studio" }} />
@@ -17,12 +18,10 @@ export default function Studio() {
         <dl className="list-container mt-6">
           <React.Fragment>
             <dt className="studio-list-title">
-              <Image
-                src="/images/studio/caniworknow_header.png"
+              <ProjectScreenshot
+                src={shots.caniworknow.card}
+                fallback={shots.caniworknow.fallback}
                 alt="Can I Work Now? header screenshot"
-                className="studio-screenshot-placeholder object-cover rounded-md border border-neutral-200 dark:border-zinc-800"
-                width={794}
-                height={548}
               />
             </dt>
             <dd className="studio-list-content">
@@ -34,12 +33,10 @@ export default function Studio() {
           </React.Fragment>
           <React.Fragment>
             <dt className="studio-list-title mt-8">
-              <Image
-                src="/images/studio/slant_header.png"
+              <ProjectScreenshot
+                src={shots.slant.card}
+                fallback={shots.slant.fallback}
                 alt="Slant header screenshot"
-                className="studio-screenshot-placeholder object-cover rounded-md border border-neutral-200 dark:border-zinc-800"
-                width={794}
-                height={548}
               />
             </dt>
             <dd className="studio-list-content mt-8">
@@ -51,12 +48,10 @@ export default function Studio() {
           </React.Fragment>
           <React.Fragment>
             <dt className="studio-list-title mt-8">
-              <Image
-                src="/images/studio/sher_header.png"
+              <ProjectScreenshot
+                src={shots.sher.card}
+                fallback={shots.sher.fallback}
                 alt="Sher header screenshot"
-                className="studio-screenshot-placeholder object-cover rounded-md border border-neutral-200 dark:border-zinc-800"
-                width={794}
-                height={548}
               />
             </dt>
             <dd className="studio-list-content mt-8">
@@ -68,12 +63,10 @@ export default function Studio() {
           </React.Fragment>
           <React.Fragment>
             <dt className="studio-list-title mt-8">
-              <Image
-                src="/images/studio/statcan_header.png"
+              <ProjectScreenshot
+                src={shots.statcan.card}
+                fallback={shots.statcan.fallback}
                 alt="statcan2 header screenshot"
-                className="studio-screenshot-placeholder object-cover rounded-md border border-neutral-200 dark:border-zinc-800"
-                width={794}
-                height={548}
               />
             </dt>
             <dd className="studio-list-content mt-8">
@@ -85,12 +78,10 @@ export default function Studio() {
           </React.Fragment>
           <React.Fragment>
             <dt className="studio-list-title mt-8">
-              <Image
-                src="/images/studio/hypee_header.png"
+              <ProjectScreenshot
+                src={shots.hypee.card}
+                fallback={shots.hypee.fallback}
                 alt="Hyp.ee header screenshot"
-                className="studio-screenshot-placeholder object-cover rounded-md border border-neutral-200 dark:border-zinc-800"
-                width={794}
-                height={548}
               />
             </dt>
             <dd className="studio-list-content mt-8">
@@ -102,12 +93,10 @@ export default function Studio() {
           </React.Fragment>
           <React.Fragment>
             <dt className="studio-list-title mt-8">
-              <Image
-                src="/images/studio/bridgebot_header.png"
+              <ProjectScreenshot
+                src={shots.bridgebot.card}
+                fallback={shots.bridgebot.fallback}
                 alt="Bridgebot header screenshot"
-                className="studio-screenshot-placeholder object-cover rounded-md border border-neutral-200 dark:border-zinc-800"
-                width={794}
-                height={548}
               />
             </dt>
             <dd className="studio-list-content mt-8">
@@ -121,12 +110,10 @@ export default function Studio() {
           </React.Fragment>
           <React.Fragment>
             <dt className="studio-list-title mt-8">
-              <Image
-                src="/images/studio/tagtunes_header.png"
+              <ProjectScreenshot
+                src={shots.tagtunes.card}
+                fallback={shots.tagtunes.fallback}
                 alt="Tagtun.es header screenshot"
-                className="studio-screenshot-placeholder object-cover rounded-md border border-neutral-200 dark:border-zinc-800"
-                width={794}
-                height={548}
               />
             </dt>
             <dd className="studio-list-content mt-8">
@@ -155,4 +142,11 @@ export default function Studio() {
       </Main>
     </>
   );
+}
+
+export async function getStaticProps() {
+  return {
+    props: { shots: await getProjectShots() },
+    revalidate: 3600, // refresh the signed URLs and re-check the API every hour
+  };
 }
