@@ -111,7 +111,8 @@ export const HoverPreview: React.FC<HoverPreviewProps> = ({
   const imageUrl = primaryFailed && fallbackImageUrl ? fallbackImageUrl : primaryImageUrl;
   // With a fallback, both images are pre-sized plain files, so neither goes through the optimizer
   const unoptimized = Boolean(fallbackImageUrl);
-  const liveActive = unoptimized && !primaryFailed;
+  // Only a live image can stall; when the primary is already the fallback there is nothing to wait for
+  const liveActive = unoptimized && !primaryFailed && primaryImageUrl !== fallbackImageUrl;
   const maxSize = MAX_SIZES[variant];
   const sizes = `${maxSize.width}px`;
 

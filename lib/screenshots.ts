@@ -6,12 +6,12 @@ import { createHmac } from "node:crypto";
 export interface ProjectShot {
   // Static image in /public. Always set, used whenever the live image is unavailable.
   fallback: string;
-  // Small WebP copy of the fallback, served as a plain file (no optimizer), for the instant swap when a
-  // live image stalls. Set for projects that can be live.
+  // Small WebP, served as a plain file (no optimizer), for the instant swap when the live image stalls.
+  // Matches the kind of shot the page uses. Set for projects that can be live.
   still?: string;
   // Signed api.hem.so URLs, pre-sized as WebP. Unset when the key is missing or the API failed.
-  card?: string; // /studio, shown up to 578 CSS px wide
-  preview?: string; // hover preview on the home page, shown up to 260 CSS px wide
+  card?: string; // /studio, framed, shown up to 578 CSS px wide
+  preview?: string; // hover preview on the home page, a plain page shot, shown up to 260 CSS px wide
 }
 
 interface ProjectConfig {
@@ -20,6 +20,9 @@ interface ProjectConfig {
   still?: string;
   // Extra API options that make the framed shot match the hand-made one
   params?: Record<string, string | number | boolean>;
+  // Plain shot for the hover preview: the viewport and wait that make the page look right unframed
+  previewParams?: Record<string, string | number | boolean>;
+  previewStill?: string;
   // false keeps the static image on purpose
   live?: boolean;
   // true when the home page hover preview uses it; each size is a separate capture on the API
@@ -38,6 +41,8 @@ const PROJECTS: Record<string, ProjectConfig> = {
     url: "https://slant.page",
     fallback: "/images/studio/slant_header.png",
     still: "/images/studio/slant_header.webp",
+    previewStill: "/images/studio/slant_preview.webp",
+    previewParams: { width: 1280, height: 720, dark_mode: true, delay_ms: 2500 },
     params: {
       bg: "3a342d",
       dark_mode: true,
@@ -51,6 +56,8 @@ const PROJECTS: Record<string, ProjectConfig> = {
     url: "https://sher.ing",
     fallback: "/images/studio/sher_header.png",
     still: "/images/studio/sher_header.webp",
+    previewStill: "/images/studio/sher_preview.webp",
+    previewParams: { width: 1280, height: 720, dark_mode: true, delay_ms: 2000 },
     params: { bg: "2e2c3a", dark_mode: true, delay_ms: 2000 },
     preview: true,
   },
@@ -58,6 +65,8 @@ const PROJECTS: Record<string, ProjectConfig> = {
     url: "https://statcan2.ca",
     fallback: "/images/studio/statcan_header.png",
     still: "/images/studio/statcan_header.webp",
+    previewStill: "/images/studio/statcan_preview.webp",
+    previewParams: { width: 1280, height: 720, delay_ms: 2000 },
     params: { bg: "3d2c2e", delay_ms: 2000 },
     preview: true,
   },
@@ -154,10 +163,8 @@ export async function getProjectShots(
   );
   const shots: Record<string, ProjectShot> = {};
   for (const [id, project] of used) {
-    shots[id] = {
-      fallback: project.fallback,
-      ...(project.still && { still: project.still }),
-    };
+    const still = kind === "card" ? project.still : project.previewStill;
+    shots[id] = { fallback: project.fallback, ...(still && { still }) };
   }
   if (!key) return shots;
 
@@ -172,9 +179,9 @@ export async function getProjectShots(
           baseUrl,
           key,
           {
-            ...project.params,
+            ...(kind === "card" ? project.params : project.previewParams),
             url: project.url,
-            style: "framed",
+            style: kind === "card" ? "framed" : "plain",
             format: "webp",
             quality: QUALITY,
             out_width: outWidth,
