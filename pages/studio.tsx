@@ -146,7 +146,7 @@ export default function Studio({ shots }: { shots: Record<string, ProjectShot> }
 
 export async function getStaticProps() {
   return {
-    props: { shots: await getProjectShots() },
+    props: { shots: await getProjectShots("card") },
     revalidate: 3600, // refresh the signed URLs and re-check the API every hour
   };
 }

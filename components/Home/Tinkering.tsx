@@ -7,28 +7,19 @@ const PROJECTS = [
     title: "Slant",
     url: "https://slant.page",
     id: "slant",
-    imgAlt: "Slant header screenshot",
     description: "A writing app that interviews you, researches, and drafts in your voice.",
-    width: 794,
-    height: 548,
   },
   {
     title: "Sher",
     url: "https://sher.ing",
     id: "sher",
-    imgAlt: "Sher header screenshot",
     description: "Share live coding agent sessions with your team or across machines.",
-    width: 794,
-    height: 548,
   },
   {
     title: "statcan2",
     url: "https://statcan2.ca",
     id: "statcan",
-    imgAlt: "statcan2 header screenshot",
     description: "Statistics Canada data, easier to find, chart, and query.",
-    width: 794,
-    height: 548,
   },
 ];
 

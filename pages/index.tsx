@@ -158,7 +158,7 @@ export async function getStaticProps() {
   // Every scored tool, the same number the page shows above its map.
   const mapCounts = { "/multiplexers": loadTools().length };
 
-  const shots = await getProjectShots();
+  const shots = await getProjectShots("preview");
 
   return {
     props: {

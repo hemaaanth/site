@@ -39,6 +39,8 @@ const VIEWPORT_MARGIN = 12;
 const FOLLOW_EASE = 0.3;
 // Matches the exit transition in hover-preview.css
 const EXIT_MS = 140;
+// How long a live image may take before the static fallback replaces it
+const LIVE_DEADLINE_MS = 3000;
 
 // One shared portal container for every HoverPreview instance
 let portalRoot: HTMLElement | null = null;
@@ -143,6 +145,7 @@ export const HoverPreview: React.FC<HoverPreviewProps> = ({
 
     let idleId: number | null = null;
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    let stallId: ReturnType<typeof setTimeout> | null = null;
 
     const warm = () => {
       const { props } = getImageProps({ src: imageUrl, alt: '', width: 0, height: 0, sizes, unoptimized });
@@ -151,7 +154,14 @@ export const HoverPreview: React.FC<HoverPreviewProps> = ({
       img.sizes = props.sizes ?? '';
       img.srcset = props.srcSet ?? '';
       img.src = props.src;
-      img.decode().catch(() => {});
+      img.decode().then(
+        () => {
+          if (stallId !== null) clearTimeout(stallId);
+        },
+        () => {}
+      );
+      // A live image that has not arrived by now is not coming soon; use the static one
+      if (unoptimized) stallId = setTimeout(() => setPrimaryFailed(true), LIVE_DEADLINE_MS);
     };
 
     const schedule = () => {
@@ -173,8 +183,16 @@ export const HoverPreview: React.FC<HoverPreviewProps> = ({
       window.removeEventListener('load', schedule);
       if (idleId !== null) window.cancelIdleCallback(idleId);
       if (timeoutId !== null) clearTimeout(timeoutId);
+      if (stallId !== null) clearTimeout(stallId);
     };
   }, [preload, imageUrl, sizes, unoptimized]);
+
+  // Without a preload (or before it ran) the card waits for the live image at most LIVE_DEADLINE_MS
+  useEffect(() => {
+    if (phase === 'hidden' || loaded || !unoptimized) return;
+    const timer = setTimeout(() => setPrimaryFailed(true), LIVE_DEADLINE_MS);
+    return () => clearTimeout(timer);
+  }, [phase, loaded, unoptimized]);
 
   const applyTransform = useCallback(() => {
     const card = cardRef.current;
