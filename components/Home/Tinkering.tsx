@@ -39,7 +39,7 @@ export default function Tinkering({ shots }: { shots: Record<string, ProjectShot
                 <LinkExternal
                   href={project.url}
                   imageUrl={shot.preview ?? shot.fallback}
-                  fallbackImageUrl={shot.preview && shot.fallback}
+                  fallbackImageUrl={shot.preview && shot.still}
                   imageVariant="screenshot"
                   preloadImage
                 >

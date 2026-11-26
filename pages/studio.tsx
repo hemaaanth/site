@@ -21,6 +21,7 @@ export default function Studio({ shots }: { shots: Record<string, ProjectShot> }
               <ProjectScreenshot
                 src={shots.caniworknow.card}
                 fallback={shots.caniworknow.fallback}
+                still={shots.caniworknow.still}
                 alt="Can I Work Now? header screenshot"
               />
             </dt>
@@ -36,6 +37,7 @@ export default function Studio({ shots }: { shots: Record<string, ProjectShot> }
               <ProjectScreenshot
                 src={shots.slant.card}
                 fallback={shots.slant.fallback}
+                still={shots.slant.still}
                 alt="Slant header screenshot"
               />
             </dt>
@@ -51,6 +53,7 @@ export default function Studio({ shots }: { shots: Record<string, ProjectShot> }
               <ProjectScreenshot
                 src={shots.sher.card}
                 fallback={shots.sher.fallback}
+                still={shots.sher.still}
                 alt="Sher header screenshot"
               />
             </dt>
@@ -66,6 +69,7 @@ export default function Studio({ shots }: { shots: Record<string, ProjectShot> }
               <ProjectScreenshot
                 src={shots.statcan.card}
                 fallback={shots.statcan.fallback}
+                still={shots.statcan.still}
                 alt="statcan2 header screenshot"
               />
             </dt>
@@ -81,6 +85,7 @@ export default function Studio({ shots }: { shots: Record<string, ProjectShot> }
               <ProjectScreenshot
                 src={shots.hypee.card}
                 fallback={shots.hypee.fallback}
+                still={shots.hypee.still}
                 alt="Hyp.ee header screenshot"
               />
             </dt>
@@ -96,6 +101,7 @@ export default function Studio({ shots }: { shots: Record<string, ProjectShot> }
               <ProjectScreenshot
                 src={shots.bridgebot.card}
                 fallback={shots.bridgebot.fallback}
+                still={shots.bridgebot.still}
                 alt="Bridgebot header screenshot"
               />
             </dt>
@@ -113,6 +119,7 @@ export default function Studio({ shots }: { shots: Record<string, ProjectShot> }
               <ProjectScreenshot
                 src={shots.tagtunes.card}
                 fallback={shots.tagtunes.fallback}
+                still={shots.tagtunes.still}
                 alt="Tagtun.es header screenshot"
               />
             </dt>

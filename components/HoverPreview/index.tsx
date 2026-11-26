@@ -109,7 +109,9 @@ export const HoverPreview: React.FC<HoverPreviewProps> = ({
   const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
 
   const imageUrl = primaryFailed && fallbackImageUrl ? fallbackImageUrl : primaryImageUrl;
-  const unoptimized = Boolean(fallbackImageUrl) && !primaryFailed;
+  // With a fallback, both images are pre-sized plain files, so neither goes through the optimizer
+  const unoptimized = Boolean(fallbackImageUrl);
+  const liveActive = unoptimized && !primaryFailed;
   const maxSize = MAX_SIZES[variant];
   const sizes = `${maxSize.width}px`;
 
@@ -161,7 +163,7 @@ export const HoverPreview: React.FC<HoverPreviewProps> = ({
         () => {}
       );
       // A live image that has not arrived by now is not coming soon; use the static one
-      if (unoptimized) stallId = setTimeout(() => setPrimaryFailed(true), LIVE_DEADLINE_MS);
+      if (liveActive) stallId = setTimeout(() => setPrimaryFailed(true), LIVE_DEADLINE_MS);
     };
 
     const schedule = () => {
@@ -185,14 +187,14 @@ export const HoverPreview: React.FC<HoverPreviewProps> = ({
       if (timeoutId !== null) clearTimeout(timeoutId);
       if (stallId !== null) clearTimeout(stallId);
     };
-  }, [preload, imageUrl, sizes, unoptimized]);
+  }, [preload, imageUrl, sizes, unoptimized, liveActive]);
 
   // Without a preload (or before it ran) the card waits for the live image at most LIVE_DEADLINE_MS
   useEffect(() => {
-    if (phase === 'hidden' || loaded || !unoptimized) return;
+    if (phase === 'hidden' || loaded || !liveActive) return;
     const timer = setTimeout(() => setPrimaryFailed(true), LIVE_DEADLINE_MS);
     return () => clearTimeout(timer);
-  }, [phase, loaded, unoptimized]);
+  }, [phase, loaded, liveActive]);
 
   const applyTransform = useCallback(() => {
     const card = cardRef.current;
