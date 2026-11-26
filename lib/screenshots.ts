@@ -20,7 +20,8 @@ interface ProjectConfig {
   still?: string;
   // Extra API options that make the framed shot match the hand-made one
   params?: Record<string, string | number | boolean>;
-  // Plain shot for the hover preview: the viewport and wait that make the page look right unframed
+  // Plain shot for the hover preview: the viewport and wait that make the page look right unframed,
+  // and the zoom that crops it to the readable top of the page
   previewParams?: Record<string, string | number | boolean>;
   previewStill?: string;
   // false keeps the static image on purpose
@@ -42,7 +43,14 @@ const PROJECTS: Record<string, ProjectConfig> = {
     fallback: "/images/studio/slant_header.png",
     still: "/images/studio/slant_header.webp",
     previewStill: "/images/studio/slant_preview.webp",
-    previewParams: { width: 1280, height: 720, dark_mode: true, delay_ms: 2500 },
+    previewParams: {
+      width: 1280,
+      height: 720,
+      dark_mode: true,
+      delay_ms: 2500,
+      zoom: 1.6,
+      anchor: "top",
+    },
     params: {
       bg: "3a342d",
       dark_mode: true,
@@ -57,7 +65,14 @@ const PROJECTS: Record<string, ProjectConfig> = {
     fallback: "/images/studio/sher_header.png",
     still: "/images/studio/sher_header.webp",
     previewStill: "/images/studio/sher_preview.webp",
-    previewParams: { width: 1280, height: 720, dark_mode: true, delay_ms: 2000 },
+    previewParams: {
+      width: 1280,
+      height: 720,
+      dark_mode: true,
+      delay_ms: 2000,
+      zoom: 1.6,
+      anchor: "top-left",
+    },
     params: { bg: "2e2c3a", dark_mode: true, delay_ms: 2000 },
     preview: true,
   },
@@ -66,7 +81,13 @@ const PROJECTS: Record<string, ProjectConfig> = {
     fallback: "/images/studio/statcan_header.png",
     still: "/images/studio/statcan_header.webp",
     previewStill: "/images/studio/statcan_preview.webp",
-    previewParams: { width: 1280, height: 720, delay_ms: 2000 },
+    previewParams: {
+      width: 1280,
+      height: 720,
+      delay_ms: 2000,
+      zoom: 1.6,
+      anchor: "top",
+    },
     params: { bg: "3d2c2e", delay_ms: 2000 },
     preview: true,
   },
