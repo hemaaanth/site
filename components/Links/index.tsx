@@ -10,13 +10,14 @@ interface LinkExternalProps {
   href: string;
   children: React.ReactNode;
   imageUrl?: string;
+  fallbackImageUrl?: string;
   imageVariant?: PreviewVariant;
   preloadImage?: boolean;
 }
 
-export function LinkExternal({ href, children, imageUrl, imageVariant, preloadImage }: LinkExternalProps) {
+export function LinkExternal({ href, children, imageUrl, fallbackImageUrl, imageVariant, preloadImage }: LinkExternalProps) {
   return (
-    <HoverPreview imageUrl={imageUrl} variant={imageVariant} preload={preloadImage}>
+    <HoverPreview imageUrl={imageUrl} fallbackImageUrl={fallbackImageUrl} variant={imageVariant} preload={preloadImage}>
       <a
         className="link link-external"
         href={href}

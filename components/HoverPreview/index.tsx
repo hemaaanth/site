@@ -6,6 +6,9 @@ export type PreviewVariant = 'cover' | 'screenshot';
 
 interface HoverPreviewProps {
   imageUrl?: string;
+  // Used when imageUrl fails to load. imageUrl is then treated as already sized and skips the
+  // Next.js optimizer, while the fallback still goes through it.
+  fallbackImageUrl?: string;
   children: React.ReactNode;
   className?: string;
   variant?: PreviewVariant;
@@ -36,6 +39,8 @@ const VIEWPORT_MARGIN = 12;
 const FOLLOW_EASE = 0.3;
 // Matches the exit transition in hover-preview.css
 const EXIT_MS = 140;
+// How long a live image may take before the static fallback replaces it
+const LIVE_DEADLINE_MS = 3000;
 
 // One shared portal container for every HoverPreview instance
 let portalRoot: HTMLElement | null = null;
@@ -91,7 +96,8 @@ function boundedPosition(pointer: Point, size: Size): Point {
 }
 
 export const HoverPreview: React.FC<HoverPreviewProps> = ({
-  imageUrl,
+  imageUrl: primaryImageUrl,
+  fallbackImageUrl,
   children,
   className = '',
   variant = 'cover',
@@ -99,8 +105,14 @@ export const HoverPreview: React.FC<HoverPreviewProps> = ({
 }) => {
   const [phase, setPhase] = useState<Phase>('hidden');
   const [loaded, setLoaded] = useState(false);
+  const [primaryFailed, setPrimaryFailed] = useState(false);
   const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
 
+  const imageUrl = primaryFailed && fallbackImageUrl ? fallbackImageUrl : primaryImageUrl;
+  // With a fallback, both images are pre-sized plain files, so neither goes through the optimizer
+  const unoptimized = Boolean(fallbackImageUrl);
+  // Only a live image can stall; when the primary is already the fallback there is nothing to wait for
+  const liveActive = unoptimized && !primaryFailed && primaryImageUrl !== fallbackImageUrl;
   const maxSize = MAX_SIZES[variant];
   const sizes = `${maxSize.width}px`;
 
@@ -125,6 +137,10 @@ export const HoverPreview: React.FC<HoverPreviewProps> = ({
     failedRef.current = false;
   }, [imageUrl]);
 
+  useEffect(() => {
+    setPrimaryFailed(false);
+  }, [primaryImageUrl]);
+
   // Request the same optimized file the card's <Image> will pick, so hover hits the cache.
   // Devices without any hover-capable pointer never open the card, so they skip the download.
   useEffect(() => {
@@ -132,15 +148,23 @@ export const HoverPreview: React.FC<HoverPreviewProps> = ({
 
     let idleId: number | null = null;
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    let stallId: ReturnType<typeof setTimeout> | null = null;
 
     const warm = () => {
-      const { props } = getImageProps({ src: imageUrl, alt: '', width: 0, height: 0, sizes });
+      const { props } = getImageProps({ src: imageUrl, alt: '', width: 0, height: 0, sizes, unoptimized });
       const img = document.createElement('img');
       // sizes and srcset must be set before src so the browser picks the same candidate
       img.sizes = props.sizes ?? '';
       img.srcset = props.srcSet ?? '';
       img.src = props.src;
-      img.decode().catch(() => {});
+      img.decode().then(
+        () => {
+          if (stallId !== null) clearTimeout(stallId);
+        },
+        () => {}
+      );
+      // A live image that has not arrived by now is not coming soon; use the static one
+      if (liveActive) stallId = setTimeout(() => setPrimaryFailed(true), LIVE_DEADLINE_MS);
     };
 
     const schedule = () => {
@@ -162,8 +186,16 @@ export const HoverPreview: React.FC<HoverPreviewProps> = ({
       window.removeEventListener('load', schedule);
       if (idleId !== null) window.cancelIdleCallback(idleId);
       if (timeoutId !== null) clearTimeout(timeoutId);
+      if (stallId !== null) clearTimeout(stallId);
     };
-  }, [preload, imageUrl, sizes]);
+  }, [preload, imageUrl, sizes, unoptimized, liveActive]);
+
+  // Without a preload (or before it ran) the card waits for the live image at most LIVE_DEADLINE_MS
+  useEffect(() => {
+    if (phase === 'hidden' || loaded || !liveActive) return;
+    const timer = setTimeout(() => setPrimaryFailed(true), LIVE_DEADLINE_MS);
+    return () => clearTimeout(timer);
+  }, [phase, loaded, liveActive]);
 
   const applyTransform = useCallback(() => {
     const card = cardRef.current;
@@ -303,11 +335,16 @@ export const HoverPreview: React.FC<HoverPreviewProps> = ({
   }, [applyTransform]);
 
   const handleImageError = useCallback(() => {
+    // Try the fallback once before giving up; the card stays open while it loads
+    if (fallbackImageUrl && !primaryFailed) {
+      setPrimaryFailed(true);
+      return;
+    }
     failedRef.current = true;
     stopFollowing();
     setLoaded(false);
     setPhase('hidden');
-  }, [stopFollowing]);
+  }, [stopFollowing, fallbackImageUrl, primaryFailed]);
 
   // If no image URL is provided, just render children as is
   if (!imageUrl) {
@@ -332,6 +369,7 @@ export const HoverPreview: React.FC<HoverPreviewProps> = ({
           <div className="hover-preview-frame">
             <Image
               src={imageUrl}
+              unoptimized={unoptimized}
               alt=""
               width={0}
               height={0}
